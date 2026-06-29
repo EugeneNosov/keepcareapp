@@ -1,9 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap');
 
 :root {
-    color: #eeeeea;
-    background: #070807;
+    color: #deded8;
+    background: #050606;
     font-family: 'IBM Plex Mono', 'SFMono-Regular', Consolas, monospace;
+    font-synthesis: none;
 }
 
 * {
@@ -15,14 +16,19 @@ body {
     min-width: 320px;
     min-height: 100vh;
     background:
-        linear-gradient(rgba(255, 255, 255, 0.018) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255, 255, 255, 0.018) 1px, transparent 1px),
-        #070807;
-    background-size: 32px 32px;
+        linear-gradient(rgba(255, 255, 255, 0.012) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.012) 1px, transparent 1px),
+        #050606;
+    background-size: 24px 24px;
 }
 
 button,
 a,
 input {
     font: inherit;
+}
+
+::selection {
+    color: #080908;
+    background: #f0783c;
 }

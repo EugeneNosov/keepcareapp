@@ -4,28 +4,28 @@
     display: flex;
     flex-direction: column;
     height: 100vh;
-    padding: 24px 16px;
-    border-right: 1px solid #282923;
-    background: rgba(8, 9, 8, 0.96);
+    padding: 20px 12px;
+    border-right: 1px solid #303330;
+    background: rgba(5, 6, 6, 0.98);
 }
 
 .side-menu__brand {
     display: flex;
     align-items: center;
     gap: 12px;
-    min-height: 56px;
-    padding: 0 10px 22px;
-    border-bottom: 1px solid #24251f;
+    min-height: 58px;
+    padding: 0 8px 18px;
+    border-bottom: 1px solid #252725;
 }
 
 .side-menu__brand-mark {
     display: grid;
-    width: 38px;
-    height: 38px;
+    width: 36px;
+    height: 36px;
     place-items: center;
-    border: 1px solid #ffd43b;
-    color: #ffd43b;
-    box-shadow: inset 0 0 18px rgba(255, 212, 59, 0.08);
+    border: 1px solid #6c706c;
+    color: #e7e7e1;
+    box-shadow: inset 0 0 14px rgba(255, 255, 255, 0.025);
 }
 
 .side-menu__brand-mark svg {
@@ -35,54 +35,58 @@
 
 .side-menu__brand-name {
     color: #f6f6f1;
-    font-size: 15px;
-    font-weight: 600;
-    letter-spacing: 0.08em;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
 }
 
 .side-menu__nav {
     display: grid;
-    gap: 8px;
-    margin-top: 38px;
+    gap: 6px;
+    margin-top: 30px;
 }
 
 .side-menu__item {
     position: relative;
     display: flex;
     align-items: center;
-    gap: 14px;
+    gap: 12px;
     width: 100%;
-    min-height: 52px;
-    padding: 0 14px;
+    min-height: 46px;
+    padding: 0 12px;
     border: 1px solid transparent;
-    color: #777871;
+    color: #8c908b;
     background: transparent;
     text-align: left;
     text-decoration: none;
-    transition: border-color 160ms ease, color 160ms ease, background 160ms ease;
+    font-size: 11px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    transition: border-color 140ms ease, color 140ms ease, background 140ms ease;
 }
 
 .side-menu__item svg {
-    width: 19px;
-    height: 19px;
+    width: 17px;
+    height: 17px;
     flex: 0 0 auto;
 }
 
 .side-menu__item--active {
-    border-color: #4b431f;
-    color: #090a08;
-    background: #ffd43b;
-    box-shadow: 0 0 26px rgba(255, 212, 59, 0.08);
+    border-color: #4a4d49;
+    color: #f1f1eb;
+    background: #111312;
+    box-shadow: inset 2px 0 0 #f0783c;
 }
 
 .side-menu__item:not(:disabled):hover {
-    border-color: #69602d;
+    border-color: #4a4d49;
     color: #f7f7ef;
+    background: #0d0f0e;
 }
 
 .side-menu__item--active:not(:disabled):hover {
-    color: #090a08;
+    color: #ffffff;
 }
 
 .side-menu__status {
@@ -90,9 +94,9 @@
     align-items: center;
     gap: 9px;
     margin: auto 10px 4px;
-    color: #696a64;
-    font-size: 10px;
-    letter-spacing: 0.08em;
+    color: #747873;
+    font-size: 9px;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
 }
 
@@ -100,8 +104,8 @@
     width: 6px;
     height: 6px;
     border-radius: 50%;
-    background: #65d17a;
-    box-shadow: 0 0 8px rgba(101, 209, 122, 0.8);
+    background: #51d88a;
+    box-shadow: 0 0 8px rgba(81, 216, 138, 0.55);
 }
 
 @media (max-width: 720px) {
