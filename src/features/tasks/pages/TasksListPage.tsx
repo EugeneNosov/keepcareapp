@@ -1,16 +1,44 @@
-import { LuActivity, LuArrowUpRight, LuCheck, LuClock3 } from 'react-icons/lu'
-import { Link } from 'react-router'
+import {
+  LuCircleCheck,
+  LuClock3,
+  LuPlus,
+  LuSearch,
+  LuTriangleAlert,
+} from 'react-icons/lu'
+import TaskItem from '../components/TaskItem.tsx'
+import type { Task } from '../types/tasks.types.ts'
 
 const metrics = [
-  {label: 'Active', value: '04', icon: LuActivity, color: '#f0a43c'},
-  {label: 'Completed', value: '18', icon: LuCheck, color: '#4bd49b'},
-  {label: 'Pending', value: '03', icon: LuClock3, color: '#d6d7d2'},
+  {
+    label: 'Overdue',
+    value: '02',
+    description: 'Require immediate action',
+    icon: LuTriangleAlert,
+    color: '#e36f5e',
+    surface: '#25100e',
+  },
+  {
+    label: 'Due soon',
+    value: '03',
+    description: 'Due within the next 24 hours',
+    icon: LuClock3,
+    color: '#f0a43c',
+    surface: '#22170b',
+  },
+  {
+    label: 'OK',
+    value: '18',
+    description: 'No action required',
+    icon: LuCircleCheck,
+    color: '#4bd49b',
+    surface: '#0b2118',
+  },
 ]
 
-const tasks = [
-  {name: 'Morning medication', owner: 'You', status: 'IN PROGRESS', due: '08:30', color: '#f0a43c'},
-  {name: 'Schedule health check', owner: 'Family', status: 'PENDING', due: 'Tomorrow', color: '#d6d7d2'},
-  {name: 'Update care notes', owner: 'You', status: 'COMPLETE', due: '12:10', color: '#4bd49b'},
+const tasks: Task[] = [
+  {id: 'morning-medication', name: 'Morning medication', status: 'overdue', scheduledFor: 'Today'},
+  {id: 'health-check', name: 'Schedule health check', status: 'due_soon', scheduledFor: 'Tomorrow'},
+  {id: 'care-notes', name: 'Update care notes', status: 'ok', scheduledFor: 'Jul 04'},
 ]
 
 export function TasksListPage() {
@@ -19,78 +47,82 @@ export function TasksListPage() {
       <header className="border border-[#343734] bg-[#080909]">
         <div className="flex flex-wrap items-center justify-between gap-4 border-b border-[#242624] px-5 py-4">
           <div>
-            <p className="m-0 text-[9px] tracking-[0.14em] text-[#777b77] uppercase">
-              KeepCare control interface
-            </p>
             <h1 className="mt-1.5 text-lg font-medium tracking-[0.05em] text-[#ededE8] uppercase">
-              Task operations
+              Tasks
             </h1>
           </div>
-          <span
-            className="border border-[#783d34] bg-[#25100e] px-2.5 py-1 text-[9px] tracking-[0.12em] text-[#e36f5e] uppercase">
-            Private workspace
-          </span>
+          <button
+            className="cursor-pointer inline-flex h-9 items-center gap-2 border border-[#e16f3a] bg-[#e16f3a] px-3.5 text-[10px] font-medium tracking-[0.08em] text-[#100b08] uppercase transition-colors hover:border-[#f58a55] hover:bg-[#f58a55] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#f0783c]"
+            type="button"
+          >
+            <LuPlus className="size-4" aria-hidden="true"/>
+            Create task
+          </button>
         </div>
         <div
           className="flex flex-wrap items-center justify-between gap-3 px-5 py-3 text-[9px] tracking-[0.06em] text-[#8d918c] uppercase">
-          <span>Operator: <strong className="font-medium text-[#d9dad5]">Primary user</strong></span>
-          <span>System status: <strong className="bg-[#173422] px-1.5 py-0.5 font-medium text-[#68d792]">Online</strong></span>
+          <span>All registered tasks</span>
         </div>
       </header>
 
       <div className="mt-6 grid grid-cols-3 gap-5 max-[860px]:grid-cols-1">
-        {metrics.map(({label, value, icon: Icon, color}) => (
-          <article className="border border-[#383b38] bg-[#080909] p-5" key={label}>
+        {metrics.map(({label, value, description, icon: Icon, color, surface}) => (
+          <article
+            className="relative overflow-hidden border border-[#383b38] bg-[#080909] p-5 transition-colors hover:border-[#505450]"
+            key={label}
+          >
+            <span className="absolute inset-y-0 left-0 w-0.5" style={{backgroundColor: color}}/>
             <div className="flex items-center justify-between">
               <span className="text-[10px] tracking-[0.1em] text-[#939792] uppercase">{label}</span>
-              <Icon className="size-4" style={{color}} aria-hidden="true"/>
+              <span
+                className="grid size-8 place-items-center border"
+                style={{backgroundColor: surface, borderColor: `${color}55`, color}}
+              >
+                <Icon className="size-4" aria-hidden="true"/>
+              </span>
             </div>
             <strong className="mt-5 block text-3xl font-semibold tracking-[-0.04em] text-[#f2f2ed]">
               {value}
             </strong>
-            <div className="mt-4 h-1 bg-[#222522]">
-              <span className="block h-full w-3/5" style={{backgroundColor: color}}/>
-            </div>
+            <p className="mt-2 text-[10px] tracking-[0.03em] text-[#737772]">{description}</p>
           </article>
         ))}
       </div>
 
       <section className="mt-6 border border-[#383b38] bg-[#080909]">
-        <header className="flex items-center justify-between border-b border-[#303330] px-5 py-4">
+        <header className="flex flex-wrap items-center justify-between gap-4 border-b border-[#303330] px-5 py-4">
           <h2
             className="flex items-center gap-2.5 text-xs font-medium tracking-[0.08em] text-[#e2e3de] uppercase before:block before:h-5 before:w-0.5 before:bg-[#f0783c]">
             Task registry
           </h2>
-          <span className="text-[9px] tracking-[0.1em] text-[#747873] uppercase">03 records</span>
+          <div className="flex items-center gap-4 max-[520px]:w-full">
+            <label className="group relative max-[520px]:min-w-0 max-[520px]:flex-1">
+              <span className="sr-only">Search tasks</span>
+              <LuSearch
+                className="pointer-events-none absolute top-1/2 left-3 size-3.5 -translate-y-1/2 text-[#686c68] transition-colors group-focus-within:text-[#f0783c]"
+                aria-hidden="true"
+              />
+              <input
+                className="h-9 w-56 border border-[#343734] bg-[#0c0e0d] pr-3 pl-9 text-[11px] text-[#dcddd7] outline-none placeholder:text-[#626662] focus:border-[#7b4932] max-[520px]:w-full"
+                placeholder="Search tasks..."
+                type="search"
+              />
+            </label>
+            <span className="shrink-0 text-[9px] tracking-[0.1em] text-[#747873] uppercase">03 records</span>
+          </div>
         </header>
 
         <div className="overflow-x-auto">
-          <div className="min-w-[650px]">
+          <div className="min-w-[560px]">
             <div
-              className="grid grid-cols-[2fr_1fr_1fr_1fr_32px] gap-4 border-b border-[#242624] px-5 py-3 text-[9px] tracking-[0.08em] text-[#70746f] uppercase">
+              className="grid grid-cols-[minmax(220px,2fr)_minmax(120px,1fr)_minmax(150px,1fr)_32px] gap-4 border-b border-[#242624] px-5 py-3 text-[9px] tracking-[0.08em] text-[#70746f] uppercase">
               <span>Task name</span>
-              <span>Owner</span>
               <span>Status</span>
-              <span>Deadline</span>
+              <span>Scheduled for</span>
               <span/>
             </div>
             {tasks.map(task => (
-              <div
-                className="grid grid-cols-[2fr_1fr_1fr_1fr_32px] items-center gap-4 border-b border-[#202220] px-5 py-[18px] text-[11px] last:border-b-0 hover:bg-[#0d0f0e]"
-                key={task.name}
-              >
-                <span className="text-[#dcddd7]">{task.name}</span>
-                <span className="text-[#898d88]">{task.owner}</span>
-                <span className="flex items-center gap-2 text-[9px] tracking-[0.04em]" style={{color: task.color}}>
-                  <i className="size-1.5 rounded-full not-italic" style={{backgroundColor: task.color}}/>
-                  {task.status}
-                </span>
-                <span className="text-[#a4a7a2]">{task.due}</span>
-                <Link className="text-[#8c908b] hover:text-[#f0783c]" to="/tasks/example-task"
-                      aria-label={`Open ${task.name}`}>
-                  <LuArrowUpRight className="size-4" aria-hidden="true"/>
-                </Link>
-              </div>
+              <TaskItem task={task} key={task.id}/>
             ))}
           </div>
         </div>

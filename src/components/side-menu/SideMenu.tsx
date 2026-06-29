@@ -27,11 +27,6 @@ export function SideMenu() {
           </NavLink>
         ))}
       </nav>
-
-      <p className="side-menu__status">
-        <span aria-hidden="true"/>
-        System online
-      </p>
     </aside>
   )
 }
