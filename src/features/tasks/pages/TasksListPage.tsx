@@ -113,14 +113,14 @@ export function TasksListPage() {
         </header>
 
         <div className="overflow-x-auto">
-          <div className="min-w-[760px]">
+          <div className="min-w-[900px]">
             <div
-              className="grid grid-cols-[minmax(220px,2fr)_minmax(120px,1fr)_minmax(130px,1fr)_minmax(140px,1fr)_32px] gap-4 border-b border-[#242624] px-5 py-3 text-[9px] tracking-[0.08em] text-[#70746f] uppercase">
+              className="grid grid-cols-[minmax(220px,2fr)_minmax(120px,1fr)_minmax(130px,1fr)_minmax(140px,1fr)_150px] gap-4 border-b border-[#242624] px-5 py-3 text-[9px] tracking-[0.08em] text-[#70746f] uppercase">
               <span>Task name</span>
               <span>Status</span>
               <span>Period</span>
               <span>Due date</span>
-              <span/>
+              <span>Action</span>
             </div>
             {isLoading && (
               <p className="px-5 py-6 text-[11px] text-[#747873]">Loading tasks...</p>

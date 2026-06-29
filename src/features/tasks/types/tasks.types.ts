@@ -1,6 +1,6 @@
-import type { TASK_REPEAT_UNITS, TASK_STATUSES } from '../task.constants.ts';
+import type { TASK_REPEAT_UNITS, TASK_STATUS } from '../task.constants.ts';
 
-export type TaskStatus = typeof TASK_STATUSES[number];
+export type TaskStatus = typeof TASK_STATUS[keyof typeof TASK_STATUS];
 export type TaskRepeatUnit = typeof TASK_REPEAT_UNITS[number];
 
 export interface TaskRepeatEvery {
