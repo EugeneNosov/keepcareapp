@@ -4,10 +4,11 @@ import {
   LuSearch,
   LuTriangleAlert,
 } from 'react-icons/lu'
-import { useState } from 'react'
 import AddTaskDialog from '../components/AddTaskDialog.tsx'
 import TaskItem from '../components/TaskItem.tsx'
-import type { Task } from '../types/tasks.types.ts'
+import useCreateTask from '../hooks/useCreateTask.ts'
+import useTasks from '../hooks/useTasks.ts'
+import type { Task } from '../types/tasks.types.ts';
 
 const metrics = [
   {
@@ -36,14 +37,13 @@ const metrics = [
   },
 ]
 
-const initialTasks: Task[] = [
-  {id: 'morning-medication', name: 'Morning medication', status: 'overdue', scheduledFor: 'Today'},
-  {id: 'health-check', name: 'Schedule health check', status: 'due_soon', scheduledFor: 'Tomorrow'},
-  {id: 'care-notes', name: 'Update care notes', status: 'ok', scheduledFor: 'Jul 04'},
-]
-
 export function TasksListPage() {
-  const [tasks, setTasks] = useState(initialTasks)
+  const {tasks, isLoading, error} = useTasks();
+  const createTaskMutation = useCreateTask();
+
+  async function handleCreateTask(task: Task) {
+    await createTaskMutation.mutateAsync(task);
+  }
 
   return (
     <section className="mx-auto w-full max-w-[1180px]">
@@ -54,7 +54,9 @@ export function TasksListPage() {
               Tasks
             </h1>
           </div>
-          <AddTaskDialog onAddNewTask={task => setTasks(current => [task, ...current])}/>
+          <AddTaskDialog
+            onAddNewTask={handleCreateTask}
+          />
         </div>
         <div
           className="flex flex-wrap items-center justify-between gap-3 px-5 py-3 text-[9px] tracking-[0.06em] text-[#8d918c] uppercase">
@@ -105,7 +107,9 @@ export function TasksListPage() {
                 type="search"
               />
             </label>
-            <span className="shrink-0 text-[9px] tracking-[0.1em] text-[#747873] uppercase">03 records</span>
+            <span className="shrink-0 text-[9px] tracking-[0.1em] text-[#747873] uppercase">
+              {tasks.length.toString().padStart(2, '0')} {tasks.length === 1 ? 'record' : 'records'}
+            </span>
           </div>
         </header>
 
@@ -118,9 +122,16 @@ export function TasksListPage() {
               <span>Scheduled for</span>
               <span/>
             </div>
-            {tasks.map(task => (
-              <TaskItem task={task} key={task.id}/>
-            ))}
+            {isLoading && (
+              <p className="px-5 py-6 text-[11px] text-[#747873]">Loading tasks...</p>
+            )}
+            {error && (
+              <p className="px-5 py-6 text-[11px] text-[#e36f5e]" role="alert">{error}</p>
+            )}
+            {!isLoading && !error && tasks.length === 0 && (
+              <p className="px-5 py-6 text-[11px] text-[#747873]">No tasks registered yet.</p>
+            )}
+            {tasks.map(task => <TaskItem task={task} key={task.id}/>)}
           </div>
         </div>
       </section>
