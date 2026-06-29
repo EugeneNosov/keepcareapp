@@ -1,15 +1,19 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
-import { TASK_STATUSES } from '../task.constants.ts'
+import { TASK_REPEAT_UNITS } from '../task.constants.ts'
 
 const taskFormSchema = z.object({
   name: z.string()
     .trim()
     .min(1, 'Task name is required')
     .max(50, 'Task name must be less than 50 characters'),
-  status: z.enum(TASK_STATUSES),
-  scheduledFor: z.string().min(1, 'Scheduled date is required'),
+  repeatEvery: z.object({
+    value: z.number()
+      .int('Period must be a whole number')
+      .min(1, 'Period must be at least 1'),
+    unit: z.enum(TASK_REPEAT_UNITS),
+  }),
 })
 
 export type TaskFormData = z.infer<typeof taskFormSchema>
@@ -23,8 +27,10 @@ interface TaskFormProps {
 
 const initialTaskFormData: TaskFormData = {
   name: '',
-  status: 'ok',
-  scheduledFor: '',
+  repeatEvery: {
+    value: 3,
+    unit: 'days',
+  },
 }
 
 const fieldClassName = 'h-10 w-full border border-[#343734] bg-[#0c0e0d] px-3 text-[11px] text-[#dcddd7] outline-none transition-colors focus:border-[#a8552f] focus:ring-1 focus:ring-[#a8552f]'
@@ -73,19 +79,25 @@ export default function TaskForm({
         />
       </label>
 
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className="grid gap-4 sm:grid-cols-[minmax(0,1fr)_150px]">
         <label className="flex flex-col gap-2">
-          <span className={labelClassName}>Status</span>
-          <select className={fieldClassName} {...register('status')}>
-            <option value="ok">OK</option>
-            <option value="due_soon">Due soon</option>
-            <option value="overdue">Overdue</option>
-          </select>
+          <span className={labelClassName}>Repeat every</span>
+          <input
+            className={fieldClassName}
+            min={1}
+            placeholder="2"
+            type="number"
+            {...register('repeatEvery.value', {valueAsNumber: true})}
+          />
         </label>
 
         <label className="flex flex-col gap-2">
-          <span className={labelClassName}>Scheduled for</span>
-          <input className={fieldClassName} type="date" {...register('scheduledFor')}/>
+          <span className={labelClassName}>Period</span>
+          <select className={fieldClassName} {...register('repeatEvery.unit')}>
+            <option value="days">Days</option>
+            <option value="weeks">Weeks</option>
+            <option value="months">Months</option>
+          </select>
         </label>
       </div>
 

@@ -1,14 +1,13 @@
 import {
   LuCircleCheck,
   LuClock3,
-  LuSearch,
   LuTriangleAlert,
 } from 'react-icons/lu'
 import AddTaskDialog from '../components/AddTaskDialog.tsx'
 import TaskItem from '../components/TaskItem.tsx'
 import useCreateTask from '../hooks/useCreateTask.ts'
 import useTasks from '../hooks/useTasks.ts'
-import type { Task } from '../types/tasks.types.ts';
+import type { CreateTaskPayload } from '../types/tasks.types.ts';
 
 const metrics = [
   {
@@ -41,7 +40,7 @@ export function TasksListPage() {
   const {tasks, isLoading, error} = useTasks();
   const createTaskMutation = useCreateTask();
 
-  async function handleCreateTask(task: Task) {
+  async function handleCreateTask(task: CreateTaskPayload) {
     await createTaskMutation.mutateAsync(task);
   }
 
@@ -95,18 +94,18 @@ export function TasksListPage() {
             Task registry
           </h2>
           <div className="flex items-center gap-4 max-[520px]:w-full">
-            <label className="group relative max-[520px]:min-w-0 max-[520px]:flex-1">
-              <span className="sr-only">Search tasks</span>
-              <LuSearch
-                className="pointer-events-none absolute top-1/2 left-3 size-3.5 -translate-y-1/2 text-[#686c68] transition-colors group-focus-within:text-[#f0783c]"
-                aria-hidden="true"
-              />
-              <input
-                className="h-9 w-56 border border-[#343734] bg-[#0c0e0d] pr-3 pl-9 text-[11px] text-[#dcddd7] outline-none placeholder:text-[#626662] focus:border-[#7b4932] max-[520px]:w-full"
-                placeholder="Search tasks..."
-                type="search"
-              />
-            </label>
+            {/*<label className="group relative max-[520px]:min-w-0 max-[520px]:flex-1">*/}
+            {/*  <span className="sr-only">Search tasks</span>*/}
+            {/*  <LuSearch*/}
+            {/*    className="pointer-events-none absolute top-1/2 left-3 size-3.5 -translate-y-1/2 text-[#686c68] transition-colors group-focus-within:text-[#f0783c]"*/}
+            {/*    aria-hidden="true"*/}
+            {/*  />*/}
+            {/*  <input*/}
+            {/*    className="h-9 w-56 border border-[#343734] bg-[#0c0e0d] pr-3 pl-9 text-[11px] text-[#dcddd7] outline-none placeholder:text-[#626662] focus:border-[#7b4932] max-[520px]:w-full"*/}
+            {/*    placeholder="Search tasks..."*/}
+            {/*    type="search"*/}
+            {/*  />*/}
+            {/*</label>*/}
             <span className="shrink-0 text-[9px] tracking-[0.1em] text-[#747873] uppercase">
               {tasks.length.toString().padStart(2, '0')} {tasks.length === 1 ? 'record' : 'records'}
             </span>
@@ -114,12 +113,13 @@ export function TasksListPage() {
         </header>
 
         <div className="overflow-x-auto">
-          <div className="min-w-[560px]">
+          <div className="min-w-[760px]">
             <div
-              className="grid grid-cols-[minmax(220px,2fr)_minmax(120px,1fr)_minmax(150px,1fr)_32px] gap-4 border-b border-[#242624] px-5 py-3 text-[9px] tracking-[0.08em] text-[#70746f] uppercase">
+              className="grid grid-cols-[minmax(220px,2fr)_minmax(120px,1fr)_minmax(130px,1fr)_minmax(140px,1fr)_32px] gap-4 border-b border-[#242624] px-5 py-3 text-[9px] tracking-[0.08em] text-[#70746f] uppercase">
               <span>Task name</span>
               <span>Status</span>
-              <span>Scheduled for</span>
+              <span>Period</span>
+              <span>Due date</span>
               <span/>
             </div>
             {isLoading && (

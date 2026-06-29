@@ -1,11 +1,11 @@
 import { useState } from 'react'
 import { LuPlus } from 'react-icons/lu'
 import Dialog from '../../../components/dialog/Dialog.tsx'
-import type { Task } from '../types/tasks.types.ts'
+import type { CreateTaskPayload } from '../types/tasks.types.ts'
 import TaskForm, { type TaskFormData } from './TaskForm.tsx'
 
 interface AddTaskDialogProps {
-  onAddNewTask: (task: Task) => void | Promise<void>
+  onAddNewTask: (task: CreateTaskPayload) => void | Promise<void>
 }
 
 export default function AddTaskDialog({onAddNewTask}: AddTaskDialogProps) {
@@ -16,10 +16,7 @@ export default function AddTaskDialog({onAddNewTask}: AddTaskDialogProps) {
   }
 
   async function handleCreateTask(data: TaskFormData) {
-    await onAddNewTask({
-      id: crypto.randomUUID(),
-      ...data,
-    })
+    await onAddNewTask(data)
     closeDialog()
   }
 

@@ -1,4 +1,5 @@
 export const TASK_STATUSES = ['overdue', 'due_soon', 'ok'] as const;
+export const TASK_REPEAT_UNITS = ['days', 'weeks', 'months'] as const;
 export const TASK_QUERY_KEYS = {
   all: ['tasks'] as const,
 }
