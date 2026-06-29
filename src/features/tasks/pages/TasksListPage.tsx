@@ -1,10 +1,11 @@
 import {
   LuCircleCheck,
   LuClock3,
-  LuPlus,
   LuSearch,
   LuTriangleAlert,
 } from 'react-icons/lu'
+import { useState } from 'react'
+import AddTaskDialog from '../components/AddTaskDialog.tsx'
 import TaskItem from '../components/TaskItem.tsx'
 import type { Task } from '../types/tasks.types.ts'
 
@@ -35,13 +36,15 @@ const metrics = [
   },
 ]
 
-const tasks: Task[] = [
+const initialTasks: Task[] = [
   {id: 'morning-medication', name: 'Morning medication', status: 'overdue', scheduledFor: 'Today'},
   {id: 'health-check', name: 'Schedule health check', status: 'due_soon', scheduledFor: 'Tomorrow'},
   {id: 'care-notes', name: 'Update care notes', status: 'ok', scheduledFor: 'Jul 04'},
 ]
 
 export function TasksListPage() {
+  const [tasks, setTasks] = useState(initialTasks)
+
   return (
     <section className="mx-auto w-full max-w-[1180px]">
       <header className="border border-[#343734] bg-[#080909]">
@@ -51,13 +54,7 @@ export function TasksListPage() {
               Tasks
             </h1>
           </div>
-          <button
-            className="cursor-pointer inline-flex h-9 items-center gap-2 border border-[#e16f3a] bg-[#e16f3a] px-3.5 text-[10px] font-medium tracking-[0.08em] text-[#100b08] uppercase transition-colors hover:border-[#f58a55] hover:bg-[#f58a55] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#f0783c]"
-            type="button"
-          >
-            <LuPlus className="size-4" aria-hidden="true"/>
-            Create task
-          </button>
+          <AddTaskDialog onAddNewTask={task => setTasks(current => [task, ...current])}/>
         </div>
         <div
           className="flex flex-wrap items-center justify-between gap-3 px-5 py-3 text-[9px] tracking-[0.06em] text-[#8d918c] uppercase">

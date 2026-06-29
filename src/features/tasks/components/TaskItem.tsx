@@ -27,8 +27,14 @@ export default function TaskItem({task}: TaskItemProps) {
       className="grid grid-cols-[minmax(220px,2fr)_minmax(120px,1fr)_minmax(150px,1fr)_32px] items-center gap-4 border-b border-[#202220] px-5 py-[18px] text-[11px] last:border-b-0 hover:bg-[#0d0f0e]"
     >
       <span className="text-[#dcddd7]">{task.name}</span>
-      <span className={`flex items-center gap-2 text-[9px] tracking-[0.04em] text-[${statusStyle.color}]`}>
-        <i className={`size-1.5 rounded-full not-italic bg-[${statusStyle.color}]`}/>
+      <span
+        className="flex items-center gap-2 text-[9px] tracking-[0.04em]"
+        style={{color: statusStyle.color}}
+      >
+        <i
+          className="size-1.5 rounded-full not-italic"
+          style={{backgroundColor: statusStyle.color}}
+        />
         {statusStyle.label}
       </span>
       <span className="text-[#a4a7a2]">{task.scheduledFor}</span>
