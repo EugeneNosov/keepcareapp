@@ -1,16 +1,12 @@
-import { LuActivity, LuArrowRight, LuHeartPulse, LuShieldCheck } from 'react-icons/lu'
+import { LuActivity, LuArrowRight, LuShieldCheck } from 'react-icons/lu'
 import { Link } from 'react-router'
+import Brand from '../../../components/brand/Brand.tsx';
 
 export function LandingPage() {
   return (
     <section className="mx-auto flex min-h-screen w-full max-w-[1320px] flex-col px-6 py-6 max-[640px]:px-4">
       <header className="flex items-center justify-between border border-[#343734] bg-[#070808] px-5 py-4">
-        <div className="flex items-center gap-3 text-xs tracking-[0.11em] text-[#ecece7] uppercase">
-          <span className="grid size-8 place-items-center border border-[#626662]">
-            <LuHeartPulse className="size-4" aria-hidden="true"/>
-          </span>
-          KeepCare
-        </div>
+        <Brand />
         <span className="hidden text-[9px] tracking-[0.1em] text-[#797d78] uppercase sm:block">
           System status: <strong className="bg-[#173422] px-1.5 py-0.5 font-medium text-[#68d792]">Online</strong>
         </span>
