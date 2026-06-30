@@ -89,6 +89,16 @@
     color: #ffffff;
 }
 
+.side-menu__logout {
+    margin-top: auto;
+    cursor: pointer;
+}
+
+.side-menu__logout:disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
+}
+
 .side-menu__status {
     display: flex;
     align-items: center;

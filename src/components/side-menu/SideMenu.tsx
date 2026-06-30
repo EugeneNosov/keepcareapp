@@ -1,9 +1,26 @@
-import { LuHeartPulse } from 'react-icons/lu'
-import { NavLink } from 'react-router'
-import './SideMenu.css'
-import { SIDE_MENU_CONFIG } from './side-menu.config'
+import { useState } from 'react';
+import { LuHeartPulse, LuLogOut } from 'react-icons/lu';
+import { NavLink, useNavigate } from 'react-router';
+import { useAuth } from '../../features/auth/hooks/useAuth';
+import './SideMenu.css';
+import { SIDE_MENU_CONFIG } from './side-menu.config';
 
 export function SideMenu() {
+  const navigate = useNavigate();
+  const { logout } = useAuth();
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+
+  async function handleLogout() {
+    setIsLoggingOut(true);
+
+    try {
+      await logout();
+    } finally {
+      navigate('/login', { replace: true });
+      setIsLoggingOut(false);
+    }
+  }
+
   return (
     <aside className="side-menu" aria-label="Main navigation">
       <div className="side-menu__brand" aria-label="KeepCare">
@@ -27,6 +44,16 @@ export function SideMenu() {
           </NavLink>
         ))}
       </nav>
+
+      <button
+        className="side-menu__item side-menu__logout"
+        disabled={isLoggingOut}
+        onClick={handleLogout}
+        type="button"
+      >
+        <LuLogOut aria-hidden="true"/>
+        <span>{isLoggingOut ? 'Signing out...' : 'Logout'}</span>
+      </button>
     </aside>
-  )
+  );
 }

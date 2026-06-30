@@ -88,6 +88,8 @@ export function AuthProvider({children}: PropsWithChildren) {
   const logout = useCallback(async () => {
     try {
       await logoutRequest();
+    } catch {
+      // Local authentication must still be cleared if the server is unavailable.
     } finally {
       clearAuthentication();
     }

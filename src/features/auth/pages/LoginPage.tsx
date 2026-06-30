@@ -1,9 +1,51 @@
-import { LuArrowLeft, LuLockKeyhole } from 'react-icons/lu'
-import { FcGoogle } from 'react-icons/fc'
-import { Link } from 'react-router'
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { LuArrowLeft, LuLockKeyhole } from 'react-icons/lu';
+import { FcGoogle } from 'react-icons/fc';
+import { Link, Navigate, useNavigate } from 'react-router';
 import Brand from '../../../components/brand/Brand.tsx';
+import { ApiError } from '../../../shared/api';
+import { useAuth } from '../hooks/useAuth';
+import type { LoginInput } from '../types/auth.types';
 
 export function LoginPage() {
+  const navigate = useNavigate();
+  const {isAuthenticated, isLoading, login} = useAuth();
+  const [requestError, setRequestError] = useState<string | null>(null);
+  const {
+    register: registerField,
+    handleSubmit,
+    formState: {errors, isSubmitting},
+  } = useForm<LoginInput>();
+
+  async function handleLogin(input: LoginInput) {
+    setRequestError(null);
+
+    try {
+      await login(input);
+      navigate('/tasks', {replace: true});
+    } catch (error) {
+      setRequestError(
+        error instanceof ApiError
+          ? error.message
+          : 'Unable to sign in. Please try again.',
+      );
+    }
+  }
+
+  if (isLoading) {
+    return (
+      <div className="grid min-h-screen place-items-center text-[10px] tracking-[0.1em] text-[#a2a5a1] uppercase"
+           role="status">
+        Restoring session...
+      </div>
+    );
+  }
+
+  if (isAuthenticated) {
+    return <Navigate to="/tasks" replace/>;
+  }
+
   return (
     <div
       className="grid min-h-screen place-items-center px-6 py-20 max-[720px]:block max-[720px]:px-4 max-[720px]:pt-[76px]">
@@ -20,7 +62,7 @@ export function LoginPage() {
           className="relative flex flex-col overflow-hidden border-r border-[#3a3c3a] bg-[#151615] p-9 max-[720px]:min-h-[260px] max-[720px]:border-r-0 max-[720px]:border-b max-[720px]:p-7">
           <div
             className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.018)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.018)_1px,transparent_1px)] bg-[size:18px_18px]"/>
-          <Brand />
+          <Brand/>
 
           <div className="relative my-auto max-[720px]:my-10">
             <p className="mb-3 text-[9px] tracking-[0.13em] text-[#f0783c] uppercase">Authorized access only</p>
@@ -44,14 +86,24 @@ export function LoginPage() {
             </div>
           </div>
 
-          <form className="mt-7 grid gap-5">
+          <form className="mt-7 grid gap-5" onSubmit={handleSubmit(handleLogin)}>
             <label className="grid gap-2.5 text-[9px] tracking-[0.08em] text-[#a8aba6] uppercase">
               Email address
               <input
                 className="h-12 w-full rounded-none border border-[#4b4e4b] bg-[#202220] px-3.5 text-[11px] tracking-normal text-[#eeeeea] normal-case outline-none transition-colors placeholder:text-[#858985] hover:border-[#606360] focus:border-[#f0783c] focus:shadow-[inset_2px_0_0_#f0783c]"
                 placeholder="you@example.com"
                 type="email"
+                autoComplete="email"
+                aria-invalid={Boolean(errors.email)}
+                {...registerField('email', {
+                  required: 'Email address is required.',
+                })}
               />
+              {errors.email && (
+                <span className="normal-case text-[#e36f5e]" role="alert">
+                  {errors.email.message}
+                </span>
+              )}
             </label>
 
             <label className="grid gap-2.5 text-[9px] tracking-[0.08em] text-[#a8aba6] uppercase">
@@ -61,13 +113,30 @@ export function LoginPage() {
                 placeholder="Enter your password"
                 type="password"
                 autoComplete="current-password"
+                aria-invalid={Boolean(errors.password)}
+                {...registerField('password', {
+                  required: 'Password is required.',
+                })}
               />
+              {errors.password && (
+                <span className="normal-case text-[#e36f5e]" role="alert">
+                  {errors.password.message}
+                </span>
+              )}
             </label>
 
+            {requestError && (
+              <p className="m-0 border border-[#7c3932] bg-[#25100e] px-3 py-2.5 text-[10px] leading-5 text-[#e98a7e]"
+                 role="alert">
+                {requestError}
+              </p>
+            )}
+
             <button
-              className="flex h-12 cursor-pointer items-center justify-between border border-[#d8d9d4] bg-[#dedfda] px-4 text-[10px] font-semibold tracking-[0.09em] text-[#090a09] uppercase hover:bg-white"
-              type="button">
-              Login <span aria-hidden="true">→</span>
+              className="flex h-12 cursor-pointer items-center justify-between border border-[#d8d9d4] bg-[#dedfda] px-4 text-[10px] font-semibold tracking-[0.09em] text-[#090a09] uppercase hover:bg-white disabled:cursor-not-allowed disabled:opacity-60"
+              disabled={isSubmitting}
+              type="submit">
+              {isSubmitting ? 'Signing in...' : 'Login'} <span aria-hidden="true">→</span>
             </button>
 
             <div className="flex items-center gap-3 text-[9px] tracking-[0.1em] text-[#929691] uppercase">
@@ -87,5 +156,5 @@ export function LoginPage() {
         </div>
       </section>
     </div>
-  )
+  );
 }
