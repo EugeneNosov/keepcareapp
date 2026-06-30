@@ -9,7 +9,7 @@ export function LandingPage() {
           <span className="grid size-8 place-items-center border border-[#626662]">
             <LuHeartPulse className="size-4" aria-hidden="true"/>
           </span>
-          KeepCare control interface
+          KeepCare
         </div>
         <span className="hidden text-[9px] tracking-[0.1em] text-[#797d78] uppercase sm:block">
           System status: <strong className="bg-[#173422] px-1.5 py-0.5 font-medium text-[#68d792]">Online</strong>

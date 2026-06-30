@@ -33,8 +33,8 @@ const initialTaskFormData: TaskFormData = {
   },
 }
 
-const fieldClassName = 'h-10 w-full border border-[#343734] bg-[#0c0e0d] px-3 text-[11px] text-[#dcddd7] outline-none transition-colors focus:border-[#a8552f] focus:ring-1 focus:ring-[#a8552f]'
-const labelClassName = 'text-[9px] font-medium tracking-[0.08em] text-[#989c97] uppercase'
+const fieldClassName = 'h-10 w-full border border-[#4b4e4b] bg-[#202220] px-3 text-[11px] text-[#eeeeea] outline-none transition-colors placeholder:text-[#858985] hover:border-[#606360] focus:border-[#d36b3b] focus:ring-1 focus:ring-[#d36b3b]'
+const labelClassName = 'text-[9px] font-medium tracking-[0.08em] text-[#b0b3af] uppercase'
 
 export default function TaskForm({
                                    defaultValues = initialTaskFormData,
@@ -112,9 +112,9 @@ export default function TaskForm({
         </div>
       )}
 
-      <div className="grid grid-cols-2 gap-7 border-t border-[#2c2f2c] pt-5">
+      <div className="grid grid-cols-2 gap-7 border-t border-[#3a3c3a] pt-5">
         <button
-          className="h-12 cursor-pointer border border-b-3 border-[#d4d4d0] bg-[#373837] px-4 text-[11px] font-medium tracking-[0.04em] text-white uppercase shadow-[inset_0_0_0_2px_#171817] transition-colors hover:bg-[#454645] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+          className="h-12 cursor-pointer border border-b-3 border-[#dededa] bg-[#414341] px-4 text-[11px] font-medium tracking-[0.04em] text-white uppercase shadow-[inset_0_0_0_2px_#242624] transition-colors hover:bg-[#505250] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
           onClick={handleCancel}
           type="button"
         >

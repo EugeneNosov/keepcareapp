@@ -46,8 +46,8 @@ export function TasksListPage() {
 
   return (
     <section className="mx-auto w-full max-w-[1180px]">
-      <header className="border border-[#343734] bg-[#080909]">
-        <div className="flex flex-wrap items-center justify-between gap-4 border-b border-[#242624] px-5 py-4">
+      <header className="border border-[#484a48] bg-[#171817]">
+        <div className="flex flex-wrap items-center justify-between gap-4 border-b border-[#3a3c3a] px-5 py-4">
           <div>
             <h1 className="mt-1.5 text-lg font-medium tracking-[0.05em] text-[#ededE8] uppercase">
               Tasks
@@ -58,7 +58,7 @@ export function TasksListPage() {
           />
         </div>
         <div
-          className="flex flex-wrap items-center justify-between gap-3 px-5 py-3 text-[9px] tracking-[0.06em] text-[#8d918c] uppercase">
+          className="flex flex-wrap items-center justify-between gap-3 px-5 py-3 text-[9px] tracking-[0.06em] text-[#a2a5a1] uppercase">
           <span>All registered tasks</span>
         </div>
       </header>
@@ -66,12 +66,12 @@ export function TasksListPage() {
       <div className="mt-6 grid grid-cols-3 gap-5 max-[860px]:grid-cols-1">
         {metrics.map(({label, value, description, icon: Icon, color, surface}) => (
           <article
-            className="relative overflow-hidden border border-[#383b38] bg-[#080909] p-5 transition-colors hover:border-[#505450]"
+            className="relative overflow-hidden border border-[#484a48] bg-[#171817] p-5 transition-colors hover:bg-[#1c1e1c] hover:border-[#626562]"
             key={label}
           >
             <span className="absolute inset-y-0 left-0 w-0.5" style={{backgroundColor: color}}/>
             <div className="flex items-center justify-between">
-              <span className="text-[10px] tracking-[0.1em] text-[#939792] uppercase">{label}</span>
+              <span className="text-[10px] tracking-[0.1em] text-[#aeb1ad] uppercase">{label}</span>
               <span
                 className="grid size-8 place-items-center border"
                 style={{backgroundColor: surface, borderColor: `${color}55`, color}}
@@ -82,13 +82,13 @@ export function TasksListPage() {
             <strong className="mt-5 block text-3xl font-semibold tracking-[-0.04em] text-[#f2f2ed]">
               {value}
             </strong>
-            <p className="mt-2 text-[10px] tracking-[0.03em] text-[#737772]">{description}</p>
+            <p className="mt-2 text-[10px] tracking-[0.03em] text-[#929691]">{description}</p>
           </article>
         ))}
       </div>
 
-      <section className="mt-6 border border-[#383b38] bg-[#080909]">
-        <header className="flex flex-wrap items-center justify-between gap-4 border-b border-[#303330] px-5 py-4">
+      <section className="mt-6 border border-[#484a48] bg-[#171817]">
+        <header className="flex flex-wrap items-center justify-between gap-4 border-b border-[#3a3c3a] px-5 py-4">
           <h2
             className="flex items-center gap-2.5 text-xs font-medium tracking-[0.08em] text-[#e2e3de] uppercase before:block before:h-5 before:w-0.5 before:bg-[#f0783c]">
             Task registry
@@ -106,7 +106,7 @@ export function TasksListPage() {
             {/*    type="search"*/}
             {/*  />*/}
             {/*</label>*/}
-            <span className="shrink-0 text-[9px] tracking-[0.1em] text-[#747873] uppercase">
+            <span className="shrink-0 text-[9px] tracking-[0.1em] text-[#999d98] uppercase">
               {tasks.length.toString().padStart(2, '0')} {tasks.length === 1 ? 'record' : 'records'}
             </span>
           </div>
@@ -115,7 +115,7 @@ export function TasksListPage() {
         <div className="overflow-x-auto">
           <div className="min-w-[900px]">
             <div
-              className="grid grid-cols-[minmax(220px,2fr)_minmax(120px,1fr)_minmax(130px,1fr)_minmax(140px,1fr)_150px] gap-4 border-b border-[#242624] px-5 py-3 text-[9px] tracking-[0.08em] text-[#70746f] uppercase">
+              className="grid grid-cols-[minmax(220px,2fr)_minmax(120px,1fr)_minmax(130px,1fr)_minmax(140px,1fr)_150px] gap-4 border-b border-[#3a3c3a] px-5 py-3 text-[9px] tracking-[0.08em] text-[#969a95] uppercase">
               <span>Task name</span>
               <span>Status</span>
               <span>Period</span>
