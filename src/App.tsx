@@ -5,6 +5,7 @@ import {
 } from 'react-router'
 import './App.css'
 import { LoginPage } from './features/auth/pages/LoginPage'
+import { RegisterPage } from './features/auth/pages/RegisterPage'
 import { LandingPage } from './features/marketing/pages/LandingPage'
 import { TasksListPage } from './features/tasks/pages/TasksListPage'
 import { ProtectedLayout } from './layouts/ProtectedLayout'
@@ -21,6 +22,10 @@ const router = createBrowserRouter([
       {
         path: '/login',
         element: <LoginPage/>,
+      },
+      {
+        path: '/register',
+        element: <RegisterPage/>,
       },
     ],
   },

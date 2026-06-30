@@ -152,6 +152,13 @@ export function LoginPage() {
               <FcGoogle className="size-4" aria-hidden="true"/>
               Login with Google
             </button>
+
+            <p className="m-0 text-center text-[9px] tracking-[0.06em] text-[#929691] uppercase">
+              New to KeepCare?{' '}
+              <Link className="text-[#e8e9e3] underline-offset-4 hover:text-[#f0783c] hover:underline" to="/register">
+                Create account
+              </Link>
+            </p>
           </form>
         </div>
       </section>
