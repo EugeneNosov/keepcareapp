@@ -7,6 +7,8 @@ import { ApiError } from '../../../shared/api';
 import AddTaskDialog from '../components/AddTaskDialog.tsx'
 import TaskItem from '../components/TaskItem.tsx'
 import useCreateTask from '../hooks/useCreateTask.ts'
+import useDeleteTask from '../hooks/useDeleteTask.ts';
+import useMarkTaskAsCompleted from '../hooks/useMarkTaskAsCompleted.ts';
 import useTasks from '../hooks/useTasks.ts'
 import type { CreateTaskPayload } from '../types/tasks.types.ts';
 
@@ -40,6 +42,10 @@ const metrics = [
 export function TasksListPage() {
   const {tasks, isLoading, error} = useTasks();
   const createTaskMutation = useCreateTask();
+  const completeTaskMutation = useMarkTaskAsCompleted();
+  const deleteTaskMutation = useDeleteTask();
+  const isTaskActionPending =
+    completeTaskMutation.isPending || deleteTaskMutation.isPending;
   const createError = createTaskMutation.error instanceof ApiError
     ? createTaskMutation.error.message
     : createTaskMutation.error
@@ -48,6 +54,31 @@ export function TasksListPage() {
 
   async function handleCreateTask(task: CreateTaskPayload) {
     await createTaskMutation.mutateAsync(task);
+  }
+
+  function handleCompleteTask(taskId: string) {
+    completeTaskMutation.mutate(taskId);
+  }
+
+  function handleDeleteTask(taskId: string) {
+    deleteTaskMutation.mutate(taskId);
+  }
+
+  function getTaskActionError(taskId: string) {
+    const mutationError =
+      completeTaskMutation.variables === taskId
+        ? completeTaskMutation.error
+        : deleteTaskMutation.variables === taskId
+          ? deleteTaskMutation.error
+          : null;
+
+    if (!mutationError) {
+      return null;
+    }
+
+    return mutationError instanceof ApiError
+      ? mutationError.message
+      : 'Unable to update this task.';
   }
 
   return (
@@ -138,7 +169,24 @@ export function TasksListPage() {
             {!isLoading && !error && tasks.length === 0 && (
               <p className="px-5 py-6 text-[11px] text-[#747873]">No tasks registered yet.</p>
             )}
-            {tasks.map(task => <TaskItem task={task} key={task.id}/>)}
+            {tasks.map((task) => (
+              <TaskItem
+                actionError={getTaskActionError(task.id)}
+                isActionDisabled={isTaskActionPending}
+                isCompleting={
+                  completeTaskMutation.isPending
+                  && completeTaskMutation.variables === task.id
+                }
+                isDeleting={
+                  deleteTaskMutation.isPending
+                  && deleteTaskMutation.variables === task.id
+                }
+                key={task.id}
+                onComplete={handleCompleteTask}
+                onDelete={handleDeleteTask}
+                task={task}
+              />
+            ))}
           </div>
         </div>
       </section>

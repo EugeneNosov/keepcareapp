@@ -1,7 +1,4 @@
 import { LuCheck, LuTrash2 } from 'react-icons/lu';
-import { ApiError } from '../../../shared/api';
-import useDeleteTask from '../hooks/useDeleteTask.ts';
-import useMarkTaskAsCompleted from '../hooks/useMarkTaskAsCompleted.ts';
 import { TASK_STATUS } from '../task.constants.ts';
 import type { Task, TaskStatus } from '../types/tasks.types.ts';
 
@@ -21,7 +18,13 @@ const statusStyles: Record<TaskStatus, { label: string; color: string }> = {
 }
 
 interface TaskItemProps {
-  task: Task
+  task: Task;
+  actionError: string | null;
+  isActionDisabled: boolean;
+  isCompleting: boolean;
+  isDeleting: boolean;
+  onComplete: (taskId: string) => void;
+  onDelete: (taskId: string) => void;
 }
 
 function formatRepeatEvery({value, unit}: Task['repeatEvery']) {
@@ -64,24 +67,22 @@ function isTaskCompletedToday(task: Task) {
   return isSameCalendarDate(lastCompletedDate, new Date());
 }
 
-export default function TaskItem({task}: TaskItemProps) {
+export default function TaskItem({
+  task,
+  actionError,
+  isActionDisabled,
+  isCompleting,
+  isDeleting,
+  onComplete,
+  onDelete,
+}: TaskItemProps) {
   const statusStyle = statusStyles[task.status];
-  const markTaskAsCompletedMutation = useMarkTaskAsCompleted();
-  const deleteTaskMutation = useDeleteTask();
   const isCompletedToday = isTaskCompletedToday(task);
-  const isCompleting = markTaskAsCompletedMutation.isPending;
-  const isDeleting = deleteTaskMutation.isPending;
-  const isCompleteButtonDisabled = isCompletedToday || isCompleting || isDeleting;
-  const mutationError = markTaskAsCompletedMutation.error ?? deleteTaskMutation.error;
-  const errorMessage = mutationError instanceof ApiError
-    ? mutationError.message
-    : mutationError
-      ? 'Unable to update this task.'
-      : null;
+  const isCompleteButtonDisabled = isCompletedToday || isActionDisabled;
 
   function handleDelete() {
     if (window.confirm(`Delete "${task.name}"?`)) {
-      deleteTaskMutation.mutate(task.id);
+      onDelete(task.id);
     }
   }
 
@@ -107,25 +108,25 @@ export default function TaskItem({task}: TaskItemProps) {
           <button
             className="inline-flex h-9 flex-1 cursor-pointer items-center justify-center gap-2 border border-[#2c7f62] bg-[#0b2118] px-3 text-[9px] font-medium tracking-[0.06em] text-[#4bd49b] uppercase transition-colors hover:border-[#4bd49b] hover:bg-[#103424] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#4bd49b] disabled:cursor-not-allowed disabled:border-[#313431] disabled:bg-[#151715] disabled:text-[#686c68]"
             disabled={isCompleteButtonDisabled}
-            onClick={() => markTaskAsCompletedMutation.mutate(task.id)}
+            onClick={() => onComplete(task.id)}
             type="button"
           >
             <LuCheck className="size-3.5" aria-hidden="true"/>
             {isCompleting ? 'Saving...' : isCompletedToday ? 'Completed' : 'Complete'}
           </button>
           <button
-            aria-label={`Delete ${task.name}`}
+            aria-label={isDeleting ? `Deleting ${task.name}` : `Delete ${task.name}`}
             className="grid size-9 cursor-pointer place-items-center border border-[#713b37] bg-[#25100e] text-[#e36f5e] transition-colors hover:border-[#e36f5e] hover:bg-[#321512] disabled:cursor-not-allowed disabled:opacity-50"
-            disabled={isCompleting || isDeleting}
+            disabled={isActionDisabled}
             onClick={handleDelete}
             type="button"
           >
             <LuTrash2 className="size-3.5" aria-hidden="true"/>
           </button>
         </div>
-        {errorMessage && (
+        {actionError && (
           <span className="text-[9px] leading-4 text-[#e36f5e]" role="alert">
-            {errorMessage}
+            {actionError}
           </span>
         )}
       </div>
