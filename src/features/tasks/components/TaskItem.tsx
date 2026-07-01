@@ -1,7 +1,9 @@
-import { LuCheck } from 'react-icons/lu'
-import useMarkTaskAsCompleted from '../hooks/useMarkTaskAsCompleted.ts'
-import { TASK_STATUS } from '../task.constants.ts'
-import type { Task, TaskStatus } from '../types/tasks.types.ts'
+import { LuCheck, LuTrash2 } from 'react-icons/lu';
+import { ApiError } from '../../../shared/api';
+import useDeleteTask from '../hooks/useDeleteTask.ts';
+import useMarkTaskAsCompleted from '../hooks/useMarkTaskAsCompleted.ts';
+import { TASK_STATUS } from '../task.constants.ts';
+import type { Task, TaskStatus } from '../types/tasks.types.ts';
 
 const statusStyles: Record<TaskStatus, { label: string; color: string }> = {
   [TASK_STATUS.overdue]: {
@@ -63,15 +65,29 @@ function isTaskCompletedToday(task: Task) {
 }
 
 export default function TaskItem({task}: TaskItemProps) {
-  const statusStyle = statusStyles[task.status]
-  const markTaskAsCompletedMutation = useMarkTaskAsCompleted()
-  const isCompletedToday = isTaskCompletedToday(task)
-  const isCompleting = markTaskAsCompletedMutation.isPending
-  const isCompleteButtonDisabled = isCompletedToday || isCompleting
+  const statusStyle = statusStyles[task.status];
+  const markTaskAsCompletedMutation = useMarkTaskAsCompleted();
+  const deleteTaskMutation = useDeleteTask();
+  const isCompletedToday = isTaskCompletedToday(task);
+  const isCompleting = markTaskAsCompletedMutation.isPending;
+  const isDeleting = deleteTaskMutation.isPending;
+  const isCompleteButtonDisabled = isCompletedToday || isCompleting || isDeleting;
+  const mutationError = markTaskAsCompletedMutation.error ?? deleteTaskMutation.error;
+  const errorMessage = mutationError instanceof ApiError
+    ? mutationError.message
+    : mutationError
+      ? 'Unable to update this task.'
+      : null;
+
+  function handleDelete() {
+    if (window.confirm(`Delete "${task.name}"?`)) {
+      deleteTaskMutation.mutate(task.id);
+    }
+  }
 
   return (
     <div
-      className="grid grid-cols-[minmax(220px,2fr)_minmax(120px,1fr)_minmax(130px,1fr)_minmax(140px,1fr)_150px] items-center gap-4 border-b border-[#343634] px-5 py-[18px] text-[11px] last:border-b-0 hover:bg-[#1c1e1c]"
+      className="grid grid-cols-[minmax(220px,2fr)_minmax(120px,1fr)_minmax(130px,1fr)_minmax(140px,1fr)_230px] items-center gap-4 border-b border-[#343634] px-5 py-[18px] text-[11px] last:border-b-0 hover:bg-[#1c1e1c]"
     >
       <span className="text-[#dcddd7]">{task.name}</span>
       <span
@@ -86,15 +102,33 @@ export default function TaskItem({task}: TaskItemProps) {
       </span>
       <span className="text-[#a4a7a2]">{formatRepeatEvery(task.repeatEvery)}</span>
       <span className="text-[#dcddd7]">{formatDueDate(task.dueDate)}</span>
-      <button
-        className="inline-flex h-9 cursor-pointer items-center justify-center gap-2 border border-[#2c7f62] bg-[#0b2118] px-3 text-[9px] font-medium tracking-[0.06em] text-[#4bd49b] uppercase transition-colors hover:border-[#4bd49b] hover:bg-[#103424] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#4bd49b] disabled:cursor-not-allowed disabled:border-[#313431] disabled:bg-[#151715] disabled:text-[#686c68]"
-        disabled={isCompleteButtonDisabled}
-        onClick={() => markTaskAsCompletedMutation.mutate(task.id)}
-        type="button"
-      >
-        <LuCheck className="size-3.5" aria-hidden="true"/>
-        {isCompleting ? 'Saving...' : isCompletedToday ? 'Completed' : 'Complete'}
-      </button>
+      <div className="grid gap-2">
+        <div className="flex gap-2">
+          <button
+            className="inline-flex h-9 flex-1 cursor-pointer items-center justify-center gap-2 border border-[#2c7f62] bg-[#0b2118] px-3 text-[9px] font-medium tracking-[0.06em] text-[#4bd49b] uppercase transition-colors hover:border-[#4bd49b] hover:bg-[#103424] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#4bd49b] disabled:cursor-not-allowed disabled:border-[#313431] disabled:bg-[#151715] disabled:text-[#686c68]"
+            disabled={isCompleteButtonDisabled}
+            onClick={() => markTaskAsCompletedMutation.mutate(task.id)}
+            type="button"
+          >
+            <LuCheck className="size-3.5" aria-hidden="true"/>
+            {isCompleting ? 'Saving...' : isCompletedToday ? 'Completed' : 'Complete'}
+          </button>
+          <button
+            aria-label={`Delete ${task.name}`}
+            className="grid size-9 cursor-pointer place-items-center border border-[#713b37] bg-[#25100e] text-[#e36f5e] transition-colors hover:border-[#e36f5e] hover:bg-[#321512] disabled:cursor-not-allowed disabled:opacity-50"
+            disabled={isCompleting || isDeleting}
+            onClick={handleDelete}
+            type="button"
+          >
+            <LuTrash2 className="size-3.5" aria-hidden="true"/>
+          </button>
+        </div>
+        {errorMessage && (
+          <span className="text-[9px] leading-4 text-[#e36f5e]" role="alert">
+            {errorMessage}
+          </span>
+        )}
+      </div>
     </div>
-  )
+  );
 }

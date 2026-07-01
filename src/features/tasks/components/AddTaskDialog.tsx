@@ -5,10 +5,11 @@ import type { CreateTaskPayload } from '../types/tasks.types.ts'
 import TaskForm, { type TaskFormData } from './TaskForm.tsx'
 
 interface AddTaskDialogProps {
-  onAddNewTask: (task: CreateTaskPayload) => void | Promise<void>
+  error?: string | null;
+  onAddNewTask: (task: CreateTaskPayload) => void | Promise<void>;
 }
 
-export default function AddTaskDialog({onAddNewTask}: AddTaskDialogProps) {
+export default function AddTaskDialog({ error, onAddNewTask }: AddTaskDialogProps) {
   const [isOpen, setIsOpen] = useState(false)
 
   function closeDialog() {
@@ -36,6 +37,7 @@ export default function AddTaskDialog({onAddNewTask}: AddTaskDialogProps) {
           <TaskForm
             onCancel={closeDialog}
             onSubmit={handleCreateTask}
+            requestError={error}
             submitLabel="Create task"
           />
         </Dialog>

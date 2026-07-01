@@ -5,6 +5,7 @@ import {
   useState,
   type PropsWithChildren,
 } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import { setApiAccessToken } from '../../../shared/api';
 import {
   login as loginRequest,
@@ -33,6 +34,7 @@ function restoreSession() {
 }
 
 export function AuthProvider({children}: PropsWithChildren) {
+  const queryClient = useQueryClient();
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -64,7 +66,7 @@ export function AuthProvider({children}: PropsWithChildren) {
         if (isActive) {
           setIsLoading(false);
         }
-      })
+      });
 
     return () => {
       isActive = false;
@@ -92,8 +94,9 @@ export function AuthProvider({children}: PropsWithChildren) {
       // Local authentication must still be cleared if the server is unavailable.
     } finally {
       clearAuthentication();
+      queryClient.clear();
     }
-  }, [clearAuthentication]);
+  }, [clearAuthentication, queryClient]);
 
   const value = useMemo<AuthContextValue>(
     () => ({

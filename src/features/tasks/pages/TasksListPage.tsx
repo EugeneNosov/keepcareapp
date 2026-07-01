@@ -3,6 +3,7 @@ import {
   LuClock3,
   LuTriangleAlert,
 } from 'react-icons/lu'
+import { ApiError } from '../../../shared/api';
 import AddTaskDialog from '../components/AddTaskDialog.tsx'
 import TaskItem from '../components/TaskItem.tsx'
 import useCreateTask from '../hooks/useCreateTask.ts'
@@ -39,6 +40,11 @@ const metrics = [
 export function TasksListPage() {
   const {tasks, isLoading, error} = useTasks();
   const createTaskMutation = useCreateTask();
+  const createError = createTaskMutation.error instanceof ApiError
+    ? createTaskMutation.error.message
+    : createTaskMutation.error
+      ? 'Unable to create task.'
+      : null;
 
   async function handleCreateTask(task: CreateTaskPayload) {
     await createTaskMutation.mutateAsync(task);
@@ -54,6 +60,7 @@ export function TasksListPage() {
             </h1>
           </div>
           <AddTaskDialog
+            error={createError}
             onAddNewTask={handleCreateTask}
           />
         </div>
@@ -115,7 +122,7 @@ export function TasksListPage() {
         <div className="overflow-x-auto">
           <div className="min-w-[900px]">
             <div
-              className="grid grid-cols-[minmax(220px,2fr)_minmax(120px,1fr)_minmax(130px,1fr)_minmax(140px,1fr)_150px] gap-4 border-b border-[#3a3c3a] px-5 py-3 text-[9px] tracking-[0.08em] text-[#969a95] uppercase">
+              className="grid grid-cols-[minmax(220px,2fr)_minmax(120px,1fr)_minmax(130px,1fr)_minmax(140px,1fr)_230px] gap-4 border-b border-[#3a3c3a] px-5 py-3 text-[9px] tracking-[0.08em] text-[#969a95] uppercase">
               <span>Task name</span>
               <span>Status</span>
               <span>Period</span>

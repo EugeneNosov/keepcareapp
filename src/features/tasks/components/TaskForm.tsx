@@ -19,10 +19,11 @@ const taskFormSchema = z.object({
 export type TaskFormData = z.infer<typeof taskFormSchema>
 
 interface TaskFormProps {
-  defaultValues?: TaskFormData
-  onCancel: () => void
-  onSubmit: (data: TaskFormData) => void | Promise<void>
-  submitLabel: string
+  defaultValues?: TaskFormData;
+  requestError?: string | null;
+  onCancel: () => void;
+  onSubmit: (data: TaskFormData) => void | Promise<void>;
+  submitLabel: string;
 }
 
 const initialTaskFormData: TaskFormData = {
@@ -38,6 +39,7 @@ const labelClassName = 'text-[9px] font-medium tracking-[0.08em] text-[#b0b3af] 
 
 export default function TaskForm({
                                    defaultValues = initialTaskFormData,
+                                   requestError,
                                    onCancel,
                                    onSubmit,
                                    submitLabel,
@@ -109,6 +111,15 @@ export default function TaskForm({
           <ul className="space-y-1">
             {errorMessages.map(message => <li key={message}>{message}</li>)}
           </ul>
+        </div>
+      )}
+
+      {requestError && (
+        <div
+          className="border border-[#7a302b] bg-[#25100e] px-4 py-3 text-[11px] text-[#e98a7c]"
+          role="alert"
+        >
+          {requestError}
         </div>
       )}
 
