@@ -1,2 +1,7 @@
-export { apiRequest, setApiAccessToken } from './api-client';
+export {
+  apiRequest,
+  setApiAccessToken,
+  setApiRefreshHandler,
+  setApiUnauthorizedHandler,
+} from './api-client';
 export { ApiError } from './api-error';

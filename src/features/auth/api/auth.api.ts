@@ -23,6 +23,7 @@ export function register(input: RegisterInput) {
 export function refreshSession() {
   return apiRequest<AuthResponse>('/auth/refresh', {
     method: 'POST',
+    skipAuthRefresh: true,
   });
 }
 

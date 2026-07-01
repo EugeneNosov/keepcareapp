@@ -6,7 +6,11 @@ import {
   type PropsWithChildren,
 } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
-import { setApiAccessToken } from '../../../shared/api';
+import {
+  setApiAccessToken,
+  setApiRefreshHandler,
+  setApiUnauthorizedHandler,
+} from '../../../shared/api';
 import {
   login as loginRequest,
   logout as logoutRequest,
@@ -48,8 +52,28 @@ export function AuthProvider({children}: PropsWithChildren) {
     setUser(null);
   }, []);
 
+  const refreshAuthentication = useCallback(async () => {
+    try {
+      const response = await refreshSession();
+      applyAuthentication(response);
+      return response.accessToken;
+    } catch (error) {
+      clearAuthentication();
+      queryClient.clear();
+      throw error;
+    }
+  }, [applyAuthentication, clearAuthentication, queryClient]);
+
+  const handleUnauthorized = useCallback(() => {
+    clearAuthentication();
+    queryClient.clear();
+  }, [clearAuthentication, queryClient]);
+
   useEffect(() => {
     let isActive = true;
+
+    setApiRefreshHandler(refreshAuthentication);
+    setApiUnauthorizedHandler(handleUnauthorized);
 
     restoreSession()
       .then((response) => {
@@ -70,8 +94,15 @@ export function AuthProvider({children}: PropsWithChildren) {
 
     return () => {
       isActive = false;
+      setApiRefreshHandler(null);
+      setApiUnauthorizedHandler(null);
     };
-  }, [applyAuthentication, clearAuthentication]);
+  }, [
+    applyAuthentication,
+    clearAuthentication,
+    handleUnauthorized,
+    refreshAuthentication,
+  ]);
 
   const login = useCallback(
     async (input: LoginInput) => {

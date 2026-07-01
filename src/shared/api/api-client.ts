@@ -7,24 +7,49 @@ if (!apiUrl) {
 }
 
 let accessToken: string | null = null;
+let refreshHandler: (() => Promise<string>) | null = null;
+let unauthorizedHandler: (() => void) | null = null;
+let pendingTokenRefresh: Promise<string> | null = null;
 
 export function setApiAccessToken(token: string | null) {
   accessToken = token;
 }
 
+export function setApiRefreshHandler(handler: (() => Promise<string>) | null) {
+  refreshHandler = handler;
+}
+
+export function setApiUnauthorizedHandler(handler: (() => void) | null) {
+  unauthorizedHandler = handler;
+}
+
 type ApiRequestOptions = Omit<RequestInit, 'body'> & {
   body?: unknown;
+  skipAuthRefresh?: boolean;
 };
 
 export async function apiRequest<T>(
   path: string,
   options: ApiRequestOptions = {},
 ): Promise<T> {
-  const headers = new Headers(options.headers);
+  return executeRequest<T>(path, options, true);
+}
+
+async function executeRequest<T>(
+  path: string,
+  options: ApiRequestOptions,
+  canRetryAfterRefresh: boolean,
+): Promise<T> {
+  const {
+    body,
+    skipAuthRefresh = false,
+    ...requestOptions
+  } = options;
+  const headers = new Headers(requestOptions.headers);
 
   headers.set('Accept', 'application/json');
 
-  if (options.body !== undefined) {
+  if (body !== undefined) {
     headers.set('Content-Type', 'application/json');
   }
 
@@ -33,11 +58,22 @@ export async function apiRequest<T>(
   }
 
   const response = await fetch(`${apiUrl}/${path.replace(/^\//, '')}`, {
-    ...options,
+    ...requestOptions,
     headers,
     credentials: 'include',
-    body: options.body === undefined ? undefined : JSON.stringify(options.body),
+    body: body === undefined ? undefined : JSON.stringify(body),
   });
+
+  if (response.status === 401 && accessToken && !skipAuthRefresh) {
+    if (refreshHandler && canRetryAfterRefresh) {
+      await refreshAccessToken();
+      return executeRequest<T>(path, options, false);
+    }
+
+    if (!canRetryAfterRefresh) {
+      unauthorizedHandler?.();
+    }
+  }
 
   if (response.status === 204) {
     return undefined as T;
@@ -50,6 +86,25 @@ export async function apiRequest<T>(
   }
 
   return payload as T;
+}
+
+function refreshAccessToken(): Promise<string> {
+  if (!refreshHandler) {
+    return Promise.reject(new Error('No authentication refresh handler is configured'));
+  }
+
+  if (!pendingTokenRefresh) {
+    pendingTokenRefresh = refreshHandler()
+      .then((token) => {
+        accessToken = token;
+        return token;
+      })
+      .finally(() => {
+        pendingTokenRefresh = null;
+      });
+  }
+
+  return pendingTokenRefresh;
 }
 
 async function parseResponse(response: Response): Promise<unknown> {
