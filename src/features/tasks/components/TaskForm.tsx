@@ -34,8 +34,8 @@ const initialTaskFormData: TaskFormData = {
   },
 }
 
-const fieldClassName = 'h-10 w-full border border-[#4b4e4b] bg-[#202220] px-3 text-[11px] text-[#eeeeea] outline-none transition-colors placeholder:text-[#858985] hover:border-[#606360] focus:border-[#d36b3b] focus:ring-1 focus:ring-[#d36b3b]'
-const labelClassName = 'text-[9px] font-medium tracking-[0.08em] text-[#b0b3af] uppercase'
+const fieldClassName = 'h-12 w-full rounded-xl border border-[#303330] bg-[#191b19] px-4 text-sm text-[#eeeeea] outline-none transition-colors placeholder:text-[#666b66] hover:border-[#454945] focus:border-[#f0783c]'
+const labelClassName = 'text-xs text-[#a8aba6]'
 
 export default function TaskForm({
                                    defaultValues = initialTaskFormData,
@@ -105,7 +105,7 @@ export default function TaskForm({
 
       {errorMessages.length > 0 && (
         <div
-          className="border border-[#7a302b] bg-[#25100e] px-4 py-3 text-[11px] text-[#e98a7c]"
+          className="rounded-xl border border-[#63342f] bg-[#25100e] px-4 py-3 text-xs text-[#e98a7c]"
           role="alert"
         >
           <ul className="space-y-1">
@@ -116,23 +116,23 @@ export default function TaskForm({
 
       {requestError && (
         <div
-          className="border border-[#7a302b] bg-[#25100e] px-4 py-3 text-[11px] text-[#e98a7c]"
+          className="rounded-xl border border-[#63342f] bg-[#25100e] px-4 py-3 text-xs text-[#e98a7c]"
           role="alert"
         >
           {requestError}
         </div>
       )}
 
-      <div className="grid grid-cols-2 gap-7 border-t border-[#3a3c3a] pt-5">
+      <div className="grid grid-cols-2 gap-3 pt-2">
         <button
-          className="h-12 cursor-pointer border border-b-3 border-[#dededa] bg-[#414341] px-4 text-[11px] font-medium tracking-[0.04em] text-white uppercase shadow-[inset_0_0_0_2px_#242624] transition-colors hover:bg-[#505250] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+          className="h-12 cursor-pointer rounded-full bg-[#202320] px-4 text-sm text-[#aeb2ac] transition-colors hover:bg-[#292c29] hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
           onClick={handleCancel}
           type="button"
         >
           Cancel
         </button>
         <button
-          className="h-12 cursor-pointer border border-[#d4d4d0] bg-[#f4f4f2] px-4 text-[11px] font-medium tracking-[0.04em] text-[#111211] uppercase transition-colors hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white disabled:cursor-not-allowed disabled:bg-[#777975] disabled:text-[#b8bab6]"
+          className="h-12 cursor-pointer rounded-full bg-[#f0783c] px-4 text-sm font-medium text-[#160b06] transition-colors hover:bg-[#ff8a4f] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#f0783c] disabled:cursor-not-allowed disabled:bg-[#493126] disabled:text-[#8c6958]"
           disabled={!isValid || isSubmitting}
           type="submit"
         >

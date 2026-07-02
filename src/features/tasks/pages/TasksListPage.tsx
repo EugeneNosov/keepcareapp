@@ -5,6 +5,7 @@ import {
   LuTriangleAlert,
 } from 'react-icons/lu'
 import { ApiError } from '@/shared/api';
+import { TASK_STATUS } from '../task.constants.ts';
 import AddTaskDialog from '../components/AddTaskDialog.tsx'
 import TaskItem from '../components/TaskItem.tsx'
 import useCreateTask from '../hooks/useCreateTask.ts'
@@ -16,27 +17,21 @@ import type { CreateTaskPayload } from '../types/tasks.types.ts';
 const metrics = [
   {
     label: 'Overdue',
-    value: '02',
-    description: 'Require immediate action',
     icon: LuTriangleAlert,
     color: '#e36f5e',
-    surface: '#25100e',
+    status: TASK_STATUS.overdue,
   },
   {
     label: 'Due soon',
-    value: '03',
-    description: 'Due within the next 24 hours',
     icon: LuClock3,
     color: '#f0a43c',
-    surface: '#22170b',
+    status: TASK_STATUS.dueSoon,
   },
   {
     label: 'OK',
-    value: '18',
-    description: 'No action required',
     icon: LuCircleCheck,
     color: '#4bd49b',
-    surface: '#0b2118',
+    status: TASK_STATUS.ok,
   },
 ]
 
@@ -85,92 +80,56 @@ export function TasksListPage() {
   }
 
   return (
-    <section className="mx-auto w-full max-w-295">
-      <header className="border border-[#484a48] bg-[#171817]">
-        <div className="flex flex-wrap items-center justify-between gap-4 border-b border-[#3a3c3a] px-5 py-4">
-          <div>
-            <h1 className="mt-1.5 text-lg font-medium tracking-wider text-[#ededE8] uppercase">
-              Tasks
-            </h1>
-          </div>
-          <AddTaskDialog
-            error={createError}
-            onAddNewTask={handleCreateTask}
-          />
+    <section className="mx-auto w-full max-w-275">
+      <header className="flex flex-wrap items-end justify-between gap-6">
+        <div>
+          <p className="mb-3 text-xs font-medium tracking-[0.08em] text-[#f0783c] uppercase">Your care list</p>
+          <h1 className="text-[clamp(36px,5vw,56px)] leading-none font-medium tracking-[-0.055em] text-[#ededE8]">
+            Tasks
+          </h1>
+          <p className="mt-4 text-sm text-[#858a84]">See what needs attention today.</p>
         </div>
-        <div
-          className="flex flex-wrap items-center justify-between gap-3 px-5 py-3 text-[9px] tracking-[0.06em] text-[#a2a5a1] uppercase">
-          <span>All registered tasks</span>
-        </div>
+        <AddTaskDialog error={createError} onAddNewTask={handleCreateTask}/>
       </header>
 
-      <div className="mt-6 grid grid-cols-3 gap-5 max-[860px]:grid-cols-1">
-        {metrics.map(({label, value, description, icon: Icon, color, surface}) => (
-          <article
-            className="relative overflow-hidden border border-[#484a48] bg-[#171817] p-5 transition-colors hover:bg-[#1c1e1c] hover:border-[#626562]"
-            key={label}
-          >
-            <span className="absolute inset-y-0 left-0 w-0.5" style={{backgroundColor: color}}/>
-            <div className="flex items-center justify-between">
-              <span className="text-[10px] tracking-widest text-[#aeb1ad] uppercase">{label}</span>
-              <span
-                className="grid size-8 place-items-center border"
-                style={{backgroundColor: surface, borderColor: `${color}55`, color}}
-              >
+      <section className="mt-10 grid grid-cols-3 rounded-3xl border border-[#292c29] bg-[#111311] max-[660px]:grid-cols-1">
+        {metrics.map(({label, icon: Icon, color, status}, index) => {
+          const value = tasks.filter((task) => task.status === status).length;
+          return (
+            <article className="flex items-center gap-4 border-r border-[#292c29] p-5 last:border-r-0 max-[660px]:border-r-0 max-[660px]:border-b max-[660px]:last:border-b-0" key={label}>
+              <span className="grid size-10 place-items-center rounded-full" style={{backgroundColor: `${color}14`, color}}>
                 <Icon className="size-4" aria-hidden="true"/>
               </span>
-            </div>
-            <strong className="mt-5 block text-3xl font-semibold tracking-[-0.04em] text-[#f2f2ed]">
-              {value}
-            </strong>
-            <p className="mt-2 text-[10px] tracking-[0.03em] text-[#929691]">{description}</p>
-          </article>
-        ))}
-      </div>
+              <div>
+                <strong className="text-xl font-medium text-[#e5e6e1]">{isLoading ? '—' : value.toString().padStart(2, '0')}</strong>
+                <p className="mt-1 text-[11px] text-[#777c76]">{label}</p>
+              </div>
+              {index === 0 && value > 0 && <span className="ml-auto size-1.5 rounded-full bg-[#e36f5e]"/>}
+            </article>
+          );
+        })}
+      </section>
 
-      <section className="mt-6 border border-[#484a48] bg-[#171817]">
-        <header className="flex flex-wrap items-center justify-between gap-4 border-b border-[#3a3c3a] px-5 py-4">
-          <h2
-            className="flex items-center gap-2.5 text-xs font-medium tracking-[0.08em] text-[#e2e3de] uppercase before:block before:h-5 before:w-0.5 before:bg-[#f0783c]">
-            Task registry
-          </h2>
-          <div className="flex items-center gap-4 max-[520px]:w-full">
-            {/*<label className="group relative max-[520px]:min-w-0 max-[520px]:flex-1">*/}
-            {/*  <span className="sr-only">Search tasks</span>*/}
-            {/*  <LuSearch*/}
-            {/*    className="pointer-events-none absolute top-1/2 left-3 size-3.5 -translate-y-1/2 text-[#686c68] transition-colors group-focus-within:text-[#f0783c]"*/}
-            {/*    aria-hidden="true"*/}
-            {/*  />*/}
-            {/*  <input*/}
-            {/*    className="h-9 w-56 border border-[#343734] bg-[#0c0e0d] pr-3 pl-9 text-[11px] text-[#dcddd7] outline-none placeholder:text-[#626662] focus:border-[#7b4932] max-[520px]:w-full"*/}
-            {/*    placeholder="Search tasks..."*/}
-            {/*    type="search"*/}
-            {/*  />*/}
-            {/*</label>*/}
-            <span className="shrink-0 text-[9px] tracking-widest text-[#999d98] uppercase">
-              {tasks.length.toString().padStart(2, '0')} {tasks.length === 1 ? 'record' : 'records'}
-            </span>
-          </div>
+      <section className="mt-10">
+        <header className="mb-4 flex items-center justify-between gap-4 px-1">
+          <h2 className="text-sm font-medium text-[#dfe0db]">All tasks</h2>
+          <span className="text-xs text-[#777c76]">
+            {tasks.length} {tasks.length === 1 ? 'task' : 'tasks'}
+          </span>
         </header>
 
-        <div className="overflow-x-auto">
-          <div className="min-w-225">
-            <div
-              className="grid grid-cols-[minmax(220px,2fr)_minmax(120px,1fr)_minmax(130px,1fr)_minmax(140px,1fr)_230px] gap-4 border-b border-[#3a3c3a] px-5 py-3 text-[9px] tracking-[0.08em] text-[#969a95] uppercase">
-              <span>Task name</span>
-              <span>Status</span>
-              <span>Period</span>
-              <span>Due date</span>
-              <span>Action</span>
-            </div>
+        <div className="grid gap-3">
             {isLoading && (
-              <p className="px-5 py-6 text-[11px] text-[#747873]">Loading tasks...</p>
+              <p className="rounded-2xl bg-[#111311] px-5 py-6 text-xs text-[#747873]">Loading tasks...</p>
             )}
             {error && (
-              <p className="px-5 py-6 text-[11px] text-[#e36f5e]" role="alert">{error}</p>
+              <p className="rounded-2xl border border-[#63342f] bg-[#25100e] px-5 py-4 text-xs text-[#e36f5e]" role="alert">{error}</p>
             )}
             {!isLoading && !error && tasks.length === 0 && (
-              <p className="px-5 py-6 text-[11px] text-[#747873]">No tasks registered yet.</p>
+              <div className="rounded-3xl border border-dashed border-[#303330] px-6 py-14 text-center">
+                <p className="text-sm text-[#b1b4af]">Your list is clear.</p>
+                <p className="mt-2 text-xs text-[#686d68]">Create a recurring task to get started.</p>
+              </div>
             )}
             {tasks.map((task) => (
               <TaskItem
@@ -190,7 +149,6 @@ export function TasksListPage() {
                 task={task}
               />
             ))}
-          </div>
         </div>
       </section>
     </section>

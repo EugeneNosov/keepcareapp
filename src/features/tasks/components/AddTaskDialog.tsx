@@ -24,7 +24,7 @@ export default function AddTaskDialog({ error, onAddNewTask }: AddTaskDialogProp
   return (
     <>
       <button
-        className="inline-flex h-9 cursor-pointer items-center gap-2 border border-[#e16f3a] bg-[#e16f3a] px-3.5 text-[10px] font-medium tracking-[0.08em] text-[#100b08] uppercase transition-colors hover:border-[#f58a55] hover:bg-[#f58a55] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#f0783c]"
+        className="inline-flex h-11 cursor-pointer items-center gap-2 rounded-full bg-[#f0783c] px-5 text-sm font-medium text-[#160b06] transition-colors hover:bg-[#ff8a4f] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#f0783c]"
         onClick={() => setIsOpen(true)}
         type="button"
       >

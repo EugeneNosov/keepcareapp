@@ -1,20 +1,23 @@
 import { memo } from 'react';
-import { LuCheck, LuTrash2 } from 'react-icons/lu';
+import { LuCheck, LuCircleCheck, LuClock3, LuTrash2, LuTriangleAlert } from 'react-icons/lu';
 import { TASK_STATUS } from '../task.constants.ts';
 import type { Task, TaskStatus } from '../types/tasks.types.ts';
 
-const statusStyles: Record<TaskStatus, { label: string; color: string }> = {
+const statusStyles: Record<TaskStatus, { label: string; color: string; icon: typeof LuClock3 }> = {
   [TASK_STATUS.overdue]: {
     label: 'OVERDUE',
     color: '#e36f5e',
+    icon: LuTriangleAlert,
   },
   [TASK_STATUS.dueSoon]: {
     label: 'DUE SOON',
-    color: '#f0a43c'
+    color: '#f0a43c',
+    icon: LuClock3,
   },
   [TASK_STATUS.ok]: {
     label: 'OK',
-    color: '#4bd49b'
+    color: '#4bd49b',
+    icon: LuCircleCheck,
   },
 }
 
@@ -80,6 +83,7 @@ function TaskItem({
                     onDelete,
                   }: TaskItemProps) {
   const statusStyle = statusStyles[task.status];
+  const StatusIcon = statusStyle.icon;
   const isCompletedToday = isTaskCompletedToday(task);
   const isCompleteButtonDisabled = isCompletedToday || isActionDisabled;
 
@@ -90,26 +94,28 @@ function TaskItem({
   }
 
   return (
-    <div
-      className="grid grid-cols-[minmax(220px,2fr)_minmax(120px,1fr)_minmax(130px,1fr)_minmax(140px,1fr)_230px] items-center gap-4 border-b border-[#343634] px-5 py-4.5 text-[11px] last:border-b-0 hover:bg-[#1c1e1c]"
-    >
-      <span className="text-[#dcddd7]">{task.name}</span>
-      <span
-        className="flex items-center gap-2 text-[9px] tracking-[0.04em]"
-        style={{color: statusStyle.color}}
-      >
-        <i
-          className="size-1.5 rounded-full not-italic"
-          style={{backgroundColor: statusStyle.color}}
-        />
-        {statusStyle.label}
-      </span>
-      <span className="text-[#a4a7a2]">{formatRepeatEvery(task.repeatEvery)}</span>
-      <span className="text-[#dcddd7]">{formatDueDate(task.dueDate)}</span>
-      <div className="grid gap-2">
+    <article
+      className="grid grid-cols-[minmax(0,1.5fr)_minmax(220px,0.8fr)_auto] items-center gap-6 rounded-2xl border border-transparent bg-[#111311] p-4 transition-colors hover:border-[#292c29] hover:bg-[#151715] max-[760px]:grid-cols-1 max-[760px]:gap-4">
+      <div className="flex min-w-0 items-center gap-4">
+        <span className="grid size-10 shrink-0 place-items-center rounded-full"
+              style={{backgroundColor: `${statusStyle.color}14`, color: statusStyle.color}}>
+          <StatusIcon className="size-4" aria-hidden="true"/>
+        </span>
+        <div className="min-w-0">
+          <h3 className="truncate text-sm text-[#dcddd7]">{task.name}</h3>
+          <p className="mt-1.5 text-[11px] text-[#737873]">{formatRepeatEvery(task.repeatEvery)}</p>
+        </div>
+      </div>
+      <div className="max-[760px]:pl-14">
+        <p className="text-[10px] text-[#686d68]">Next due</p>
+        <p className="mt-1 text-xs text-[#b7bab5]">{formatDueDate(task.dueDate)} <span className="ml-2"
+                                                                                       style={{color: statusStyle.color}}>{statusStyle.label}</span>
+        </p>
+      </div>
+      <div className="grid min-w-50 gap-2 max-[760px]:min-w-0">
         <div className="flex gap-2">
           <button
-            className="inline-flex h-9 flex-1 cursor-pointer items-center justify-center gap-2 border border-[#2c7f62] bg-[#0b2118] px-3 text-[9px] font-medium tracking-[0.06em] text-[#4bd49b] uppercase transition-colors hover:border-[#4bd49b] hover:bg-[#103424] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#4bd49b] disabled:cursor-not-allowed disabled:border-[#313431] disabled:bg-[#151715] disabled:text-[#686c68]"
+            className="inline-flex h-10 flex-1 cursor-pointer items-center justify-center gap-2 rounded-full bg-[#1a2c23] px-4 text-[11px] font-medium text-[#65c99b] transition-colors hover:bg-[#213a2d] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#4bd49b] disabled:cursor-not-allowed disabled:bg-[#191b19] disabled:text-[#686c68]"
             disabled={isCompleteButtonDisabled}
             onClick={() => onComplete(task.id)}
             type="button"
@@ -119,7 +125,7 @@ function TaskItem({
           </button>
           <button
             aria-label={isDeleting ? `Deleting ${task.name}` : `Delete ${task.name}`}
-            className="grid size-9 cursor-pointer place-items-center border border-[#713b37] bg-[#25100e] text-[#e36f5e] transition-colors hover:border-[#e36f5e] hover:bg-[#321512] disabled:cursor-not-allowed disabled:opacity-50"
+            className="grid size-10 cursor-pointer place-items-center rounded-full bg-[#201716] text-[#b86358] transition-colors hover:bg-[#321c19] hover:text-[#e36f5e] disabled:cursor-not-allowed disabled:opacity-50"
             disabled={isActionDisabled}
             onClick={handleDelete}
             type="button"
@@ -133,7 +139,7 @@ function TaskItem({
           </span>
         )}
       </div>
-    </div>
+    </article>
   );
 }
 
