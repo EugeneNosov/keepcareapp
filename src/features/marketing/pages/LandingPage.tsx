@@ -1,15 +1,13 @@
 import { LuActivity, LuArrowRight, LuShieldCheck } from 'react-icons/lu'
 import { Link } from 'react-router'
+import { ROUTES } from '../../../app.constants.ts';
 import Brand from '../../../components/brand/Brand.tsx';
 
 export function LandingPage() {
   return (
     <section className="mx-auto flex min-h-screen w-full max-w-[1320px] flex-col px-6 py-6 max-[640px]:px-4">
       <header className="flex items-center justify-between border border-[#343734] bg-[#070808] px-5 py-4">
-        <Brand />
-        <span className="hidden text-[9px] tracking-[0.1em] text-[#797d78] uppercase sm:block">
-          System status: <strong className="bg-[#173422] px-1.5 py-0.5 font-medium text-[#68d792]">Online</strong>
-        </span>
+        <Brand/>
       </header>
 
       <main className="grid flex-1 grid-cols-[1.15fr_0.85fr] items-center gap-8 py-12 max-[800px]:grid-cols-1">
@@ -28,12 +26,12 @@ export function LandingPage() {
           <nav className="mt-9 flex flex-wrap gap-3">
             <Link
               className="inline-flex items-center gap-4 border border-[#dadbd6] bg-[#dedfda] px-5 py-3 text-[10px] font-semibold tracking-[0.08em] text-[#080908] uppercase hover:bg-white"
-              to="/login">
+              to={ROUTES.login}>
               Access workspace <LuArrowRight aria-hidden="true"/>
             </Link>
             <Link
               className="inline-flex items-center gap-4 border border-[#4a4d4a] px-5 py-3 text-[10px] tracking-[0.08em] text-[#c5c7c2] uppercase hover:border-[#f0783c] hover:text-[#f0783c]"
-              to="/tasks">
+              to={ROUTES.tasks}>
               View tasks
             </Link>
           </nav>

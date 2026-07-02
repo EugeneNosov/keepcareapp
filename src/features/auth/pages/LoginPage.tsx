@@ -6,6 +6,7 @@ import {
 import { useForm } from 'react-hook-form';
 import { LuArrowLeft, LuLockKeyhole } from 'react-icons/lu';
 import { Link, Navigate, useNavigate } from 'react-router';
+import { ROUTES } from '../../../app.constants.ts';
 import Brand from '../../../components/brand/Brand.tsx';
 import { ApiError } from '../../../shared/api';
 import { useAuth } from '../hooks/useAuth';
@@ -27,7 +28,7 @@ export function LoginPage() {
 
     try {
       await login(input);
-      navigate('/tasks', {replace: true});
+      navigate(ROUTES.tasks, {replace: true});
     } catch (error) {
       setRequestError(
         error instanceof ApiError
@@ -43,7 +44,7 @@ export function LoginPage() {
 
     try {
       await loginWithGoogle({credential});
-      navigate('/tasks', {replace: true});
+      navigate(ROUTES.tasks, {replace: true});
     } catch (error) {
       setRequestError(
         error instanceof ApiError
@@ -78,7 +79,7 @@ export function LoginPage() {
   }
 
   if (isAuthenticated) {
-    return <Navigate to="/tasks" replace/>;
+    return <Navigate to={ROUTES.tasks} replace/>;
   }
 
   return (
@@ -86,7 +87,7 @@ export function LoginPage() {
       className="grid min-h-screen place-items-center px-6 py-20 max-[720px]:block max-[720px]:px-4 max-[720px]:pt-[76px]">
       <Link
         className="absolute top-7 left-8 inline-flex items-center gap-2 text-[9px] tracking-[0.1em] text-[#a2a5a1] uppercase hover:text-[#f0783c] max-[720px]:left-4"
-        to="/"
+        to={ROUTES.home}
       >
         <LuArrowLeft aria-hidden="true"/> Return to home
       </Link>
@@ -200,7 +201,7 @@ export function LoginPage() {
 
             <p className="m-0 text-center text-[9px] tracking-[0.06em] text-[#929691] uppercase">
               New to KeepCare?{' '}
-              <Link className="text-[#e8e9e3] underline-offset-4 hover:text-[#f0783c] hover:underline" to="/register">
+              <Link className="text-[#e8e9e3] underline-offset-4 hover:text-[#f0783c] hover:underline" to={ROUTES.register}>
                 Create account
               </Link>
             </p>

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { LuHeartPulse, LuLogOut } from 'react-icons/lu';
 import { NavLink, useNavigate } from 'react-router';
+import { ROUTES } from '../../app.constants.ts';
 import { useAuth } from '../../features/auth/hooks/useAuth';
 import './SideMenu.css';
 import { SIDE_MENU_CONFIG } from './side-menu.config';
@@ -16,7 +17,7 @@ export function SideMenu() {
     try {
       await logout();
     } finally {
-      navigate('/login', { replace: true });
+      navigate(ROUTES.login, { replace: true });
       setIsLoggingOut(false);
     }
   }
