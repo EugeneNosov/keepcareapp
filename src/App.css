@@ -15,11 +15,7 @@ body {
     margin: 0;
     min-width: 320px;
     min-height: 100vh;
-    background:
-        linear-gradient(rgba(255, 255, 255, 0.012) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255, 255, 255, 0.012) 1px, transparent 1px),
-        #050606;
-    background-size: 24px 24px;
+    background: #080909;
 }
 
 button,

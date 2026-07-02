@@ -2,10 +2,10 @@ import { LuHeartPulse } from 'react-icons/lu';
 
 export default function Brand() {
   return (
-    <div className="relative flex items-center gap-3 text-xs tracking-[0.1em] text-[#e6e7e1] uppercase">
-            <span className="grid size-9 place-items-center border border-[#727672]">
-              <LuHeartPulse className="size-[18px]" aria-hidden="true"/>
-            </span>
+    <div className="relative flex items-center gap-2.5 text-sm font-medium text-[#e6e7e1]">
+      <span className="grid size-8 place-items-center rounded-full bg-[#f0783c] text-[#160b06]">
+        <LuHeartPulse className="size-4" aria-hidden="true"/>
+      </span>
       KeepCare
     </div>
   )

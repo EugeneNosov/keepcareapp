@@ -1,13 +1,8 @@
 import {
   LuArrowRight,
-  LuCalendarClock,
   LuCheck,
   LuCircleCheck,
   LuClock3,
-  LuListTodo,
-  LuPlus,
-  LuRefreshCw,
-  LuShieldCheck,
   LuTriangleAlert,
 } from 'react-icons/lu';
 import { Link } from 'react-router';
@@ -15,248 +10,105 @@ import { ROUTES } from '@/app.constants.ts';
 import Brand from '@/components/brand/Brand.tsx';
 
 const exampleTasks = [
-  {
-    name: 'Replace water filter',
-    repeat: 'Every 3 months',
-    status: 'Due soon',
-    color: '#f0a43c',
-    icon: LuClock3,
-  },
-  {
-    name: 'Refill medication',
-    repeat: 'Every 4 weeks',
-    status: 'Overdue',
-    color: '#e36f5e',
-    icon: LuTriangleAlert,
-  },
-  {
-    name: 'Check smoke alarms',
-    repeat: 'Every 6 months',
-    status: 'OK',
-    color: '#4bd49b',
-    icon: LuCircleCheck,
-  },
+  {name: 'Refill medication', repeat: 'Every 4 weeks', status: 'Overdue', color: '#e97861', icon: LuTriangleAlert},
+  {name: 'Replace water filter', repeat: 'Every 3 months', status: 'Due soon', color: '#e5a44e', icon: LuClock3},
+  {name: 'Check smoke alarms', repeat: 'Every 6 months', status: 'All good', color: '#65c99b', icon: LuCircleCheck},
 ];
 
-const workflow = [
-  {
-    step: '01',
-    title: 'Create a recurring task',
-    text: 'Name what needs attention and choose a repeat period in days, weeks, or months.',
-    icon: LuPlus,
-  },
-  {
-    step: '02',
-    title: 'See what needs action',
-    text: 'KeepCare separates overdue, due-soon, and healthy tasks so priorities stay obvious.',
-    icon: LuCalendarClock,
-  },
-  {
-    step: '03',
-    title: 'Complete and continue',
-    text: 'Mark a task complete and its next due date is calculated from the recurring schedule.',
-    icon: LuRefreshCw,
-  },
+const benefits = [
+  ['Add it once', 'Choose how often a task should repeat.'],
+  ['See what matters', 'Overdue and upcoming tasks stay at the top.'],
+  ['Complete and relax', 'KeepCare schedules the next due date for you.'],
 ];
 
 export function LandingPage() {
   return (
-    <div className="min-h-screen w-full">
-      <div className="mx-auto w-full max-w-[1320px] px-6 py-6 max-[640px]:px-4">
-      <header className="flex items-center justify-between border border-[#343734] bg-[#070808] px-5 py-4">
-        <Brand/>
-        <nav className="flex items-center gap-2" aria-label="Account">
-          <Link
-            className="px-3 py-2 text-[9px] tracking-[0.08em] text-[#a5a8a3] uppercase hover:text-[#f0783c]"
-            to={ROUTES.login}
-          >
-            Sign in
-          </Link>
-          <Link
-            className="border border-[#4a4d4a] px-3 py-2 text-[9px] tracking-[0.08em] text-[#e1e2dc] uppercase hover:border-[#f0783c] hover:text-[#f0783c]"
-            to={ROUTES.register}
-          >
-            Create account
-          </Link>
-        </nav>
-      </header>
+    <div className="min-h-screen bg-[#080909] text-[#e9eae5]">
+      <div className="mx-auto w-full max-w-[1180px] px-6 max-[640px]:px-4">
+        <header className="flex h-20 items-center justify-between">
+          <Brand/>
+          <nav className="flex items-center gap-4 max-[440px]:gap-3" aria-label="Account">
+            <Link className="whitespace-nowrap text-xs text-[#a4a8a2] transition-colors hover:text-white"
+                  to={ROUTES.login}>
+              Sign in
+            </Link>
+            <Link
+              className="whitespace-nowrap rounded-full border border-[#454845] px-4 py-2 text-xs transition-colors hover:border-[#777b76] max-[440px]:px-3"
+              to={ROUTES.register}>
+              Create account
+            </Link>
+          </nav>
+        </header>
 
-      <main>
-        <section className="grid grid-cols-[1.08fr_0.92fr] items-stretch gap-6 py-10 max-[900px]:grid-cols-1">
-          <div className="relative overflow-hidden border border-[#383b38] bg-[#070808] p-[clamp(30px,5vw,66px)]">
-            <div
-              className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.018)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.018)_1px,transparent_1px)] bg-[size:18px_18px]"/>
-            <div className="relative">
-              <p
-                className="mb-6 flex items-center gap-2 text-[9px] tracking-[0.14em] text-[#f0783c] uppercase before:h-5 before:w-0.5 before:bg-[#f0783c]">
-                Recurring care task tracker
+        <main>
+          <section
+            className="grid min-h-[650px] grid-cols-[1.05fr_0.95fr] items-center gap-20 py-20 max-[900px]:grid-cols-1 max-[900px]:gap-14 max-[900px]:py-14">
+            <div>
+              <p className="mb-6 text-xs font-medium tracking-[0.08em] text-[#f0783c] uppercase">
+                Recurring tasks, remembered
               </p>
-              <h1
-                className="max-w-[760px] text-[clamp(46px,7vw,92px)] leading-[0.9] font-medium tracking-[-0.075em] text-[#efefea] uppercase">
-                Remember<br/>what matters.
+              <h1 className="max-w-[650px] text-[clamp(48px,7vw,82px)] leading-[0.98] font-medium tracking-[-0.065em]">
+                Keep up with the things that matter.
               </h1>
-              <p className="mt-8 max-w-[610px] text-xs leading-6 text-[#969a95]">
-                KeepCare gives recurring household and personal care tasks one
-                clear home. See what is overdue, what is coming up, and what can
-                safely wait.
+              <p className="mt-7 max-w-[560px] text-base leading-7 text-[#989d97]">
+                One calm place for household and personal care tasks. Know what needs attention today—and let the rest
+                wait.
               </p>
-
-              <div className="mt-9 flex flex-wrap gap-3">
+              <div className="mt-9 flex flex-wrap items-center gap-5">
                 <Link
-                  className="inline-flex items-center gap-4 border border-[#dadbd6] bg-[#dedfda] px-5 py-3 text-[10px] font-semibold tracking-[0.08em] text-[#080908] uppercase hover:bg-white"
-                  to={ROUTES.register}
-                >
-                  Start tracking
+                  className="inline-flex items-center gap-3 rounded-full bg-[#f0783c] px-6 py-3.5 text-sm font-medium text-[#160b06] transition-colors hover:bg-[#ff8a4f]"
+                  to={ROUTES.register}>
+                  Start for free
                   <LuArrowRight aria-hidden="true"/>
                 </Link>
-                <Link
-                  className="inline-flex items-center gap-3 border border-[#4a4d4a] px-5 py-3 text-[10px] tracking-[0.08em] text-[#c5c7c2] uppercase hover:border-[#f0783c] hover:text-[#f0783c]"
-                  to={ROUTES.login}
-                >
-                  Open workspace
-                </Link>
-              </div>
-
-              <div
-                className="mt-12 grid grid-cols-3 border-t border-[#292c29] pt-5 max-[560px]:grid-cols-1 max-[560px]:gap-4">
-                {[
-                  'Days, weeks, months',
-                  'Clear due status',
-                  'Private account',
-                ].map((item) => (
-                  <span
-                    className="flex items-center gap-2 text-[8px] tracking-[0.07em] text-[#747873] uppercase"
-                    key={item}
-                  >
-                    <LuCheck className="size-3 text-[#4bd49b]" aria-hidden="true"/>
-                    {item}
-                  </span>
-                ))}
+                <span className="text-xs text-[#737873]">No setup complexity</span>
               </div>
             </div>
-          </div>
 
-          <aside className="flex flex-col border border-[#383b38] bg-[#0a0b0a]">
-            <header className="flex items-center justify-between border-b border-[#343734] px-5 py-4">
-              <div>
-                <p className="text-[8px] tracking-[0.12em] text-[#727671] uppercase">
-                  Example workspace
-                </p>
-                <h2 className="mt-2 text-xs font-medium tracking-[0.06em] text-[#e1e2dd] uppercase">
-                  Care schedule
-                </h2>
+            <aside className="rounded-3xl border border-[#292c29] bg-[#111311] p-4 shadow-2xl shadow-black/30">
+              <div className="flex items-center justify-between px-3 py-3">
+                <div>
+                  <p className="text-xs font-medium">Today</p>
+                  <p className="mt-1 text-[11px] text-[#777c76]">3 recurring tasks</p>
+                </div>
+                <span className="rounded-full bg-[#1c211e] px-3 py-1.5 text-[10px] text-[#8f958f]">Care list</span>
               </div>
-              <LuListTodo className="size-5 text-[#f0783c]" aria-hidden="true"/>
-            </header>
-
-            <div className="grid flex-1 content-center gap-3 p-5">
-              {exampleTasks.map(({name, repeat, status, color, icon: Icon}) => (
-                <article
-                  className="border border-[#343734] bg-[#111312] p-4 transition-colors hover:border-[#555855] hover:bg-[#151715]"
-                  key={name}
-                >
-                  <div className="flex items-start justify-between gap-4">
-                    <div>
-                      <h3 className="text-[11px] font-medium text-[#dcddd7]">
-                        {name}
-                      </h3>
-                      <p className="mt-2 text-[9px] text-[#777b76]">{repeat}</p>
+              <div className="mt-2 space-y-2">
+                {exampleTasks.map(({name, repeat, status, color, icon: Icon}) => (
+                  <article className="flex items-center justify-between gap-4 rounded-2xl bg-[#191b19] p-4" key={name}>
+                    <div className="flex min-w-0 items-center gap-3">
+                      <span className="grid size-9 shrink-0 place-items-center rounded-full"
+                            style={{backgroundColor: `${color}16`, color}}>
+                        <Icon className="size-4" aria-hidden="true"/>
+                      </span>
+                      <div className="min-w-0">
+                        <h2 className="truncate text-sm text-[#dcddd8]">{name}</h2>
+                        <p className="mt-1 text-[11px] text-[#737873]">{repeat}</p>
+                      </div>
                     </div>
-                    <span
-                      className="flex shrink-0 items-center gap-2 border px-2.5 py-1.5 text-[8px] tracking-[0.06em] uppercase"
-                      style={{borderColor: `${color}55`, color}}
-                    >
-                      <Icon className="size-3" aria-hidden="true"/>
-                      {status}
-                    </span>
-                  </div>
+                    <span className="shrink-0 text-[11px]" style={{color}}>{status}</span>
+                  </article>
+                ))}
+              </div>
+              <div className="mt-3 flex items-center gap-2 px-3 py-2 text-[11px] text-[#777c76]">
+                <LuCheck className="text-[#65c99b]" aria-hidden="true"/>
+                Next dates update automatically
+              </div>
+            </aside>
+          </section>
+
+          <section className="border-t border-[#252825] py-16">
+            <p className="mb-10 text-xs tracking-[0.08em] text-[#777c76] uppercase">How it works</p>
+            <div className="grid grid-cols-3 gap-10 max-[720px]:grid-cols-1 max-[720px]:gap-8">
+              {benefits.map(([title, text], index) => (
+                <article key={title}>
+                  <span className="text-xs text-[#f0783c]">0{index + 1}</span>
+                  <h2 className="mt-4 text-base font-medium">{title}</h2>
+                  <p className="mt-2 max-w-[300px] text-sm leading-6 text-[#858a84]">{text}</p>
                 </article>
               ))}
             </div>
-
-            <footer className="grid grid-cols-3 border-t border-[#343734]">
-              {[
-                ['01', 'Overdue', '#e36f5e'],
-                ['01', 'Due soon', '#f0a43c'],
-                ['01', 'OK', '#4bd49b'],
-              ].map(([value, label, color]) => (
-                <div className="border-r border-[#343734] p-4 last:border-r-0" key={label}>
-                  <strong className="text-lg font-medium" style={{color}}>
-                    {value}
-                  </strong>
-                  <span className="mt-1 block text-[8px] tracking-[0.08em] text-[#727671] uppercase">
-                    {label}
-                  </span>
-                </div>
-              ))}
-            </footer>
-          </aside>
-        </section>
-
-        <section className="border border-[#383b38] bg-[#070808]">
-          <header
-            className="flex flex-wrap items-end justify-between gap-5 border-b border-[#343734] px-[clamp(24px,4vw,48px)] py-7">
-            <div>
-              <p className="text-[9px] tracking-[0.13em] text-[#f0783c] uppercase">
-                Simple operating loop
-              </p>
-              <h2
-                className="mt-3 text-[clamp(24px,4vw,40px)] leading-none font-medium tracking-[-0.045em] text-[#e8e9e3] uppercase">
-                Add it. Track it. Repeat.
-              </h2>
-            </div>
-            <p className="max-w-[420px] text-[10px] leading-5 text-[#7d817c]">
-              No complicated project setup—just the recurring responsibilities
-              that keep daily life running.
-            </p>
-          </header>
-
-          <div className="grid grid-cols-3 max-[800px]:grid-cols-1">
-            {workflow.map(({step, title, text, icon: Icon}) => (
-              <article
-                className="border-r border-[#343734] p-[clamp(24px,4vw,42px)] last:border-r-0 max-[800px]:border-r-0 max-[800px]:border-b max-[800px]:last:border-b-0"
-                key={step}
-              >
-                <div className="flex items-center justify-between">
-                  <span className="text-[9px] tracking-[0.12em] text-[#666a65] uppercase">
-                    Step {step}
-                  </span>
-                  <span className="grid size-9 place-items-center border border-[#4a4d4a] text-[#f0783c]">
-                    <Icon className="size-4" aria-hidden="true"/>
-                  </span>
-                </div>
-                <h3 className="mt-8 text-sm font-medium tracking-[0.03em] text-[#dedfda] uppercase">
-                  {title}
-                </h3>
-                <p className="mt-4 text-[10px] leading-5 text-[#777b76]">{text}</p>
-              </article>
-            ))}
-          </div>
-        </section>
-
-        <section
-          className="my-10 flex flex-wrap items-center justify-between gap-7 border border-[#5a4439] bg-[#120d0a] px-[clamp(24px,4vw,48px)] py-8">
-          <div className="flex items-start gap-4">
-            <span className="grid size-10 shrink-0 place-items-center border border-[#71503f] text-[#f0783c]">
-              <LuShieldCheck className="size-5" aria-hidden="true"/>
-            </span>
-            <div>
-              <p className="text-[9px] tracking-[0.12em] text-[#f0783c] uppercase">
-                Ready when you are
-              </p>
-              <h2 className="mt-2 text-lg font-medium tracking-[-0.03em] text-[#ebece6]">
-                Build a care routine you can actually see.
-              </h2>
-            </div>
-          </div>
-          <Link
-            className="inline-flex items-center gap-4 border border-[#dadbd6] bg-[#dedfda] px-5 py-3 text-[10px] font-semibold tracking-[0.08em] text-[#080908] uppercase hover:bg-white"
-            to={ROUTES.register}
-          >
-            Create your workspace
-            <LuArrowRight aria-hidden="true"/>
-          </Link>
-        </section>
+          </section>
         </main>
       </div>
     </div>
