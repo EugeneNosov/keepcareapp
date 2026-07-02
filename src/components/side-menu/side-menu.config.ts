@@ -1,6 +1,6 @@
 import { LuBell, LuListTodo, LuSettings } from 'react-icons/lu'
 import type { IconType } from 'react-icons'
-import { ROUTES } from '../../app.constants.ts';
+import { ROUTES } from '@/app.constants.ts';
 
 type MenuItem = {
   label: string

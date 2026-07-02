@@ -2,9 +2,9 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { LuArrowLeft, LuUserPlus } from 'react-icons/lu';
 import { Link, Navigate, useNavigate } from 'react-router';
-import { ROUTES } from '../../../app.constants.ts';
-import Brand from '../../../components/brand/Brand.tsx';
-import { ApiError } from '../../../shared/api';
+import { ROUTES } from '@/app.constants.ts';
+import Brand from '@/components/brand/Brand.tsx';
+import { ApiError } from '@/shared/api';
 import { useAuth } from '../hooks/useAuth';
 import type { RegisterInput } from '../types/auth.types';
 

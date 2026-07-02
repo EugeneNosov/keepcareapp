@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { ApiError } from '../../../shared/api';
+import { ApiError } from '@/shared/api';
 import { getTasks } from '../api/task.api.ts';
 import { TASK_QUERY_KEYS } from '../task.constants.ts';
 

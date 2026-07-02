@@ -11,8 +11,8 @@ import {
   LuTriangleAlert,
 } from 'react-icons/lu';
 import { Link } from 'react-router';
-import { ROUTES } from '../../../app.constants.ts';
-import Brand from '../../../components/brand/Brand.tsx';
+import { ROUTES } from '@/app.constants.ts';
+import Brand from '@/components/brand/Brand.tsx';
 
 const exampleTasks = [
   {
@@ -61,7 +61,8 @@ const workflow = [
 
 export function LandingPage() {
   return (
-    <div className="mx-auto min-h-screen w-full max-w-[1320px] px-6 py-6 max-[640px]:px-4">
+    <div className="min-h-screen w-full">
+      <div className="mx-auto w-full max-w-[1320px] px-6 py-6 max-[640px]:px-4">
       <header className="flex items-center justify-between border border-[#343734] bg-[#070808] px-5 py-4">
         <Brand/>
         <nav className="flex items-center gap-2" aria-label="Account">
@@ -256,7 +257,8 @@ export function LandingPage() {
             <LuArrowRight aria-hidden="true"/>
           </Link>
         </section>
-      </main>
+        </main>
+      </div>
     </div>
   );
 }

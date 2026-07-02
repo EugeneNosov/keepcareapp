@@ -4,7 +4,7 @@ import {
   LuClock3,
   LuTriangleAlert,
 } from 'react-icons/lu'
-import { ApiError } from '../../../shared/api';
+import { ApiError } from '@/shared/api';
 import AddTaskDialog from '../components/AddTaskDialog.tsx'
 import TaskItem from '../components/TaskItem.tsx'
 import useCreateTask from '../hooks/useCreateTask.ts'

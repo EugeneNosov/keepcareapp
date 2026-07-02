@@ -10,7 +10,7 @@ import {
   setApiAccessToken,
   setApiRefreshHandler,
   setApiUnauthorizedHandler,
-} from '../../../shared/api';
+} from '@/shared/api';
 import {
   login as loginRequest,
   loginWithGoogle as loginWithGoogleRequest,

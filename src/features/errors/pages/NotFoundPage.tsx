@@ -2,9 +2,9 @@ import {
   LuArrowRight,
 } from 'react-icons/lu';
 import { Link } from 'react-router';
-import { ROUTES } from '../../../app.constants.ts';
-import Brand from '../../../components/brand/Brand.tsx';
-import { useAuth } from '../../auth/hooks/useAuth';
+import { ROUTES } from '@/app.constants.ts';
+import Brand from '@/components/brand/Brand.tsx';
+import { useAuth } from '@/features/auth/hooks/useAuth';
 
 export function NotFoundPage() {
   const {isAuthenticated} = useAuth();
