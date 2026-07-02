@@ -13,12 +13,14 @@ import {
 } from '../../../shared/api';
 import {
   login as loginRequest,
+  loginWithGoogle as loginWithGoogleRequest,
   logout as logoutRequest,
   refreshSession,
   register as registerRequest,
 } from '../api/auth.api';
 import type {
   AuthResponse,
+  GoogleAuthInput,
   LoginInput,
   RegisterInput,
   User,
@@ -118,6 +120,13 @@ export function AuthProvider({children}: PropsWithChildren) {
     [applyAuthentication],
   );
 
+  const loginWithGoogle = useCallback(
+    async (input: GoogleAuthInput) => {
+      applyAuthentication(await loginWithGoogleRequest(input));
+    },
+    [applyAuthentication],
+  );
+
   const logout = useCallback(async () => {
     try {
       await logoutRequest();
@@ -135,10 +144,11 @@ export function AuthProvider({children}: PropsWithChildren) {
       isAuthenticated: user !== null,
       isLoading,
       login,
+      loginWithGoogle,
       register,
       logout,
     }),
-    [isLoading, login, logout, register, user],
+    [isLoading, login, loginWithGoogle, logout, register, user],
   );
 
   return <AuthContext value={value}>{children}</AuthContext>;

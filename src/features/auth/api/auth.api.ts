@@ -1,6 +1,7 @@
 import { apiRequest } from '../../../shared/api';
 import type {
   AuthResponse,
+  GoogleAuthInput,
   LoginInput,
   RegisterInput,
   User,
@@ -15,6 +16,13 @@ export function login(input: LoginInput) {
 
 export function register(input: RegisterInput) {
   return apiRequest<AuthResponse>('/auth/register', {
+    method: 'POST',
+    body: input,
+  });
+}
+
+export function loginWithGoogle(input: GoogleAuthInput) {
+  return apiRequest<AuthResponse>('/auth/google', {
     method: 'POST',
     body: input,
   });

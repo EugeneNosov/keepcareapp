@@ -1,10 +1,7 @@
 import { ApiError } from './api-error';
+import getEnvVariable from '../utils/getEnvVariable.ts';
 
-const apiUrl = import.meta.env.VITE_API_URL?.replace(/\/$/, '');
-
-if (!apiUrl) {
-  throw new Error('VITE_API_URL is not configured');
-}
+const apiUrl = getEnvVariable('VITE_API_URL')?.replace(/\/$/, '');
 
 let accessToken: string | null = null;
 let refreshHandler: (() => Promise<string>) | null = null;

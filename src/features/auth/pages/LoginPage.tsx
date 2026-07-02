@@ -1,7 +1,10 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
+import {
+  GoogleLogin,
+  type CredentialResponse,
+} from '@react-oauth/google';
 import { useForm } from 'react-hook-form';
 import { LuArrowLeft, LuLockKeyhole } from 'react-icons/lu';
-import { FcGoogle } from 'react-icons/fc';
 import { Link, Navigate, useNavigate } from 'react-router';
 import Brand from '../../../components/brand/Brand.tsx';
 import { ApiError } from '../../../shared/api';
@@ -10,8 +13,9 @@ import type { LoginInput } from '../types/auth.types';
 
 export function LoginPage() {
   const navigate = useNavigate();
-  const {isAuthenticated, isLoading, login} = useAuth();
+  const {isAuthenticated, isLoading, login, loginWithGoogle} = useAuth();
   const [requestError, setRequestError] = useState<string | null>(null);
+  const [isGoogleSubmitting, setIsGoogleSubmitting] = useState(false);
   const {
     register: registerField,
     handleSubmit,
@@ -32,6 +36,37 @@ export function LoginPage() {
       );
     }
   }
+
+  const handleGoogleCredential = useCallback(async (credential: string) => {
+    setRequestError(null);
+    setIsGoogleSubmitting(true);
+
+    try {
+      await loginWithGoogle({credential});
+      navigate('/tasks', {replace: true});
+    } catch (error) {
+      setRequestError(
+        error instanceof ApiError
+          ? error.message
+          : 'Unable to sign in with Google. Please try again.',
+      );
+    } finally {
+      setIsGoogleSubmitting(false);
+    }
+  }, [loginWithGoogle, navigate]);
+
+  const handleGoogleSuccess = useCallback((response: CredentialResponse) => {
+    if (!response.credential) {
+      setRequestError('Google did not return a valid credential.');
+      return;
+    }
+
+    void handleGoogleCredential(response.credential);
+  }, [handleGoogleCredential]);
+
+  const handleGoogleError = useCallback(() => {
+    setRequestError('Unable to sign in with Google. Please try again.');
+  }, []);
 
   if (isLoading) {
     return (
@@ -134,7 +169,7 @@ export function LoginPage() {
 
             <button
               className="flex h-12 cursor-pointer items-center justify-between border border-[#d8d9d4] bg-[#dedfda] px-4 text-[10px] font-semibold tracking-[0.09em] text-[#090a09] uppercase hover:bg-white disabled:cursor-not-allowed disabled:opacity-60"
-              disabled={isSubmitting}
+              disabled={isSubmitting || isGoogleSubmitting}
               type="submit">
               {isSubmitting ? 'Signing in...' : 'Login'} <span aria-hidden="true">→</span>
             </button>
@@ -145,13 +180,23 @@ export function LoginPage() {
               <span className="h-px flex-1 bg-[#3a3c3a]"/>
             </div>
 
-            <button
-              className="flex h-12 cursor-pointer items-center justify-center gap-3 border border-[#555855] bg-[#202220] px-4 text-[10px] font-medium tracking-[0.07em] text-[#eeeeea] uppercase transition-colors hover:border-[#737673] hover:bg-[#292b29] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#f0783c]"
-              type="button"
+            <div
+              className={`grid min-h-11 place-items-center overflow-hidden transition-opacity ${
+                isGoogleSubmitting || isSubmitting
+                  ? 'pointer-events-none opacity-60'
+                  : ''
+              }`}
             >
-              <FcGoogle className="size-4" aria-hidden="true"/>
-              Login with Google
-            </button>
+              <GoogleLogin
+                onError={handleGoogleError}
+                onSuccess={handleGoogleSuccess}
+                shape="rectangular"
+                size="large"
+                text="continue_with"
+                theme="filled_black"
+                width="320"
+              />
+            </div>
 
             <p className="m-0 text-center text-[9px] tracking-[0.06em] text-[#929691] uppercase">
               New to KeepCare?{' '}

@@ -23,3 +23,7 @@ export type RegisterInput = {
   password: string;
   displayName?: string;
 };
+
+export type GoogleAuthInput = {
+  credential: string;
+};
