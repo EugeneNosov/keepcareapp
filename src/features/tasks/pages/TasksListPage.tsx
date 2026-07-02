@@ -85,11 +85,11 @@ export function TasksListPage() {
   }
 
   return (
-    <section className="mx-auto w-full max-w-[1180px]">
+    <section className="mx-auto w-full max-w-295">
       <header className="border border-[#484a48] bg-[#171817]">
         <div className="flex flex-wrap items-center justify-between gap-4 border-b border-[#3a3c3a] px-5 py-4">
           <div>
-            <h1 className="mt-1.5 text-lg font-medium tracking-[0.05em] text-[#ededE8] uppercase">
+            <h1 className="mt-1.5 text-lg font-medium tracking-wider text-[#ededE8] uppercase">
               Tasks
             </h1>
           </div>
@@ -112,7 +112,7 @@ export function TasksListPage() {
           >
             <span className="absolute inset-y-0 left-0 w-0.5" style={{backgroundColor: color}}/>
             <div className="flex items-center justify-between">
-              <span className="text-[10px] tracking-[0.1em] text-[#aeb1ad] uppercase">{label}</span>
+              <span className="text-[10px] tracking-widest text-[#aeb1ad] uppercase">{label}</span>
               <span
                 className="grid size-8 place-items-center border"
                 style={{backgroundColor: surface, borderColor: `${color}55`, color}}
@@ -147,14 +147,14 @@ export function TasksListPage() {
             {/*    type="search"*/}
             {/*  />*/}
             {/*</label>*/}
-            <span className="shrink-0 text-[9px] tracking-[0.1em] text-[#999d98] uppercase">
+            <span className="shrink-0 text-[9px] tracking-widest text-[#999d98] uppercase">
               {tasks.length.toString().padStart(2, '0')} {tasks.length === 1 ? 'record' : 'records'}
             </span>
           </div>
         </header>
 
         <div className="overflow-x-auto">
-          <div className="min-w-[900px]">
+          <div className="min-w-225">
             <div
               className="grid grid-cols-[minmax(220px,2fr)_minmax(120px,1fr)_minmax(130px,1fr)_minmax(140px,1fr)_230px] gap-4 border-b border-[#3a3c3a] px-5 py-3 text-[9px] tracking-[0.08em] text-[#969a95] uppercase">
               <span>Task name</span>

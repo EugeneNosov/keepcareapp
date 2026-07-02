@@ -91,7 +91,7 @@ function TaskItem({
 
   return (
     <div
-      className="grid grid-cols-[minmax(220px,2fr)_minmax(120px,1fr)_minmax(130px,1fr)_minmax(140px,1fr)_230px] items-center gap-4 border-b border-[#343634] px-5 py-[18px] text-[11px] last:border-b-0 hover:bg-[#1c1e1c]"
+      className="grid grid-cols-[minmax(220px,2fr)_minmax(120px,1fr)_minmax(130px,1fr)_minmax(140px,1fr)_230px] items-center gap-4 border-b border-[#343634] px-5 py-4.5 text-[11px] last:border-b-0 hover:bg-[#1c1e1c]"
     >
       <span className="text-[#dcddd7]">{task.name}</span>
       <span
