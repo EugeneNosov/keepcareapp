@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { LuCheck, LuTrash2 } from 'react-icons/lu';
 import { TASK_STATUS } from '../task.constants.ts';
 import type { Task, TaskStatus } from '../types/tasks.types.ts';
@@ -16,6 +17,12 @@ const statusStyles: Record<TaskStatus, { label: string; color: string }> = {
     color: '#4bd49b'
   },
 }
+
+const taskDateFormatter = new Intl.DateTimeFormat('en', {
+  day: '2-digit',
+  month: 'short',
+  year: 'numeric',
+});
 
 interface TaskItemProps {
   task: Task;
@@ -40,11 +47,7 @@ function formatDueDate(dueDate: string) {
     return '—'
   }
 
-  return new Intl.DateTimeFormat('en', {
-    day: '2-digit',
-    month: 'short',
-    year: 'numeric',
-  }).format(parsedDueDate)
+  return taskDateFormatter.format(parsedDueDate)
 }
 
 function isSameCalendarDate(date: Date, comparisonDate: Date) {
@@ -67,15 +70,15 @@ function isTaskCompletedToday(task: Task) {
   return isSameCalendarDate(lastCompletedDate, new Date());
 }
 
-export default function TaskItem({
-  task,
-  actionError,
-  isActionDisabled,
-  isCompleting,
-  isDeleting,
-  onComplete,
-  onDelete,
-}: TaskItemProps) {
+function TaskItem({
+                    task,
+                    actionError,
+                    isActionDisabled,
+                    isCompleting,
+                    isDeleting,
+                    onComplete,
+                    onDelete,
+                  }: TaskItemProps) {
   const statusStyle = statusStyles[task.status];
   const isCompletedToday = isTaskCompletedToday(task);
   const isCompleteButtonDisabled = isCompletedToday || isActionDisabled;
@@ -133,3 +136,5 @@ export default function TaskItem({
     </div>
   );
 }
+
+export default memo(TaskItem);

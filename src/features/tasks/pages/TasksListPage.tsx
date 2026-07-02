@@ -1,3 +1,4 @@
+import { useCallback } from 'react';
 import {
   LuCircleCheck,
   LuClock3,
@@ -44,6 +45,8 @@ export function TasksListPage() {
   const createTaskMutation = useCreateTask();
   const completeTaskMutation = useMarkTaskAsCompleted();
   const deleteTaskMutation = useDeleteTask();
+  const {mutate: completeTask} = completeTaskMutation;
+  const {mutate: deleteTask} = deleteTaskMutation;
   const isTaskActionPending =
     completeTaskMutation.isPending || deleteTaskMutation.isPending;
   const createError = createTaskMutation.error instanceof ApiError
@@ -56,13 +59,13 @@ export function TasksListPage() {
     await createTaskMutation.mutateAsync(task);
   }
 
-  function handleCompleteTask(taskId: string) {
-    completeTaskMutation.mutate(taskId);
-  }
+  const handleCompleteTask = useCallback((taskId: string) => {
+    completeTask(taskId);
+  }, [completeTask]);
 
-  function handleDeleteTask(taskId: string) {
-    deleteTaskMutation.mutate(taskId);
-  }
+  const handleDeleteTask = useCallback((taskId: string) => {
+    deleteTask(taskId);
+  }, [deleteTask]);
 
   function getTaskActionError(taskId: string) {
     const mutationError =
