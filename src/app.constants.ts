@@ -7,3 +7,4 @@ export const ROUTES = {
   notifications: '/app/notifications',
   settings: '/app/settings',
 } as const;
+export const TOAST_DURATION = 5_000 as const;

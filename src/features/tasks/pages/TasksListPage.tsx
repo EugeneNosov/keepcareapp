@@ -4,7 +4,7 @@ import {
   LuClock3,
   LuTriangleAlert,
 } from 'react-icons/lu'
-import { ApiError } from '@/shared/api';
+import { isInlineRequestError } from '@/shared/api';
 import { TASK_STATUS } from '../task.constants.ts';
 import AddTaskDialog from '../components/AddTaskDialog.tsx'
 import TaskItem from '../components/TaskItem.tsx'
@@ -44,11 +44,9 @@ export function TasksListPage() {
   const {mutate: deleteTask} = deleteTaskMutation;
   const isTaskActionPending =
     completeTaskMutation.isPending || deleteTaskMutation.isPending;
-  const createError = createTaskMutation.error instanceof ApiError
+  const createError = isInlineRequestError(createTaskMutation.error)
     ? createTaskMutation.error.message
-    : createTaskMutation.error
-      ? 'Unable to create task.'
-      : null;
+    : null;
 
   async function handleCreateTask(task: CreateTaskPayload) {
     await createTaskMutation.mutateAsync(task);
@@ -74,9 +72,9 @@ export function TasksListPage() {
       return null;
     }
 
-    return mutationError instanceof ApiError
+    return isInlineRequestError(mutationError)
       ? mutationError.message
-      : 'Unable to update this task.';
+      : null;
   }
 
   return (
