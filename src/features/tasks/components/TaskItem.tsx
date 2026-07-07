@@ -1,7 +1,8 @@
 import { memo } from 'react';
-import { LuCheck, LuCircleCheck, LuClock3, LuTrash2, LuTriangleAlert } from 'react-icons/lu';
+import { LuCheck, LuCircleCheck, LuClock3, LuTriangleAlert } from 'react-icons/lu';
 import { TASK_STATUS } from '../task.constants.ts';
 import type { Task, TaskStatus } from '../types/tasks.types.ts';
+import DeleteTaskDialog from './DeleteTaskDialog.tsx';
 
 const statusStyles: Record<TaskStatus, { label: string; color: string; icon: typeof LuClock3 }> = {
   [TASK_STATUS.overdue]: {
@@ -87,12 +88,6 @@ function TaskItem({
   const isCompletedToday = isTaskCompletedToday(task);
   const isCompleteButtonDisabled = isCompletedToday || isActionDisabled;
 
-  function handleDelete() {
-    if (window.confirm(`Delete "${task.name}"?`)) {
-      onDelete(task.id);
-    }
-  }
-
   return (
     <article
       className="grid grid-cols-[minmax(0,1.5fr)_minmax(220px,0.8fr)_auto] items-center gap-6 rounded-2xl border border-transparent bg-[#111311] p-4 transition-colors hover:border-[#292c29] hover:bg-[#151715] max-[760px]:grid-cols-1 max-[760px]:gap-4">
@@ -123,14 +118,12 @@ function TaskItem({
             <LuCheck className="size-3.5" aria-hidden="true"/>
             {isCompleting ? 'Saving...' : isCompletedToday ? 'Completed' : 'Complete'}
           </button>
-          <button
-            aria-label={isDeleting ? `Deleting ${task.name}` : `Delete ${task.name}`}
-            className="grid size-10 cursor-pointer place-items-center rounded-full bg-[#201716] text-[#b86358] transition-colors hover:bg-[#321c19] hover:text-[#e36f5e] disabled:cursor-not-allowed disabled:opacity-50"
-            onClick={handleDelete}
-            type="button"
-          >
-            <LuTrash2 className="size-3.5" aria-hidden="true"/>
-          </button>
+          <DeleteTaskDialog
+            isDeleting={isDeleting}
+            isDisabled={isActionDisabled}
+            onDelete={() => onDelete(task.id)}
+            taskName={task.name}
+          />
         </div>
         {actionError && (
           <span className="text-[9px] leading-4 text-[#e36f5e]" role="alert">
