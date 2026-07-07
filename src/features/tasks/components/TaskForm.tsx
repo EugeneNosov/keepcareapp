@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import Button from '@/components/Button/Button.tsx'
 import Input from '@/components/Input/Input.tsx';
+import Select from '@/components/Select/Select.tsx'
 import { TASK_REPEAT_UNITS } from '../task.constants.ts'
 
 const taskFormSchema = z.object({
@@ -36,8 +37,11 @@ const initialTaskFormData: TaskFormData = {
   },
 }
 
-const fieldClassName = 'h-12 w-full rounded-xl border border-[#303330] bg-[#191b19] px-4 text-sm text-[#eeeeea] outline-none transition-colors placeholder:text-[#666b66] hover:border-[#454945] focus:border-[#f0783c]'
-const labelClassName = 'text-xs text-[#a8aba6]'
+const repeatUnitOptions = [
+  {label: 'Days', value: 'days'},
+  {label: 'Weeks', value: 'weeks'},
+  {label: 'Months', value: 'months'},
+]
 
 export default function TaskForm({
                                    defaultValues = initialTaskFormData,
@@ -86,14 +90,12 @@ export default function TaskForm({
           {...register('repeatEvery.value', {valueAsNumber: true})}
         />
 
-        <label className="flex flex-col gap-2">
-          <span className={labelClassName}>Period</span>
-          <select className={fieldClassName} {...register('repeatEvery.unit')}>
-            <option value="days">Days</option>
-            <option value="weeks">Weeks</option>
-            <option value="months">Months</option>
-          </select>
-        </label>
+        <Select
+          label="Period"
+          id="task-repeat-unit"
+          options={repeatUnitOptions}
+          {...register('repeatEvery.unit')}
+        />
       </div>
 
       {errorMessages.length > 0 && (
