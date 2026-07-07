@@ -4,6 +4,7 @@ import {
   LuClock3,
   LuTriangleAlert,
 } from 'react-icons/lu'
+import Card from '@/components/Card/Card.tsx';
 import { isInlineRequestError } from '@/shared/api';
 import { TASK_STATUS } from '../task.constants.ts';
 import AddTaskDialog from '../components/AddTaskDialog.tsx'
@@ -90,7 +91,7 @@ export function TasksListPage() {
         <AddTaskDialog error={createError} onAddNewTask={handleCreateTask}/>
       </header>
 
-      <section className="mt-10 grid grid-cols-3 rounded-3xl border border-[#292c29] bg-[#111311] max-[660px]:grid-cols-1">
+      <Card className="mt-10 grid grid-cols-3 p-0 shadow-none max-[660px]:grid-cols-1">
         {metrics.map(({label, icon: Icon, color, status}) => {
           const value = tasks.filter((task) => task.status === status).length;
           return (
@@ -105,7 +106,7 @@ export function TasksListPage() {
             </article>
           );
         })}
-      </section>
+      </Card>
 
       <section className="mt-10">
         <header className="mb-4 flex items-center justify-between gap-4 px-1">

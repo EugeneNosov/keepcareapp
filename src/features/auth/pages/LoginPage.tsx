@@ -9,6 +9,7 @@ import { Link, Navigate, useNavigate } from 'react-router';
 import { ROUTES } from '@/app.constants.ts';
 import Brand from '@/components/Brand/Brand.tsx';
 import Button from '@/components/Button/Button.tsx';
+import Card from '@/components/Card/Card.tsx';
 import Input from '@/components/Input/Input.tsx';
 import { ApiError } from '@/shared/api';
 import { useAuth } from '../hooks/useAuth';
@@ -108,7 +109,7 @@ export function LoginPage() {
           </div>
         </section>
 
-        <section className="rounded-3xl border border-[#292c29] bg-[#111311] p-[clamp(24px,5vw,52px)] shadow-2xl shadow-black/30">
+        <Card className="p-[clamp(24px,5vw,52px)]">
           <div>
             <p className="text-xs text-[#777c76]">KeepCare account</p>
             <h2 className="mt-2 text-2xl font-medium tracking-[-0.035em] text-[#e8e9e3]">Sign in</h2>
@@ -199,7 +200,7 @@ export function LoginPage() {
               </Link>
             </p>
           </form>
-        </section>
+        </Card>
       </main>
     </div>
   );

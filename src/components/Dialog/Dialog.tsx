@@ -1,6 +1,7 @@
 import { useEffect, useRef, type ReactNode } from 'react'
 import { createPortal } from 'react-dom'
 import { LuX } from 'react-icons/lu'
+import Card from '@/components/Card/Card.tsx'
 
 interface DialogProps {
   isOpen: boolean
@@ -35,29 +36,31 @@ export default function Dialog({isOpen, onClose, title, children}: DialogProps) 
   return createPortal(
     <dialog
       aria-labelledby="dialog-title"
-      className="fixed inset-0 m-auto max-h-[calc(100vh-2rem)] w-[min(calc(100%-2rem),34rem)] overflow-hidden rounded-3xl border border-[#292c29] bg-[#111311] p-0 text-[#f2f2ee] shadow-2xl backdrop:bg-black/75 backdrop:backdrop-blur-sm"
+      className="fixed inset-0 m-auto max-h-[calc(100vh-2rem)] w-[min(calc(100%-2rem),34rem)] overflow-hidden border-0 bg-transparent p-0 text-[#f2f2ee] backdrop:bg-black/75 backdrop:backdrop-blur-sm"
       onClose={onClose}
       ref={dialogRef}
     >
-      <header className="flex items-center justify-between gap-4 px-6 pt-6 pb-3">
-        <h2
-          id="dialog-title"
-          className="text-xl font-medium tracking-[-0.03em]"
-        >
-          {title}
-        </h2>
-        <button
-          aria-label="Close dialog"
-          className="grid size-9 cursor-pointer place-items-center rounded-full bg-[#191b19] text-[#8f948e] transition-colors hover:bg-[#242724] hover:text-[#f2f2ee] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#f0783c]"
-          onClick={onClose}
-          type="button"
-        >
-          <LuX className="size-4" aria-hidden="true"/>
-        </button>
-      </header>
-      <div className="max-h-[calc(100vh-7rem)] overflow-y-auto px-6 pt-3 pb-6">
-        {children}
-      </div>
+      <Card className="overflow-hidden shadow-2xl">
+        <header className="flex items-center justify-between gap-4 px-6 pt-6 pb-3">
+          <h2
+            id="dialog-title"
+            className="text-xl font-medium tracking-[-0.03em]"
+          >
+            {title}
+          </h2>
+          <button
+            aria-label="Close dialog"
+            className="grid size-9 cursor-pointer place-items-center rounded-full bg-[#191b19] text-[#8f948e] transition-colors hover:bg-[#242724] hover:text-[#f2f2ee] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#f0783c]"
+            onClick={onClose}
+            type="button"
+          >
+            <LuX className="size-4" aria-hidden="true"/>
+          </button>
+        </header>
+        <div className="max-h-[calc(100vh-7rem)] overflow-y-auto px-6 pt-3 pb-6">
+          {children}
+        </div>
+      </Card>
     </dialog>,
     dialogRoot,
   )
