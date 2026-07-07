@@ -1,40 +1,19 @@
 import { useCallback } from 'react';
-import {
-  LuCircleCheck,
-  LuClock3,
-  LuTriangleAlert,
-} from 'react-icons/lu'
-import Card from '@/components/Card/Card.tsx';
 import { isInlineRequestError } from '@/shared/api';
-import { TASK_STATUS } from '../task.constants.ts';
 import AddTaskDialog from '../components/AddTaskDialog.tsx'
 import TaskItem from '../components/TaskItem.tsx'
+import TaskSummary from '../components/TaskSummary.tsx';
 import useCreateTask from '../hooks/useCreateTask.ts'
 import useDeleteTask from '../hooks/useDeleteTask.ts';
 import useMarkTaskAsCompleted from '../hooks/useMarkTaskAsCompleted.ts';
 import useTasks from '../hooks/useTasks.ts'
 import type { CreateTaskPayload } from '../types/tasks.types.ts';
 
-const metrics = [
-  {
-    label: 'Overdue',
-    icon: LuTriangleAlert,
-    color: '#e36f5e',
-    status: TASK_STATUS.overdue,
-  },
-  {
-    label: 'Due soon',
-    icon: LuClock3,
-    color: '#f0a43c',
-    status: TASK_STATUS.dueSoon,
-  },
-  {
-    label: 'OK',
-    icon: LuCircleCheck,
-    color: '#4bd49b',
-    status: TASK_STATUS.ok,
-  },
-]
+const summaryData = {
+  overdueCount: 4,
+  dueSoonCount: 1,
+  okCount: 14,
+};
 
 export function TasksListPage() {
   const {tasks, isLoading, error} = useTasks();
@@ -91,22 +70,7 @@ export function TasksListPage() {
         <AddTaskDialog error={createError} onAddNewTask={handleCreateTask}/>
       </header>
 
-      <Card className="mt-10 grid grid-cols-3 p-0 shadow-none max-[660px]:grid-cols-1">
-        {metrics.map(({label, icon: Icon, color, status}) => {
-          const value = tasks.filter((task) => task.status === status).length;
-          return (
-            <article className="flex items-center gap-4 border-r border-[#292c29] p-5 last:border-r-0 max-[660px]:border-r-0 max-[660px]:border-b max-[660px]:last:border-b-0" key={label}>
-              <span className="grid size-10 place-items-center rounded-full" style={{backgroundColor: `${color}14`, color}}>
-                <Icon className="size-4" aria-hidden="true"/>
-              </span>
-              <div>
-                <strong className="text-xl font-medium text-[#e5e6e1]">{isLoading ? '—' : value.toString().padStart(2, '0')}</strong>
-                <p className="mt-1 text-[11px] text-[#777c76]">{label}</p>
-              </div>
-            </article>
-          );
-        })}
-      </Card>
+      <TaskSummary summaryData={summaryData}/>
 
       <section className="mt-10">
         <header className="mb-4 flex items-center justify-between gap-4 px-1">
