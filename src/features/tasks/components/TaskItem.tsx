@@ -126,7 +126,6 @@ function TaskItem({
           <button
             aria-label={isDeleting ? `Deleting ${task.name}` : `Delete ${task.name}`}
             className="grid size-10 cursor-pointer place-items-center rounded-full bg-[#201716] text-[#b86358] transition-colors hover:bg-[#321c19] hover:text-[#e36f5e] disabled:cursor-not-allowed disabled:opacity-50"
-            disabled={isActionDisabled}
             onClick={handleDelete}
             type="button"
           >

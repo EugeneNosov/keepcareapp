@@ -1,6 +1,6 @@
 import { Navigate, Outlet, useLocation } from 'react-router';
 import { ROUTES } from '@/app.constants.ts';
-import { SideMenu } from '@/components/side-menu/SideMenu';
+import { SideMenu } from '@/components/SideMenu/SideMenu';
 import { useAuth } from '@/features/auth/hooks/useAuth';
 
 export function ProtectedLayout() {

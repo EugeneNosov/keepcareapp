@@ -2,6 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { TASK_REPEAT_UNITS } from '../task.constants.ts'
+import Input from '@/components/Input/Input.tsx';
 
 const taskFormSchema = z.object({
   name: z.string()
@@ -71,27 +72,18 @@ export default function TaskForm({
 
   return (
     <form className="flex flex-col gap-5" onSubmit={handleSubmit(handleFormSubmit)}>
-      <label className="flex flex-col gap-2">
-        <span className={labelClassName}>Task name</span>
-        <input
-          className={fieldClassName}
-          placeholder="Enter task name"
-          type="text"
-          {...register('name')}
-        />
-      </label>
+      <Input label="Task name" id="task-name" placeholder="Enter task name"
+             type="text" {...register('name')}/>
 
       <div className="grid gap-4 sm:grid-cols-[minmax(0,1fr)_150px]">
-        <label className="flex flex-col gap-2">
-          <span className={labelClassName}>Repeat every</span>
-          <input
-            className={fieldClassName}
-            min={1}
-            placeholder="2"
-            type="number"
-            {...register('repeatEvery.value', {valueAsNumber: true})}
-          />
-        </label>
+        <Input
+          label="Repeat every"
+          id="task-repeat-value"
+          min={1}
+          placeholder="2"
+          type="number"
+          {...register('repeatEvery.value', {valueAsNumber: true})}
+        />
 
         <label className="flex flex-col gap-2">
           <span className={labelClassName}>Period</span>

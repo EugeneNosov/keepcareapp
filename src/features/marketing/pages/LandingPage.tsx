@@ -7,7 +7,7 @@ import {
 } from 'react-icons/lu';
 import { Link } from 'react-router';
 import { ROUTES } from '@/app.constants.ts';
-import Brand from '@/components/brand/Brand.tsx';
+import Brand from '@/components/Brand/Brand.tsx';
 
 const exampleTasks = [
   {name: 'Refill medication', repeat: 'Every 4 weeks', status: 'Overdue', color: '#e97861', icon: LuTriangleAlert},

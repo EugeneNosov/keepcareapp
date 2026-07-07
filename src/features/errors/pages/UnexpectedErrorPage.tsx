@@ -2,7 +2,7 @@ import {
   LuRefreshCw,
 } from 'react-icons/lu';
 import { isRouteErrorResponse, useRouteError } from 'react-router';
-import Brand from '@/components/brand/Brand.tsx';
+import Brand from '@/components/Brand/Brand.tsx';
 
 export function UnexpectedErrorPage() {
   const error = useRouteError();

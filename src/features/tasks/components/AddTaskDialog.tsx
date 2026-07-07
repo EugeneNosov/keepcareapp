@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { LuPlus } from 'react-icons/lu'
-import Dialog from '@/components/dialog/Dialog.tsx'
+import Dialog from '@/components/Dialog/Dialog.tsx'
 import type { CreateTaskPayload } from '../types/tasks.types.ts'
 import TaskForm, { type TaskFormData } from './TaskForm.tsx'
 

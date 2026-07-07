@@ -7,7 +7,8 @@ import { useForm } from 'react-hook-form';
 import { LuArrowLeft, LuArrowRight, LuCheck } from 'react-icons/lu';
 import { Link, Navigate, useNavigate } from 'react-router';
 import { ROUTES } from '@/app.constants.ts';
-import Brand from '@/components/brand/Brand.tsx';
+import Brand from '@/components/Brand/Brand.tsx';
+import Input from '@/components/Input/Input.tsx';
 import { ApiError } from '@/shared/api';
 import { useAuth } from '../hooks/useAuth';
 import type { LoginInput } from '../types/auth.types';
@@ -113,10 +114,10 @@ export function LoginPage() {
           </div>
 
           <form className="mt-7 grid gap-5" onSubmit={handleSubmit(handleLogin)}>
-            <label className="grid gap-2.5 text-xs text-[#a8aba6]">
-              Email address
-              <input
-                className="h-13 w-full rounded-xl border border-[#303330] bg-[#191b19] px-4 text-sm text-[#eeeeea] outline-none transition-colors placeholder:text-[#666b66] hover:border-[#454945] focus:border-[#f0783c]"
+            <div className="grid gap-2.5">
+              <Input
+                label="Email address"
+                id="login-email"
                 placeholder="you@example.com"
                 type="email"
                 autoComplete="email"
@@ -130,12 +131,12 @@ export function LoginPage() {
                   {errors.email.message}
                 </span>
               )}
-            </label>
+            </div>
 
-            <label className="grid gap-2.5 text-xs text-[#a8aba6]">
-              Password
-              <input
-                className="h-13 w-full rounded-xl border border-[#303330] bg-[#191b19] px-4 text-sm text-[#eeeeea] outline-none transition-colors placeholder:text-[#666b66] hover:border-[#454945] focus:border-[#f0783c]"
+            <div className="grid gap-2.5">
+              <Input
+                label="Password"
+                id="login-password"
                 placeholder="Enter your password"
                 type="password"
                 autoComplete="current-password"
@@ -149,7 +150,7 @@ export function LoginPage() {
                   {errors.password.message}
                 </span>
               )}
-            </label>
+            </div>
 
             {requestError && (
               <p className="m-0 rounded-xl border border-[#63342f] bg-[#25100e] px-4 py-3 text-xs leading-5 text-[#e98a7e]"

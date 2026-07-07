@@ -9,8 +9,8 @@ import {
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import './index.css'
 import App from './App.tsx'
-import ToastContainer from './components/toast/ToastContainer.tsx';
-import { toast } from './components/toast/toast.ts';
+import ToastContainer from './components/Toast/ToastContainer.tsx';
+import { toast } from './components/Toast/toast.ts';
 import { AuthProvider } from './features/auth/context/AuthProvider.tsx'
 import {
   ApiError,
