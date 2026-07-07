@@ -5,7 +5,7 @@ import { TASK_QUERY_KEYS } from '../task.constants.ts';
 
 export default function useTasks() {
   const tasksQuery = useQuery({
-    queryKey: TASK_QUERY_KEYS.all,
+    queryKey: TASK_QUERY_KEYS.list,
     queryFn: getTasks,
   });
 

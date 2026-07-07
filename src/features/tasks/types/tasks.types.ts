@@ -22,3 +22,10 @@ export interface CreateTaskPayload {
   name: string;
   repeatEvery: TaskRepeatEvery;
 }
+
+export interface TaskSummary {
+  overdueCount: number;
+  dueSoonCount: number;
+  okCount: number;
+  allCount: number;
+}

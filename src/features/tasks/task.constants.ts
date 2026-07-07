@@ -7,4 +7,6 @@ export const TASK_STATUSES = Object.values(TASK_STATUS);
 export const TASK_REPEAT_UNITS = ['days', 'weeks', 'months'] as const;
 export const TASK_QUERY_KEYS = {
   all: ['tasks'] as const,
+  list: ['tasks', 'list'] as const,
+  summary: ['tasks', 'summary'] as const,
 };

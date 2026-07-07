@@ -1,22 +1,18 @@
 import { useCallback } from 'react';
 import { isInlineRequestError } from '@/shared/api';
-import AddTaskDialog from '../components/AddTaskDialog.tsx'
-import TaskItem from '../components/TaskItem.tsx'
+import AddTaskDialog from '../components/AddTaskDialog.tsx';
+import TaskItem from '../components/TaskItem.tsx';
 import TaskSummary from '../components/TaskSummary.tsx';
-import useCreateTask from '../hooks/useCreateTask.ts'
+import useCreateTask from '../hooks/useCreateTask.ts';
 import useDeleteTask from '../hooks/useDeleteTask.ts';
 import useMarkTaskAsCompleted from '../hooks/useMarkTaskAsCompleted.ts';
-import useTasks from '../hooks/useTasks.ts'
+import useTasks from '../hooks/useTasks.ts';
+import useTaskSummary from '../hooks/useTaskSummary.ts';
 import type { CreateTaskPayload } from '../types/tasks.types.ts';
-
-const summaryData = {
-  overdueCount: 4,
-  dueSoonCount: 1,
-  okCount: 14,
-};
 
 export function TasksListPage() {
   const {tasks, isLoading, error} = useTasks();
+  const {summaryData, error: summaryError} = useTaskSummary();
   const createTaskMutation = useCreateTask();
   const completeTaskMutation = useMarkTaskAsCompleted();
   const deleteTaskMutation = useDeleteTask();
@@ -71,6 +67,11 @@ export function TasksListPage() {
       </header>
 
       <TaskSummary summaryData={summaryData}/>
+      {summaryError && (
+        <p className="mt-3 rounded-card border border-danger-border bg-danger-surface px-5 py-4 text-xs text-danger" role="alert">
+          {summaryError}
+        </p>
+      )}
 
       <section className="mt-10">
         <header className="mb-4 flex items-center justify-between gap-4 px-1">
@@ -114,5 +115,5 @@ export function TasksListPage() {
         </div>
       </section>
     </section>
-  )
+  );
 }

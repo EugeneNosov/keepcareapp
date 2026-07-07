@@ -2,14 +2,9 @@ import {
   LuCircleCheck,
   LuClock3,
   LuTriangleAlert,
-} from 'react-icons/lu'
+} from 'react-icons/lu';
 import Card from '@/components/Card/Card.tsx';
-
-type TaskSummaryData = {
-  dueSoonCount: number;
-  okCount: number;
-  overdueCount: number;
-};
+import type { TaskSummary as TaskSummaryData } from '../types/tasks.types.ts';
 
 type TaskSummaryProps = {
   summaryData: TaskSummaryData;
@@ -56,5 +51,5 @@ export default function TaskSummary({summaryData}: TaskSummaryProps) {
         </article>
       ))}
     </Card>
-  )
+  );
 }
