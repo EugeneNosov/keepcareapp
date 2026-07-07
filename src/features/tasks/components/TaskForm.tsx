@@ -1,8 +1,9 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
-import { TASK_REPEAT_UNITS } from '../task.constants.ts'
+import Button from '@/components/Button/Button.tsx'
 import Input from '@/components/Input/Input.tsx';
+import { TASK_REPEAT_UNITS } from '../task.constants.ts'
 
 const taskFormSchema = z.object({
   name: z.string()
@@ -116,20 +117,16 @@ export default function TaskForm({
       )}
 
       <div className="grid grid-cols-2 gap-3 pt-2">
-        <button
-          className="h-12 cursor-pointer rounded-full bg-[#202320] px-4 text-sm text-[#aeb2ac] transition-colors hover:bg-[#292c29] hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+        <Button
+          label="Cancel"
           onClick={handleCancel}
-          type="button"
-        >
-          Cancel
-        </button>
-        <button
-          className="h-12 cursor-pointer rounded-full bg-[#f0783c] px-4 text-sm font-medium text-[#160b06] transition-colors hover:bg-[#ff8a4f] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#f0783c] disabled:cursor-not-allowed disabled:bg-[#493126] disabled:text-[#8c6958]"
+          variant="secondary"
+        />
+        <Button
           disabled={!isValid || isSubmitting}
+          label={isSubmitting ? 'Saving...' : submitLabel}
           type="submit"
-        >
-          {isSubmitting ? 'Saving...' : submitLabel}
-        </button>
+        />
       </div>
     </form>
   )

@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { LuPlus } from 'react-icons/lu'
+import Button from '@/components/Button/Button.tsx'
 import Dialog from '@/components/Dialog/Dialog.tsx'
 import type { CreateTaskPayload } from '../types/tasks.types.ts'
 import TaskForm, { type TaskFormData } from './TaskForm.tsx'
@@ -23,14 +24,11 @@ export default function AddTaskDialog({ error, onAddNewTask }: AddTaskDialogProp
 
   return (
     <>
-      <button
-        className="inline-flex h-11 cursor-pointer items-center gap-2 rounded-full bg-[#f0783c] px-5 text-sm font-medium text-[#160b06] transition-colors hover:bg-[#ff8a4f] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#f0783c]"
+      <Button
+        icon={LuPlus}
+        label="Create task"
         onClick={() => setIsOpen(true)}
-        type="button"
-      >
-        <LuPlus className="size-4" aria-hidden="true"/>
-        Create task
-      </button>
+      />
 
       {isOpen && (
         <Dialog isOpen={isOpen} onClose={closeDialog} title="Create task">

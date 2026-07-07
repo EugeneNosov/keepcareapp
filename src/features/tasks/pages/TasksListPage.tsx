@@ -91,7 +91,7 @@ export function TasksListPage() {
       </header>
 
       <section className="mt-10 grid grid-cols-3 rounded-3xl border border-[#292c29] bg-[#111311] max-[660px]:grid-cols-1">
-        {metrics.map(({label, icon: Icon, color, status}, index) => {
+        {metrics.map(({label, icon: Icon, color, status}) => {
           const value = tasks.filter((task) => task.status === status).length;
           return (
             <article className="flex items-center gap-4 border-r border-[#292c29] p-5 last:border-r-0 max-[660px]:border-r-0 max-[660px]:border-b max-[660px]:last:border-b-0" key={label}>
@@ -102,7 +102,6 @@ export function TasksListPage() {
                 <strong className="text-xl font-medium text-[#e5e6e1]">{isLoading ? '—' : value.toString().padStart(2, '0')}</strong>
                 <p className="mt-1 text-[11px] text-[#777c76]">{label}</p>
               </div>
-              {index === 0 && value > 0 && <span className="ml-auto size-1.5 rounded-full bg-[#e36f5e]"/>}
             </article>
           );
         })}

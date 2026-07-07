@@ -3,10 +3,15 @@ import {
 } from 'react-icons/lu';
 import { isRouteErrorResponse, useRouteError } from 'react-router';
 import Brand from '@/components/Brand/Brand.tsx';
+import Button from '@/components/Button/Button.tsx';
 
 export function UnexpectedErrorPage() {
   const error = useRouteError();
   const status = isRouteErrorResponse(error) ? error.status : 500;
+
+  function handleTryAgain() {
+    window.location.reload();
+  }
 
   return (
     <div className="min-h-screen bg-[#080909] px-6 max-[640px]:px-4">
@@ -27,14 +32,13 @@ export function UnexpectedErrorPage() {
             KeepCare could not finish loading this page. Please try again.
           </p>
 
-          <button
-            className="mt-9 inline-flex cursor-pointer items-center gap-3 rounded-full bg-[#f0783c] px-6 py-3.5 text-sm font-medium text-[#160b06] transition-colors hover:bg-[#ff8a4f]"
-            onClick={() => window.location.reload()}
-            type="button"
-          >
-            Try again
-            <LuRefreshCw aria-hidden="true"/>
-          </button>
+          <Button
+            className="mt-9 h-auto gap-3 px-6 py-3.5"
+            icon={LuRefreshCw}
+            iconPosition="right"
+            label="Try again"
+            onClick={handleTryAgain}
+          />
         </section>
       </main>
     </div>

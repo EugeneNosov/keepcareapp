@@ -8,6 +8,7 @@ import { LuArrowLeft, LuArrowRight, LuCheck } from 'react-icons/lu';
 import { Link, Navigate, useNavigate } from 'react-router';
 import { ROUTES } from '@/app.constants.ts';
 import Brand from '@/components/Brand/Brand.tsx';
+import Button from '@/components/Button/Button.tsx';
 import Input from '@/components/Input/Input.tsx';
 import { ApiError } from '@/shared/api';
 import { useAuth } from '../hooks/useAuth';
@@ -159,12 +160,14 @@ export function LoginPage() {
               </p>
             )}
 
-            <button
-              className="flex h-13 cursor-pointer items-center justify-center gap-3 rounded-full bg-[#f0783c] px-5 text-sm font-medium text-[#160b06] transition-colors hover:bg-[#ff8a4f] disabled:cursor-not-allowed disabled:opacity-60"
+            <Button
+              className="h-13 justify-center gap-3 disabled:cursor-not-allowed disabled:opacity-60"
               disabled={isSubmitting || isGoogleSubmitting}
-              type="submit">
-              {isSubmitting ? 'Signing in...' : 'Sign in'} <LuArrowRight aria-hidden="true"/>
-            </button>
+              icon={LuArrowRight}
+              iconPosition="right"
+              label={isSubmitting ? 'Signing in...' : 'Sign in'}
+              type="submit"
+            />
 
             <div className="flex items-center gap-3 text-[10px] text-[#737873]">
               <span className="h-px flex-1 bg-[#3a3c3a]"/>

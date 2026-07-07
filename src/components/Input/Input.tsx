@@ -1,12 +1,12 @@
-import React from 'react';
+import React, { type InputHTMLAttributes, type Ref, type TextareaHTMLAttributes } from 'react';
 
 type InputProps = {
   label: string;
   id: string;
   wrapperClassName?: string;
   isTextArea?: boolean;
-  ref?: React.Ref<HTMLInputElement | HTMLTextAreaElement>;
-} & React.InputHTMLAttributes<HTMLInputElement> & React.TextareaHTMLAttributes<HTMLTextAreaElement>;
+  ref?: Ref<HTMLInputElement | HTMLTextAreaElement>;
+} & InputHTMLAttributes<HTMLInputElement> & TextareaHTMLAttributes<HTMLTextAreaElement>;
 
 const fieldClassName = 'w-full rounded-xl border border-[#303330] bg-[#191b19] px-4 text-sm text-[#eeeeea] outline-none transition-colors placeholder:text-[#666b66] hover:border-[#454945] focus:border-[#f0783c]';
 
