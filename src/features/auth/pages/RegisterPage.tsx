@@ -84,7 +84,7 @@ export function RegisterPage() {
           <form className="mt-7 grid gap-5" onSubmit={handleSubmit(handleRegistration)}>
             <div className="grid gap-2.5">
               <Input
-                label="Display name (optional)"
+                label="Display name"
                 id="register-display-name"
                 placeholder="Your name"
                 type="text"
@@ -158,7 +158,6 @@ export function RegisterPage() {
             )}
 
             <Button
-              className="h-13 justify-center gap-3 disabled:cursor-not-allowed disabled:opacity-60"
               disabled={isSubmitting}
               icon={LuArrowRight}
               iconPosition="right"

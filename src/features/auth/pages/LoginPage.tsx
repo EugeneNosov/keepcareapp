@@ -161,7 +161,6 @@ export function LoginPage() {
             )}
 
             <Button
-              className="h-13 justify-center gap-3 disabled:cursor-not-allowed disabled:opacity-60"
               disabled={isSubmitting || isGoogleSubmitting}
               icon={LuArrowRight}
               iconPosition="right"
