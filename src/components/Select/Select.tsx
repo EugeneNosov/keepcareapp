@@ -1,4 +1,14 @@
-import type { Ref, SelectHTMLAttributes } from 'react';
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type ChangeEvent,
+  type CSSProperties,
+  type Ref,
+  type SelectHTMLAttributes
+} from 'react';
+import { createPortal } from 'react-dom';
 
 type SelectOption = {
   label: string;
@@ -13,7 +23,19 @@ type SelectProps = {
   ref?: Ref<HTMLSelectElement>;
 } & SelectHTMLAttributes<HTMLSelectElement>;
 
-const fieldClassName = 'h-12 w-full rounded-xl border border-[#303330] bg-[#191b19] px-4 text-sm text-[#eeeeea] outline-none transition-colors hover:border-[#454945] focus:border-[#f0783c]';
+const buttonClassName = 'flex h-12 w-full cursor-pointer items-center justify-between rounded-xl border border-[#303330] bg-[#191b19] px-4 text-sm text-[#eeeeea] outline-none transition-colors hover:border-[#454945] focus:border-[#f0783c] disabled:cursor-not-allowed disabled:bg-[#111311] disabled:text-[#686c68]';
+const optionClassName = 'flex w-full cursor-pointer items-center justify-between rounded-lg px-3 py-2 text-left text-sm text-[#eeeeea] transition-colors hover:bg-[#292c29] hover:text-white';
+
+function setRef<T>(ref: Ref<T> | undefined, value: T | null) {
+  if (typeof ref === 'function') {
+    ref(value);
+    return;
+  }
+
+  if (ref) {
+    ref.current = value;
+  }
+}
 
 const Select = ({
                   label,
@@ -22,18 +44,136 @@ const Select = ({
                   wrapperClassName,
                   className,
                   ref,
+                  name,
+                  onBlur,
+                  onChange,
+                  defaultValue,
+                  value,
+                  disabled,
                   ...props
                 }: SelectProps) => {
+  const wrapperRef = useRef<HTMLDivElement | null>(null);
+  const selectRef = useRef<HTMLSelectElement | null>(null);
+  const buttonRef = useRef<HTMLButtonElement | null>(null);
+  const menuRef = useRef<HTMLDivElement | null>(null);
+  const [isOpen, setIsOpen] = useState(false);
+  const [menuStyle, setMenuStyle] = useState<CSSProperties>();
+  const [portalContainer, setPortalContainer] = useState<Element | null>(null);
+  const [selectedValue, setSelectedValue] = useState(
+    String(value ?? defaultValue ?? options[0]?.value ?? ''),
+  );
+  const currentValue = value !== undefined ? String(value) : selectedValue;
+
+  const selectedOption = useMemo(
+    () => options.find(option => option.value === currentValue) ?? options[0],
+    [options, currentValue],
+  );
+
+  useEffect(() => {
+    function handleDocumentClick(event: MouseEvent) {
+      const target = event.target as Node;
+
+      if (
+        !wrapperRef.current?.contains(target)
+        && !menuRef.current?.contains(target)
+      ) {
+        setIsOpen(false);
+      }
+    }
+
+    document.addEventListener('mousedown', handleDocumentClick);
+
+    return () => {
+      document.removeEventListener('mousedown', handleDocumentClick);
+    };
+  }, []);
+
+  useEffect(() => {
+    function handleWindowChange() {
+      setIsOpen(false);
+    }
+
+    window.addEventListener('resize', handleWindowChange);
+    window.addEventListener('scroll', handleWindowChange, true);
+
+    return () => {
+      window.removeEventListener('resize', handleWindowChange);
+      window.removeEventListener('scroll', handleWindowChange, true);
+    };
+  }, []);
+
+  function openMenu() {
+    const buttonRect = buttonRef.current?.getBoundingClientRect();
+
+    if (!buttonRect) {
+      return;
+    }
+
+    setMenuStyle({
+      left: buttonRect.left,
+      top: buttonRect.bottom + 8,
+      width: buttonRect.width,
+    });
+    setPortalContainer(wrapperRef.current?.closest('dialog') ?? document.body);
+    setIsOpen(true);
+  }
+
+  function handleToggleMenu() {
+    if (disabled) {
+      return;
+    }
+
+    if (isOpen) {
+      setIsOpen(false);
+      return;
+    }
+
+    openMenu();
+  }
+
+  function handleSelect(option: SelectOption) {
+    if (disabled) {
+      return;
+    }
+
+    setSelectedValue(option.value);
+    setIsOpen(false);
+
+    if (selectRef.current) {
+      selectRef.current.value = option.value;
+    }
+
+    onChange?.({
+      target: {
+        name,
+        value: option.value,
+      },
+      currentTarget: {
+        name,
+        value: option.value,
+      },
+    } as ChangeEvent<HTMLSelectElement>);
+  }
+
   return (
-    <div className={`flex flex-col gap-2 ${wrapperClassName ?? ''}`}>
+    <div ref={wrapperRef} className={`relative flex flex-col gap-2 ${wrapperClassName ?? ''}`}>
       <label htmlFor={id} className="text-xs text-[#a8aba6]">
         {label}
       </label>
       <select
-        ref={ref}
+        ref={element => {
+          selectRef.current = element;
+          setRef(ref, element);
+        }}
         id={id}
+        name={name}
+        defaultValue={selectedValue}
+        disabled={disabled}
+        onBlur={onBlur}
+        onChange={onChange}
         {...props}
-        className={`${fieldClassName} ${className ?? ''}`}
+        className="sr-only"
+        tabIndex={-1}
       >
         {options.map(option => (
           <option key={option.value} value={option.value}>
@@ -41,6 +181,47 @@ const Select = ({
           </option>
         ))}
       </select>
+      <button
+        aria-expanded={isOpen}
+        aria-haspopup="listbox"
+        ref={buttonRef}
+        className={`${buttonClassName} ${isOpen ? 'border-[#f0783c]' : ''} ${className ?? ''}`}
+        disabled={disabled}
+        onClick={handleToggleMenu}
+        type="button"
+      >
+        <span>{selectedOption?.label}</span>
+        <svg className={`size-4 text-[#d8dad5] transition-transform ${isOpen ? 'rotate-180' : ''}`} aria-hidden="true"
+             viewBox="0 0 24 24" fill="none">
+          <path d="m6 9 6 6 6-6" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"/>
+        </svg>
+      </button>
+      {isOpen && portalContainer && createPortal(
+        <div
+          ref={menuRef}
+          className="fixed z-50 rounded-xl border border-[#454945] bg-[#1b1d1b] p-1.5 shadow-2xl shadow-black/40"
+          role="listbox"
+          style={menuStyle}
+        >
+          {options.map(option => {
+            const isSelected = option.value === currentValue;
+
+            return (
+              <button
+                key={option.value}
+                className={`${optionClassName} ${isSelected ? 'bg-[#2a1d17] text-[#f0783c]' : ''}`}
+                onClick={() => handleSelect(option)}
+                role="option"
+                type="button"
+                aria-selected={isSelected}
+              >
+                <span>{option.label}</span>
+              </button>
+            );
+          })}
+        </div>,
+        portalContainer,
+      )}
     </div>
   )
 };
