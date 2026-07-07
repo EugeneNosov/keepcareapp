@@ -34,7 +34,7 @@ export default function ToastContainer() {
 
   return createPortal(
     <div
-      className="fixed inset-x-0 bottom-0 z-100 border-t border-[#63342f] bg-[#25100e] px-6 py-4 text-[#e98a7c] shadow-[0_-16px_48px_rgba(0,0,0,0.35)] max-[640px]:px-4"
+      className="fixed inset-x-0 bottom-0 z-100 border-t border-danger-border bg-danger-surface px-6 py-4 text-danger-text shadow-toast max-[640px]:px-4"
       role="alert"
     >
       <div className="mx-auto flex w-full max-w-265 items-center gap-3">
@@ -44,7 +44,7 @@ export default function ToastContainer() {
         </p>
         <button
           aria-label="Dismiss notification"
-          className="grid size-9 shrink-0 cursor-pointer place-items-center rounded-full text-[#b87166] hover:bg-[#361815] hover:text-[#f2a195] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#e98a7c]"
+          className="grid size-9 shrink-0 cursor-pointer place-items-center rounded-pill text-danger-muted hover:bg-danger-surface-hover hover:text-danger-text focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-danger-text"
           onClick={() => toast.dismiss(activeToast.id)}
           type="button"
         >

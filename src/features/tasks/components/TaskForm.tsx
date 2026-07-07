@@ -100,7 +100,7 @@ export default function TaskForm({
 
       {errorMessages.length > 0 && (
         <div
-          className="rounded-xl border border-[#63342f] bg-[#25100e] px-4 py-3 text-xs text-[#e98a7c]"
+          className="rounded-control border border-danger-border bg-danger-surface px-4 py-3 text-xs text-danger-text"
           role="alert"
         >
           <ul className="space-y-1">
@@ -111,7 +111,7 @@ export default function TaskForm({
 
       {requestError && (
         <div
-          className="rounded-xl border border-[#63342f] bg-[#25100e] px-4 py-3 text-xs text-[#e98a7c]"
+          className="rounded-control border border-danger-border bg-danger-surface px-4 py-3 text-xs text-danger-text"
           role="alert"
         >
           {requestError}

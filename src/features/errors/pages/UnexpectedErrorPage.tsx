@@ -14,21 +14,21 @@ export function UnexpectedErrorPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#080909] px-6 max-[640px]:px-4">
+    <div className="min-h-screen bg-app px-6 max-[640px]:px-4">
       <header className="mx-auto flex h-20 w-full max-w-[1060px] items-center justify-between">
         <Brand/>
       </header>
 
       <main className="mx-auto grid min-h-[calc(100vh-80px)] w-full max-w-[1060px] place-items-center py-16">
         <section className="w-full max-w-[680px] text-center">
-          <span className="inline-flex rounded-full bg-[#191b19] px-4 py-2 text-xs text-[#f0783c]">
+          <span className="inline-flex rounded-pill bg-surface-raised px-4 py-2 text-xs text-primary">
             Error {status}
           </span>
           <h1
-            className="mt-7 text-[clamp(48px,8vw,82px)] leading-[0.98] font-medium tracking-[-0.065em] text-[#efefea]">
+            className="mt-7 text-[clamp(48px,8vw,82px)] leading-[0.98] font-medium tracking-[-0.065em] text-text-app">
             Something went wrong.
           </h1>
-          <p className="mx-auto mt-7 max-w-[480px] text-sm leading-7 text-[#8f948e]">
+          <p className="mx-auto mt-7 max-w-[480px] text-sm leading-7 text-text-muted">
             KeepCare could not finish loading this page. Please try again.
           </p>
 

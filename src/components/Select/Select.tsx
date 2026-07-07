@@ -23,8 +23,8 @@ type SelectProps = {
   ref?: Ref<HTMLSelectElement>;
 } & SelectHTMLAttributes<HTMLSelectElement>;
 
-const buttonClassName = 'flex h-12 w-full cursor-pointer items-center justify-between rounded-xl border border-[#303330] bg-[#191b19] px-4 text-sm text-[#eeeeea] outline-none transition-colors hover:border-[#454945] focus:border-[#f0783c] disabled:cursor-not-allowed disabled:bg-[#111311] disabled:text-[#686c68]';
-const optionClassName = 'flex w-full cursor-pointer items-center justify-between rounded-lg px-3 py-2 text-left text-sm text-[#eeeeea] transition-colors hover:bg-[#292c29] hover:text-white';
+const buttonClassName = 'flex h-control w-full cursor-pointer items-center justify-between rounded-control border border-border-muted bg-surface-raised px-4 text-sm text-text-app outline-none transition-colors hover:border-border-strong focus:border-primary disabled:cursor-not-allowed disabled:bg-surface disabled:text-text-disabled';
+const optionClassName = 'flex w-full cursor-pointer items-center justify-between rounded-lg px-3 py-2 text-left text-sm text-text-app transition-colors hover:bg-border-app hover:text-text-strong';
 
 function setRef<T>(ref: Ref<T> | undefined, value: T | null) {
   if (typeof ref === 'function') {
@@ -157,7 +157,7 @@ const Select = ({
 
   return (
     <div ref={wrapperRef} className={`relative flex flex-col gap-2 ${wrapperClassName ?? ''}`}>
-      <label htmlFor={id} className="text-xs text-[#a8aba6]">
+      <label htmlFor={id} className="text-xs text-text-muted">
         {label}
       </label>
       <select
@@ -185,13 +185,13 @@ const Select = ({
         aria-expanded={isOpen}
         aria-haspopup="listbox"
         ref={buttonRef}
-        className={`${buttonClassName} ${isOpen ? 'border-[#f0783c]' : ''} ${className ?? ''}`}
+        className={`${buttonClassName} ${isOpen ? 'border-primary' : ''} ${className ?? ''}`}
         disabled={disabled}
         onClick={handleToggleMenu}
         type="button"
       >
         <span>{selectedOption?.label}</span>
-        <svg className={`size-4 text-[#d8dad5] transition-transform ${isOpen ? 'rotate-180' : ''}`} aria-hidden="true"
+        <svg className={`size-4 text-text-soft transition-transform ${isOpen ? 'rotate-180' : ''}`} aria-hidden="true"
              viewBox="0 0 24 24" fill="none">
           <path d="m6 9 6 6 6-6" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"/>
         </svg>
@@ -199,7 +199,7 @@ const Select = ({
       {isOpen && portalContainer && createPortal(
         <div
           ref={menuRef}
-          className="fixed z-50 rounded-xl border border-[#454945] bg-[#1b1d1b] p-1.5 shadow-2xl shadow-black/40"
+          className="fixed z-50 rounded-control border border-border-strong bg-surface-raised p-1.5 shadow-2xl shadow-black/40"
           role="listbox"
           style={menuStyle}
         >
@@ -209,7 +209,7 @@ const Select = ({
             return (
               <button
                 key={option.value}
-                className={`${optionClassName} ${isSelected ? 'bg-[#2a1d17] text-[#f0783c]' : ''}`}
+                className={`${optionClassName} ${isSelected ? 'bg-surface-selected text-primary' : ''}`}
                 onClick={() => handleSelect(option)}
                 role="option"
                 type="button"

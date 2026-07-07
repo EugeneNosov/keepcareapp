@@ -5,8 +5,8 @@
     flex-direction: column;
     height: 100vh;
     padding: 22px 14px;
-    border-right: 1px solid #202320;
-    background: #080909;
+    border-right: 1px solid var(--app-color-surface-muted);
+    background: var(--app-color-bg);
 }
 
 .side-menu__brand {
@@ -22,9 +22,9 @@
     width: 36px;
     height: 36px;
     place-items: center;
-    border-radius: 50%;
-    color: #160b06;
-    background: #f0783c;
+    border-radius: var(--app-radius-pill);
+    color: var(--app-color-primary-text);
+    background: var(--app-color-primary);
 }
 
 .side-menu__brand-mark svg {
@@ -33,7 +33,7 @@
 }
 
 .side-menu__brand-name {
-    color: #f6f6f1;
+    color: var(--app-color-text-strong);
     font-size: 13px;
     font-weight: 500;
 }
@@ -53,11 +53,11 @@
     min-height: 44px;
     padding: 0 12px;
     border: 1px solid transparent;
-    color: #8c908b;
+    color: var(--app-color-text-muted);
     background: transparent;
     text-align: left;
     text-decoration: none;
-    border-radius: 12px;
+    border-radius: var(--app-radius-control);
     font-size: 12px;
     transition: border-color 140ms ease, color 140ms ease, background 140ms ease;
 }
@@ -69,17 +69,17 @@
 }
 
 .side-menu__item--active {
-    color: #f1f1eb;
-    background: #191b19;
+    color: var(--app-color-text-strong);
+    background: var(--app-color-surface-raised);
 }
 
 .side-menu__item:not(:disabled):hover {
-    color: #f7f7ef;
-    background: #131513;
+    color: var(--app-color-text-strong);
+    background: var(--app-color-surface-hover);
 }
 
 .side-menu__item--active:not(:disabled):hover {
-    color: #ffffff;
+    color: var(--app-color-text-strong);
 }
 
 .side-menu__logout {
@@ -97,7 +97,7 @@
     align-items: center;
     gap: 9px;
     margin: auto 10px 4px;
-    color: #747873;
+    color: var(--app-color-text-subtle);
     font-size: 9px;
     letter-spacing: 0.1em;
     text-transform: uppercase;
@@ -106,9 +106,9 @@
 .side-menu__status > span {
     width: 6px;
     height: 6px;
-    border-radius: 50%;
-    background: #51d88a;
-    box-shadow: 0 0 8px rgba(81, 216, 138, 0.55);
+    border-radius: var(--app-radius-pill);
+    background: var(--app-color-success);
+    box-shadow: 0 0 8px color-mix(in srgb, var(--app-color-success) 55%, transparent);
 }
 
 @media (max-width: 720px) {

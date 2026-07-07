@@ -40,7 +40,7 @@ export function RegisterPage() {
 
   if (isLoading) {
     return (
-      <div className="grid min-h-screen place-items-center text-[10px] tracking-[0.1em] text-[#a2a5a1] uppercase"
+      <div className="grid min-h-screen place-items-center text-[10px] tracking-[0.1em] text-text-muted uppercase"
            role="status">
         Restoring session...
       </div>
@@ -77,7 +77,7 @@ export function RegisterPage() {
             })}
           />
           {errors.displayName && (
-            <span className="normal-case text-[#e36f5e]" role="alert">
+            <span className="normal-case text-danger" role="alert">
                   {errors.displayName.message}
                 </span>
           )}
@@ -96,7 +96,7 @@ export function RegisterPage() {
             })}
           />
           {errors.email && (
-            <span className="normal-case text-[#e36f5e]" role="alert">
+            <span className="normal-case text-danger" role="alert">
                   {errors.email.message}
                 </span>
           )}
@@ -123,14 +123,14 @@ export function RegisterPage() {
             })}
           />
           {errors.password && (
-            <span className="normal-case text-[#e36f5e]" role="alert">
+            <span className="normal-case text-danger" role="alert">
                   {errors.password.message}
                 </span>
           )}
         </div>
 
         {requestError && (
-          <p className="m-0 rounded-xl border border-[#63342f] bg-[#25100e] px-4 py-3 text-xs leading-5 text-[#e98a7e]"
+          <p className="m-0 rounded-control border border-danger-border bg-danger-surface px-4 py-3 text-xs leading-5 text-danger-text"
              role="alert">
             {requestError}
           </p>
@@ -144,9 +144,9 @@ export function RegisterPage() {
           type="submit"
         />
 
-        <p className="m-0 text-center text-xs text-[#858a84]">
+        <p className="m-0 text-center text-xs text-text-subtle">
           Already registered?{' '}
-          <Link className="text-[#e8e9e3] transition-colors hover:text-[#f0783c]" to={ROUTES.login}>
+          <Link className="text-text-app transition-colors hover:text-primary" to={ROUTES.login}>
             Sign in
           </Link>
         </p>

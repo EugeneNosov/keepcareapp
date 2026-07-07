@@ -12,8 +12,8 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const buttonStyles: Record<ButtonVariant, string> = {
-  primary: 'h-12 bg-[#f0783c] px-4 font-medium text-[#160b06] hover:bg-[#ff8a4f] focus-visible:outline-[#f0783c] disabled:cursor-not-allowed disabled:bg-[#493126] disabled:text-[#8c6958]',
-  secondary: 'h-12 bg-[#202320] px-4 text-[#aeb2ac] hover:bg-[#292c29] hover:text-white focus-visible:outline-white disabled:cursor-not-allowed disabled:bg-[#191b19] disabled:text-[#686c68]',
+  primary: 'h-control bg-primary px-4 font-medium text-primary-text hover:bg-primary-hover focus-visible:outline-primary disabled:cursor-not-allowed disabled:bg-primary-disabled disabled:text-primary-disabled-text',
+  secondary: 'h-control bg-surface-muted px-4 text-text-muted hover:bg-border-app hover:text-text-strong focus-visible:outline-text-strong disabled:cursor-not-allowed disabled:bg-surface-raised disabled:text-text-disabled',
 };
 
 export default function Button({
@@ -28,7 +28,7 @@ export default function Button({
   return (
     <button
       {...props}
-      className={`inline-flex cursor-pointer items-center justify-center gap-2 rounded-full text-sm transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 ${buttonStyles[variant]} ${className ?? ''}`}
+      className={`inline-flex cursor-pointer items-center justify-center gap-2 rounded-pill text-sm transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 ${buttonStyles[variant]} ${className ?? ''}`}
       type={type}
     >
       {Icon && iconPosition === 'left' && <Icon className="size-4" aria-hidden="true"/>}

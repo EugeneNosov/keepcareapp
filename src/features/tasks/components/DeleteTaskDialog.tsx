@@ -31,7 +31,7 @@ export default function DeleteTaskDialog({
     <>
       <button
         aria-label={isDeleting ? `Deleting ${taskName}` : `Delete ${taskName}`}
-        className="grid size-10 cursor-pointer place-items-center rounded-full bg-[#201716] text-[#b86358] transition-colors hover:bg-[#321c19] hover:text-[#e36f5e] disabled:cursor-not-allowed disabled:opacity-50"
+        className="grid size-10 cursor-pointer place-items-center rounded-pill bg-danger-surface text-danger-muted transition-colors hover:bg-danger-surface-hover hover:text-danger disabled:cursor-not-allowed disabled:opacity-50"
         disabled={isDeleting || isDisabled}
         onClick={() => setIsOpen(true)}
         type="button"
@@ -42,8 +42,8 @@ export default function DeleteTaskDialog({
       {isOpen && (
         <Dialog isOpen={isOpen} onClose={closeDialog} title="Delete task">
           <div className="grid gap-5">
-            <p className="text-sm leading-6 text-[#b7bab5]">
-              Are you sure you want to delete <span className="text-[#eeeeea]">"{taskName}"</span>? This action cannot
+            <p className="text-sm leading-6 text-text-muted">
+              Are you sure you want to delete <span className="text-text-app">"{taskName}"</span>? This action cannot
               be undone.
             </p>
             <div className="grid grid-cols-2 gap-3">

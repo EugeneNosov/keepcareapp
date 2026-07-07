@@ -1,1 +1,41 @@
 @import "tailwindcss";
+
+@theme {
+    --color-app: var(--app-color-bg);
+    --color-app-root: var(--app-color-bg-root);
+    --color-surface: var(--app-color-surface);
+    --color-surface-raised: var(--app-color-surface-raised);
+    --color-surface-hover: var(--app-color-surface-hover);
+    --color-surface-muted: var(--app-color-surface-muted);
+    --color-surface-selected: var(--app-color-surface-selected);
+    --color-border-app: var(--app-color-border);
+    --color-border-muted: var(--app-color-border-muted);
+    --color-border-strong: var(--app-color-border-strong);
+    --color-text-app: var(--app-color-text);
+    --color-text-strong: var(--app-color-text-strong);
+    --color-text-soft: var(--app-color-text-soft);
+    --color-text-muted: var(--app-color-text-muted);
+    --color-text-subtle: var(--app-color-text-subtle);
+    --color-text-disabled: var(--app-color-text-disabled);
+    --color-primary: var(--app-color-primary);
+    --color-primary-hover: var(--app-color-primary-hover);
+    --color-primary-text: var(--app-color-primary-text);
+    --color-primary-disabled: var(--app-color-primary-disabled);
+    --color-primary-disabled-text: var(--app-color-primary-disabled-text);
+    --color-danger: var(--app-color-danger);
+    --color-danger-text: var(--app-color-danger-text);
+    --color-danger-border: var(--app-color-danger-border);
+    --color-danger-surface: var(--app-color-danger-surface);
+    --color-danger-surface-hover: var(--app-color-danger-surface-hover);
+    --color-danger-muted: var(--app-color-danger-muted);
+    --color-warning: var(--app-color-warning);
+    --color-success: var(--app-color-success);
+    --color-success-surface: var(--app-color-success-surface);
+    --color-success-surface-hover: var(--app-color-success-surface-hover);
+    --color-divider: var(--app-color-divider);
+    --radius-control: var(--app-radius-control);
+    --radius-card: var(--app-radius-card);
+    --radius-pill: var(--app-radius-pill);
+    --shadow-toast: var(--app-shadow-toast);
+    --spacing-control: var(--app-size-control-height);
+}

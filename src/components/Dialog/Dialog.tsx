@@ -36,7 +36,7 @@ export default function Dialog({isOpen, onClose, title, children}: DialogProps) 
   return createPortal(
     <dialog
       aria-labelledby="dialog-title"
-      className="fixed inset-0 m-auto max-h-[calc(100vh-2rem)] w-[min(calc(100%-2rem),34rem)] overflow-hidden border-0 bg-transparent p-0 text-[#f2f2ee] backdrop:bg-black/75 backdrop:backdrop-blur-sm"
+      className="fixed inset-0 m-auto max-h-[calc(100vh-2rem)] w-[min(calc(100%-2rem),34rem)] overflow-hidden border-0 bg-transparent p-0 text-text-strong backdrop:bg-black/75 backdrop:backdrop-blur-sm"
       onClose={onClose}
       ref={dialogRef}
     >
@@ -50,7 +50,7 @@ export default function Dialog({isOpen, onClose, title, children}: DialogProps) 
           </h2>
           <button
             aria-label="Close dialog"
-            className="grid size-9 cursor-pointer place-items-center rounded-full bg-[#191b19] text-[#8f948e] transition-colors hover:bg-[#242724] hover:text-[#f2f2ee] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#f0783c]"
+            className="grid size-9 cursor-pointer place-items-center rounded-pill bg-surface-raised text-text-muted transition-colors hover:bg-border-app hover:text-text-strong focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
             onClick={onClose}
             type="button"
           >

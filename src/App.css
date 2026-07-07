@@ -1,8 +1,46 @@
 @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap');
 
 :root {
-    color: #deded8;
-    background: #050606;
+    --app-color-bg-root: #050606;
+    --app-color-bg: #080909;
+    --app-color-surface: #111311;
+    --app-color-surface-raised: #191b19;
+    --app-color-surface-hover: #151715;
+    --app-color-surface-muted: #1c211e;
+    --app-color-surface-selected: #2a1d17;
+    --app-color-border: #292c29;
+    --app-color-border-muted: #303330;
+    --app-color-border-strong: #454945;
+    --app-color-text: #eeeeea;
+    --app-color-text-strong: #f2f2ee;
+    --app-color-text-soft: #dcddd8;
+    --app-color-text-muted: #8f948e;
+    --app-color-text-subtle: #737873;
+    --app-color-text-disabled: #686c68;
+    --app-color-primary: #f0783c;
+    --app-color-primary-hover: #ff8a4f;
+    --app-color-primary-text: #160b06;
+    --app-color-primary-disabled: #493126;
+    --app-color-primary-disabled-text: #8c6958;
+    --app-color-danger: #e36f5e;
+    --app-color-danger-text: #e98a7c;
+    --app-color-danger-border: #63342f;
+    --app-color-danger-surface: #25100e;
+    --app-color-danger-surface-hover: #361815;
+    --app-color-danger-muted: #b87166;
+    --app-color-warning: #f0a43c;
+    --app-color-success: #4bd49b;
+    --app-color-success-surface: #1a2c23;
+    --app-color-success-surface-hover: #213a2d;
+    --app-color-divider: #3a3c3a;
+    --app-radius-control: 12px;
+    --app-radius-card: 24px;
+    --app-radius-pill: 9999px;
+    --app-shadow-toast: 0 -16px 48px rgb(0 0 0 / 35%);
+    --app-size-control-height: 48px;
+
+    color: var(--app-color-text);
+    background: var(--app-color-bg-root);
     font-family: 'IBM Plex Mono', 'SFMono-Regular', Consolas, monospace;
     font-synthesis: none;
 }
@@ -15,7 +53,7 @@ body {
     margin: 0;
     min-width: 320px;
     min-height: 100vh;
-    background: #080909;
+    background: var(--app-color-bg);
 }
 
 button,
@@ -25,6 +63,6 @@ input {
 }
 
 ::selection {
-    color: #080908;
-    background: #f0783c;
+    color: var(--app-color-bg);
+    background: var(--app-color-primary);
 }

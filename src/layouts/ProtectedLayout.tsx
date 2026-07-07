@@ -9,7 +9,7 @@ export function ProtectedLayout() {
 
   if (isLoading) {
     return (
-      <div className="grid min-h-screen place-items-center text-[10px] tracking-[0.1em] text-[#a2a5a1] uppercase" role="status">
+      <div className="grid min-h-screen place-items-center text-[10px] tracking-[0.1em] text-text-muted uppercase" role="status">
         Restoring session...
       </div>
     );

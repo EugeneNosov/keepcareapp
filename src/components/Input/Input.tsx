@@ -8,7 +8,7 @@ type InputProps = {
   ref?: Ref<HTMLInputElement | HTMLTextAreaElement>;
 } & InputHTMLAttributes<HTMLInputElement> & TextareaHTMLAttributes<HTMLTextAreaElement>;
 
-const fieldClassName = 'w-full rounded-xl border border-[#303330] bg-[#191b19] px-4 text-sm text-[#eeeeea] outline-none transition-colors placeholder:text-[#666b66] hover:border-[#454945] focus:border-[#f0783c]';
+const fieldClassName = 'w-full rounded-control border border-border-muted bg-surface-raised px-4 text-sm text-text-app outline-none transition-colors placeholder:text-text-disabled hover:border-border-strong focus:border-primary';
 
 const Input = ({
                  label,
@@ -33,13 +33,13 @@ const Input = ({
       ref={ref as React.Ref<HTMLInputElement>}
       id={id}
       {...props}
-      className={`${inputClassName} h-12`}
+      className={`${inputClassName} h-control`}
     />
   );
 
   return (
     <div className={`flex flex-col gap-2 ${wrapperClassName ?? ''}`}>
-      <label htmlFor={id} className="text-xs text-[#a8aba6]">
+      <label htmlFor={id} className="text-xs text-text-muted">
         {label}
       </label>
       {field}

@@ -7,17 +7,17 @@ import DeleteTaskDialog from './DeleteTaskDialog.tsx';
 const statusStyles: Record<TaskStatus, { label: string; color: string; icon: typeof LuClock3 }> = {
   [TASK_STATUS.overdue]: {
     label: 'OVERDUE',
-    color: '#e36f5e',
+    color: 'var(--app-color-danger)',
     icon: LuTriangleAlert,
   },
   [TASK_STATUS.dueSoon]: {
     label: 'DUE SOON',
-    color: '#f0a43c',
+    color: 'var(--app-color-warning)',
     icon: LuClock3,
   },
   [TASK_STATUS.ok]: {
     label: 'OK',
-    color: '#4bd49b',
+    color: 'var(--app-color-success)',
     icon: LuCircleCheck,
   },
 }
@@ -90,27 +90,27 @@ function TaskItem({
 
   return (
     <article
-      className="grid grid-cols-[minmax(0,1.5fr)_minmax(220px,0.8fr)_auto] items-center gap-6 rounded-2xl border border-transparent bg-[#111311] p-4 transition-colors hover:border-[#292c29] hover:bg-[#151715] max-[760px]:grid-cols-1 max-[760px]:gap-4">
+      className="grid grid-cols-[minmax(0,1.5fr)_minmax(220px,0.8fr)_auto] items-center gap-6 rounded-card border border-transparent bg-surface p-4 transition-colors hover:border-border-app hover:bg-surface-hover max-[760px]:grid-cols-1 max-[760px]:gap-4">
       <div className="flex min-w-0 items-center gap-4">
-        <span className="grid size-10 shrink-0 place-items-center rounded-full"
-              style={{backgroundColor: `${statusStyle.color}14`, color: statusStyle.color}}>
+        <span className="grid size-10 shrink-0 place-items-center rounded-pill"
+              style={{backgroundColor: `color-mix(in srgb, ${statusStyle.color} 8%, transparent)`, color: statusStyle.color}}>
           <StatusIcon className="size-4" aria-hidden="true"/>
         </span>
         <div className="min-w-0">
-          <h3 className="truncate text-sm text-[#dcddd7]">{task.name}</h3>
-          <p className="mt-1.5 text-[11px] text-[#737873]">{formatRepeatEvery(task.repeatEvery)}</p>
+          <h3 className="truncate text-sm text-text-soft">{task.name}</h3>
+          <p className="mt-1.5 text-[11px] text-text-subtle">{formatRepeatEvery(task.repeatEvery)}</p>
         </div>
       </div>
       <div className="max-[760px]:pl-14">
-        <p className="text-[10px] text-[#686d68]">Next due</p>
-        <p className="mt-1 text-xs text-[#b7bab5]">{formatDueDate(task.dueDate)} <span className="ml-2"
+        <p className="text-[10px] text-text-disabled">Next due</p>
+        <p className="mt-1 text-xs text-text-muted">{formatDueDate(task.dueDate)} <span className="ml-2"
                                                                                        style={{color: statusStyle.color}}>{statusStyle.label}</span>
         </p>
       </div>
       <div className="grid min-w-50 gap-2 max-[760px]:min-w-0">
         <div className="flex gap-2">
           <button
-            className="inline-flex h-10 flex-1 cursor-pointer items-center justify-center gap-2 rounded-full bg-[#1a2c23] px-4 text-[11px] font-medium text-[#65c99b] transition-colors hover:bg-[#213a2d] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#4bd49b] disabled:cursor-not-allowed disabled:bg-[#191b19] disabled:text-[#686c68]"
+            className="inline-flex h-10 flex-1 cursor-pointer items-center justify-center gap-2 rounded-pill bg-success-surface px-4 text-[11px] font-medium text-success transition-colors hover:bg-success-surface-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-success disabled:cursor-not-allowed disabled:bg-surface-raised disabled:text-text-disabled"
             disabled={isCompleteButtonDisabled}
             onClick={() => onComplete(task.id)}
             type="button"
@@ -126,7 +126,7 @@ function TaskItem({
           />
         </div>
         {actionError && (
-          <span className="text-[9px] leading-4 text-[#e36f5e]" role="alert">
+          <span className="text-[9px] leading-4 text-danger" role="alert">
             {actionError}
           </span>
         )}
