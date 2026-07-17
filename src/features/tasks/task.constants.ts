@@ -1,4 +1,5 @@
 export const TASK_STATUS = {
+  scheduled: 'scheduled',
   overdue: 'overdue',
   dueSoon: 'due_soon',
   ok: 'ok',

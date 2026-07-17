@@ -1,10 +1,15 @@
 import { memo } from 'react';
-import { LuCheck, LuCircleCheck, LuClock3, LuTriangleAlert } from 'react-icons/lu';
+import { LuCalendarClock, LuCheck, LuCircleCheck, LuClock3, LuTriangleAlert } from 'react-icons/lu';
 import { TASK_STATUS } from '../task.constants.ts';
 import type { Task, TaskStatus } from '../types/tasks.types.ts';
 import DeleteTaskDialog from './DeleteTaskDialog.tsx';
 
 const statusStyles: Record<TaskStatus, { label: string; color: string; icon: typeof LuClock3 }> = {
+  [TASK_STATUS.scheduled]: {
+    label: 'SCHEDULED',
+    color: 'var(--app-color-primary)',
+    icon: LuCalendarClock,
+  },
   [TASK_STATUS.overdue]: {
     label: 'OVERDUE',
     color: 'var(--app-color-danger)',
@@ -74,6 +79,16 @@ function isTaskCompletedToday(task: Task) {
   return isSameCalendarDate(lastCompletedDate, new Date());
 }
 
+function isTaskScheduled(task: Task) {
+  const startsAt = new Date(task.startsAt);
+
+  if (Number.isNaN(startsAt.getTime())) {
+    return task.status === TASK_STATUS.scheduled;
+  }
+
+  return startsAt.getTime() > Date.now();
+}
+
 function TaskItem({
                     task,
                     actionError,
@@ -86,7 +101,16 @@ function TaskItem({
   const statusStyle = statusStyles[task.status];
   const StatusIcon = statusStyle.icon;
   const isCompletedToday = isTaskCompletedToday(task);
-  const isCompleteButtonDisabled = isCompletedToday || isActionDisabled;
+  const isScheduled = isTaskScheduled(task);
+  const isCompleteButtonDisabled = isScheduled || isCompletedToday || isActionDisabled;
+  const displayedDate = isScheduled ? task.startsAt : task.dueDate;
+  const completeLabel = isCompleting
+    ? 'Saving...'
+    : isCompletedToday
+      ? 'Completed'
+      : isScheduled
+        ? 'Scheduled'
+        : 'Complete';
 
   return (
     <article
@@ -102,8 +126,8 @@ function TaskItem({
         </div>
       </div>
       <div className="max-[760px]:pl-14">
-        <p className="text-[10px] text-text-disabled">Next due</p>
-        <p className="mt-1 text-xs text-text-muted">{formatDueDate(task.dueDate)} <span className="ml-2"
+        <p className="text-[10px] text-text-disabled">{isScheduled ? 'Starts' : 'Next due'}</p>
+        <p className="mt-1 text-xs text-text-muted">{formatDueDate(displayedDate)} <span className="ml-2"
                                                                                        style={{color: statusStyle.color}}>{statusStyle.label}</span>
         </p>
       </div>
@@ -116,7 +140,7 @@ function TaskItem({
             type="button"
           >
             <LuCheck className="size-3.5" aria-hidden="true"/>
-            {isCompleting ? 'Saving...' : isCompletedToday ? 'Completed' : 'Complete'}
+            {completeLabel}
           </button>
           <DeleteTaskDialog
             isDeleting={isDeleting}

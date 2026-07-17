@@ -5,6 +5,7 @@ import { TASK_QUERY_KEYS } from '../task.constants.ts';
 import type { TaskSummary } from '../types/tasks.types.ts';
 
 const EMPTY_TASK_SUMMARY: TaskSummary = {
+  scheduledCount: 0,
   overdueCount: 0,
   dueSoonCount: 0,
   okCount: 0,

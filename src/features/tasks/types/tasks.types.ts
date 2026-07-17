@@ -11,19 +11,24 @@ export interface TaskRepeatEvery {
 export interface Task {
   id: string;
   name: string;
+  notes: string | null;
   status: TaskStatus;
   repeatEvery: TaskRepeatEvery;
   createdAt: string;
+  startsAt: string;
   lastCompletedAt: string | null;
   dueDate: string;
 }
 
 export interface CreateTaskPayload {
   name: string;
+  notes?: string;
+  startsAt: string;
   repeatEvery: TaskRepeatEvery;
 }
 
 export interface TaskSummary {
+  scheduledCount: number;
   overdueCount: number;
   dueSoonCount: number;
   okCount: number;

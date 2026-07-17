@@ -6,9 +6,10 @@ import type {
   TaskSummary,
 } from '../types/tasks.types.ts';
 
-type TaskSummaryCountKey = 'overdueCount' | 'dueSoonCount' | 'okCount';
+type TaskSummaryCountKey = 'scheduledCount' | 'overdueCount' | 'dueSoonCount' | 'okCount';
 
 const TASK_SUMMARY_COUNT_KEYS: Record<TaskStatus, TaskSummaryCountKey> = {
+  [TASK_STATUS.scheduled]: 'scheduledCount',
   [TASK_STATUS.overdue]: 'overdueCount',
   [TASK_STATUS.dueSoon]: 'dueSoonCount',
   [TASK_STATUS.ok]: 'okCount',

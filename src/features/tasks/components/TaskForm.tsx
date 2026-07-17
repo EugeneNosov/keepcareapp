@@ -11,12 +11,17 @@ const taskFormSchema = z.object({
     .trim()
     .min(1, 'Task name is required')
     .max(50, 'Task name must be less than 50 characters'),
+  startsAt: z.string()
+    .min(1, 'Start date is required'),
   repeatEvery: z.object({
     value: z.number()
       .int('Period must be a whole number')
       .min(1, 'Period must be at least 1'),
     unit: z.enum(TASK_REPEAT_UNITS),
   }),
+  notes: z.string()
+    .max(240, 'Notes must be less than 240 characters')
+    .optional(),
 })
 
 export type TaskFormData = z.infer<typeof taskFormSchema>
@@ -31,10 +36,12 @@ interface TaskFormProps {
 
 const initialTaskFormData: TaskFormData = {
   name: '',
+  startsAt: new Date().toISOString().slice(0, 10),
   repeatEvery: {
     value: 3,
     unit: 'days',
   },
+  notes: '',
 }
 
 const repeatUnitOptions = [
@@ -80,6 +87,13 @@ export default function TaskForm({
       <Input label="Task name" id="task-name" placeholder="Enter task name"
              type="text" {...register('name')}/>
 
+      <Input
+        label="Starts at"
+        id="task-starts-at"
+        type="date"
+        {...register('startsAt')}
+      />
+
       <div className="grid gap-4 sm:grid-cols-[minmax(0,1fr)_150px]">
         <Input
           label="Repeat every"
@@ -97,6 +111,14 @@ export default function TaskForm({
           {...register('repeatEvery.unit')}
         />
       </div>
+
+      <Input
+        label="Notes"
+        id="task-notes"
+        isTextArea
+        placeholder="Add details like model numbers, dosage, or where to find supplies"
+        {...register('notes')}
+      />
 
       {errorMessages.length > 0 && (
         <div

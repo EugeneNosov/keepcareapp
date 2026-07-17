@@ -18,7 +18,14 @@ export default function AddTaskDialog({ error, onAddNewTask }: AddTaskDialogProp
   }
 
   async function handleCreateTask(data: TaskFormData) {
-    await onAddNewTask(data)
+    const {name, notes, repeatEvery, startsAt} = data
+
+    await onAddNewTask({
+      name,
+      notes: notes?.trim() || undefined,
+      repeatEvery,
+      startsAt,
+    })
     closeDialog()
   }
 
