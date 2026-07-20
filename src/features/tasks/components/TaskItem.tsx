@@ -1,8 +1,9 @@
 import { memo } from 'react';
 import { LuCalendarClock, LuCheck, LuCircleCheck, LuClock3, LuTriangleAlert } from 'react-icons/lu';
 import { TASK_STATUS } from '../task.constants.ts';
-import type { Task, TaskStatus } from '../types/tasks.types.ts';
+import type { Task, TaskStatus, UpdateTaskPayload } from '../types/tasks.types.ts';
 import DeleteTaskDialog from './DeleteTaskDialog.tsx';
+import EditTaskDialog from './EditTaskDialog.tsx';
 
 const statusStyles: Record<TaskStatus, { label: string; color: string; icon: typeof LuClock3 }> = {
   [TASK_STATUS.scheduled]: {
@@ -38,8 +39,12 @@ interface TaskItemProps {
   actionError: string | null;
   isCompleting: boolean;
   isDeleting: boolean;
+  isUpdating: boolean;
   onComplete: (taskId: string) => void;
   onDelete: (taskId: string) => void;
+  onEdit: (taskId: string, payload: UpdateTaskPayload) => void | Promise<void>;
+  onResetEditError: () => void;
+  updateError: string | null;
 }
 
 function formatRepeatEvery({value, unit}: Task['repeatEvery']) {
@@ -93,22 +98,26 @@ function TaskItem({
                     actionError,
                     isCompleting,
                     isDeleting,
+                    isUpdating,
                     onComplete,
                     onDelete,
+                    onEdit,
+                    onResetEditError,
+                    updateError,
                   }: TaskItemProps) {
   const statusStyle = statusStyles[task.status];
   const StatusIcon = statusStyle.icon;
   const isCompletedToday = isTaskCompletedToday(task);
   const isScheduled = isTaskScheduled(task);
-  const isActionPending = isCompleting || isDeleting;
+  const isActionPending = isCompleting || isDeleting || isUpdating;
   const isCompleteButtonDisabled = isScheduled || isCompletedToday || isActionPending;
   const displayedDate = isScheduled ? task.startsAt : task.dueDate;
   const completeLabel = isCompleting
     ? 'Saving...'
-    : isCompletedToday
-      ? 'Completed'
-      : isScheduled
-        ? 'Scheduled'
+    : isScheduled
+      ? 'Scheduled'
+      : isCompletedToday
+        ? 'Completed'
         : 'Complete';
 
   return (
@@ -144,6 +153,13 @@ function TaskItem({
             <LuCheck className="size-3.5" aria-hidden="true"/>
             {completeLabel}
           </button>
+          <EditTaskDialog
+            error={updateError}
+            isDisabled={isActionPending}
+            onEditTask={onEdit}
+            onResetError={onResetEditError}
+            task={task}
+          />
           <DeleteTaskDialog
             isDeleting={isDeleting}
             isDisabled={isActionPending}

@@ -8,7 +8,8 @@ import useDeleteTask from '../hooks/useDeleteTask.ts';
 import useMarkTaskAsCompleted from '../hooks/useMarkTaskAsCompleted.ts';
 import useTasks from '../hooks/useTasks.ts';
 import useTaskSummary from '../hooks/useTaskSummary.ts';
-import type { CreateTaskPayload } from '../types/tasks.types.ts';
+import useUpdateTask from '../hooks/useUpdateTask.ts';
+import type { CreateTaskPayload, UpdateTaskPayload } from '../types/tasks.types.ts';
 
 function updateTaskIdSet(
   taskIds: ReadonlySet<string>,
@@ -56,8 +57,10 @@ export function TasksListPage() {
   const createTaskMutation = useCreateTask();
   const completeTaskMutation = useMarkTaskAsCompleted();
   const deleteTaskMutation = useDeleteTask();
+  const updateTaskMutation = useUpdateTask();
   const {mutateAsync: completeTask} = completeTaskMutation;
   const {mutateAsync: deleteTask} = deleteTaskMutation;
+  const {mutateAsync: updateTask, reset: resetUpdateTask} = updateTaskMutation;
   const [completingTaskIds, setCompletingTaskIds] = useState<ReadonlySet<string>>(
     () => new Set(),
   );
@@ -70,10 +73,24 @@ export function TasksListPage() {
   const createError = isInlineRequestError(createTaskMutation.error)
     ? createTaskMutation.error.message
     : null;
+  const updateError = isInlineRequestError(updateTaskMutation.error)
+    ? updateTaskMutation.error.message
+    : null;
 
   async function handleCreateTask(task: CreateTaskPayload) {
     await createTaskMutation.mutateAsync(task);
   }
+
+  const handleUpdateTask = useCallback(async (
+    taskId: string,
+    payload: UpdateTaskPayload,
+  ) => {
+    await updateTask({taskId, payload});
+  }, [updateTask]);
+
+  const handleResetUpdateTask = useCallback(() => {
+    resetUpdateTask();
+  }, [resetUpdateTask]);
 
   const handleCompleteTask = useCallback(async (taskId: string) => {
     setTaskActionErrors((taskErrors) => updateTaskError(taskErrors, taskId, null));
@@ -124,7 +141,8 @@ export function TasksListPage() {
 
       <TaskSummary summaryData={summaryData}/>
       {summaryError && (
-        <p className="mt-3 rounded-card border border-danger-border bg-danger-surface px-5 py-4 text-xs text-danger" role="alert">
+        <p className="mt-3 rounded-card border border-danger-border bg-danger-surface px-5 py-4 text-xs text-danger"
+           role="alert">
           {summaryError}
         </p>
       )}
@@ -138,29 +156,41 @@ export function TasksListPage() {
         </header>
 
         <div className="grid gap-3">
-            {isLoading && (
-              <p className="rounded-card bg-surface px-5 py-6 text-xs text-text-subtle">Loading tasks...</p>
-            )}
-            {error && (
-              <p className="rounded-card border border-danger-border bg-danger-surface px-5 py-4 text-xs text-danger" role="alert">{error}</p>
-            )}
-            {!isLoading && !error && tasks.length === 0 && (
-              <div className="rounded-card border border-dashed border-border-muted px-6 py-14 text-center">
-                <p className="text-sm text-text-muted">Your list is clear.</p>
-                <p className="mt-2 text-xs text-text-disabled">Create a recurring task to get started.</p>
-              </div>
-            )}
-            {tasks.map((task) => (
-              <TaskItem
-                actionError={taskActionErrors.get(task.id) ?? null}
-                isCompleting={completingTaskIds.has(task.id)}
-                isDeleting={deletingTaskIds.has(task.id)}
-                key={task.id}
-                onComplete={handleCompleteTask}
-                onDelete={handleDeleteTask}
-                task={task}
-              />
-            ))}
+          {isLoading && (
+            <p className="rounded-card bg-surface px-5 py-6 text-xs text-text-subtle">Loading tasks...</p>
+          )}
+          {error && (
+            <p className="rounded-card border border-danger-border bg-danger-surface px-5 py-4 text-xs text-danger"
+               role="alert">{error}</p>
+          )}
+          {!isLoading && !error && tasks.length === 0 && (
+            <div className="rounded-card border border-dashed border-border-muted px-6 py-14 text-center">
+              <p className="text-sm text-text-muted">Your list is clear.</p>
+              <p className="mt-2 text-xs text-text-disabled">Create a recurring task to get started.</p>
+            </div>
+          )}
+          {tasks.map((task) => (
+            <TaskItem
+              actionError={taskActionErrors.get(task.id) ?? null}
+              isCompleting={completingTaskIds.has(task.id)}
+              isDeleting={deletingTaskIds.has(task.id)}
+              isUpdating={
+                updateTaskMutation.isPending
+                && updateTaskMutation.variables?.taskId === task.id
+              }
+              key={task.id}
+              onComplete={handleCompleteTask}
+              onDelete={handleDeleteTask}
+              onEdit={handleUpdateTask}
+              onResetEditError={handleResetUpdateTask}
+              task={task}
+              updateError={
+                updateTaskMutation.variables?.taskId === task.id
+                  ? updateError
+                  : null
+              }
+            />
+          ))}
         </div>
       </section>
     </section>

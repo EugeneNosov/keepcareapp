@@ -27,6 +27,8 @@ export interface CreateTaskPayload {
   repeatEvery: TaskRepeatEvery;
 }
 
+export type UpdateTaskPayload = CreateTaskPayload;
+
 export interface TaskSummary {
   scheduledCount: number;
   overdueCount: number;

@@ -3,6 +3,7 @@ import type {
   CreateTaskPayload,
   Task,
   TaskSummary,
+  UpdateTaskPayload,
 } from '../types/tasks.types.ts';
 
 export function getTasks() {
@@ -26,6 +27,16 @@ export function createTask(payload: CreateTaskPayload) {
 export function markTaskAsCompleted(taskId: string) {
   return apiRequest<Task>(`/tasks/${taskId}/complete`, {
     method: 'PATCH',
+  });
+}
+
+export function updateTask(taskId: string, payload: UpdateTaskPayload) {
+  return apiRequest<Task>(`/tasks/${taskId}`, {
+    method: 'PATCH',
+    body: {
+      ...payload,
+      startsAt: new Date(payload.startsAt).toISOString(),
+    },
   });
 }
 
