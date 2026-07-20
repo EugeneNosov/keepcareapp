@@ -16,7 +16,10 @@ export function getTaskSummary() {
 export function createTask(payload: CreateTaskPayload) {
   return apiRequest<Task>('/tasks', {
     method: 'POST',
-    body: payload,
+    body: {
+      ...payload,
+      startsAt: new Date(payload.startsAt).toISOString(),
+    },
   });
 }
 
