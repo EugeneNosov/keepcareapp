@@ -10,7 +10,6 @@ import './index.css'
 import App from './App.tsx'
 import ToastContainer from './components/Toast/ToastContainer.tsx';
 import { toast } from './components/Toast/toast.ts';
-import { AuthProvider } from './features/auth/context/AuthProvider.tsx'
 import {
   ApiError,
   getRequestErrorMessage,
@@ -53,9 +52,7 @@ const queryClient = new QueryClient({
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <App />
-      </AuthProvider>
+      <App />
       <ToastContainer/>
       <ReactQueryDevtools initialIsOpen={false}/>
     </QueryClientProvider>

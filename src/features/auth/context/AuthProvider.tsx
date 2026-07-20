@@ -86,6 +86,7 @@ export function AuthProvider({children}: PropsWithChildren) {
       .catch(() => {
         if (isActive) {
           clearAuthentication();
+          queryClient.clear();
         }
       })
       .finally(() => {
@@ -96,6 +97,7 @@ export function AuthProvider({children}: PropsWithChildren) {
 
     return () => {
       isActive = false;
+      setApiAccessToken(null);
       setApiRefreshHandler(null);
       setApiUnauthorizedHandler(null);
     };
@@ -103,6 +105,7 @@ export function AuthProvider({children}: PropsWithChildren) {
     applyAuthentication,
     clearAuthentication,
     handleUnauthorized,
+    queryClient,
     refreshAuthentication,
   ]);
 
