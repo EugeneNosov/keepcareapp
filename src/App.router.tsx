@@ -1,12 +1,6 @@
 import { createBrowserRouter, Navigate } from 'react-router';
 import { ROUTES } from './app.constants.ts';
 import { PublicLayout } from './layouts/PublicLayout.tsx';
-import { LandingPage } from './features/marketing/pages/LandingPage.tsx';
-import { LoginPage } from './features/auth/pages/LoginPage.tsx';
-import { RegisterPage } from './features/auth/pages/RegisterPage.tsx';
-import { ProtectedLayout } from './layouts/ProtectedLayout.tsx';
-import { TasksListPage } from './features/tasks/pages/TasksListPage.tsx';
-import { NotFoundPage } from './features/errors/pages/NotFoundPage.tsx';
 import { UnexpectedErrorPage } from './features/errors/pages/UnexpectedErrorPage.tsx';
 
 export const router = createBrowserRouter([
@@ -18,21 +12,37 @@ export const router = createBrowserRouter([
         children: [
           {
             path: ROUTES.home,
-            element: <LandingPage/>,
+            lazy: async () => {
+              const { LandingPage } = await import('./features/marketing/pages/LandingPage.tsx');
+
+              return { Component: LandingPage };
+            },
           },
           {
             path: ROUTES.login,
-            element: <LoginPage/>,
+            lazy: async () => {
+              const { LoginPage } = await import('./features/auth/pages/LoginPage.tsx');
+
+              return { Component: LoginPage };
+            },
           },
           {
             path: ROUTES.register,
-            element: <RegisterPage/>,
+            lazy: async () => {
+              const { RegisterPage } = await import('./features/auth/pages/RegisterPage.tsx');
+
+              return { Component: RegisterPage };
+            },
           },
         ],
       },
       {
         path: ROUTES.app,
-        element: <ProtectedLayout/>,
+        lazy: async () => {
+          const { ProtectedLayout } = await import('./layouts/ProtectedLayout.tsx');
+
+          return { Component: ProtectedLayout };
+        },
         children: [
           {
             index: true,
@@ -40,13 +50,21 @@ export const router = createBrowserRouter([
           },
           {
             path: 'tasks',
-            element: <TasksListPage/>,
+            lazy: async () => {
+              const { TasksListPage } = await import('./features/tasks/pages/TasksListPage.tsx');
+
+              return { Component: TasksListPage };
+            },
           },
         ],
       },
       {
         path: '*',
-        element: <NotFoundPage/>,
+        lazy: async () => {
+          const { NotFoundPage } = await import('./features/errors/pages/NotFoundPage.tsx');
+
+          return { Component: NotFoundPage };
+        },
       },
     ],
   },
