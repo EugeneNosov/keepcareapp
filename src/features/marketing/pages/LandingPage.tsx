@@ -10,7 +10,7 @@ import { ROUTES } from '@/app.constants.ts';
 import Brand from '@/components/Brand/Brand.tsx';
 
 const exampleTasks = [
-  {name: 'Refill medication', repeat: 'Every 4 weeks', status: 'Overdue', color: 'var(--app-color-danger)', icon: LuTriangleAlert},
+  {name: 'Service the boiler', repeat: 'Every 12 months', status: 'Overdue', color: 'var(--app-color-danger)', icon: LuTriangleAlert},
   {name: 'Replace water filter', repeat: 'Every 3 months', status: 'Due soon', color: 'var(--app-color-warning)', icon: LuClock3},
   {name: 'Check smoke alarms', repeat: 'Every 6 months', status: 'All good', color: 'var(--app-color-success)', icon: LuCircleCheck},
 ];

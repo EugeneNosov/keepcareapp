@@ -1,0 +1,103 @@
+.keepcare-calendar {
+    --rdp-accent-color: var(--app-color-primary);
+    --rdp-day-height: 36px;
+    --rdp-day-width: 36px;
+    --rdp-day_button-height: 32px;
+    --rdp-day_button-width: 32px;
+    --rdp-nav_button-height: 32px;
+    --rdp-nav_button-width: 32px;
+    --rdp-nav-height: 36px;
+    --rdp-outside-opacity: 1;
+    --rdp-today-color: var(--app-color-primary);
+
+    width: 100%;
+    margin: 0;
+    color: var(--app-color-text-soft);
+    font-size: 12px;
+}
+
+.keepcare-calendar .rdp-months,
+.keepcare-calendar .rdp-month {
+    width: 100%;
+    max-width: none;
+}
+
+.keepcare-calendar .rdp-month_grid {
+    width: 100%;
+    table-layout: fixed;
+}
+
+.keepcare-calendar .rdp-month_caption {
+    align-items: center;
+    color: var(--app-color-text-strong);
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.keepcare-calendar .rdp-nav {
+    gap: 4px;
+}
+
+.keepcare-calendar .rdp-button_previous,
+.keepcare-calendar .rdp-button_next {
+    border-radius: var(--app-radius-control);
+    color: var(--app-color-text-muted);
+    transition: color 150ms ease, background-color 150ms ease;
+}
+
+.keepcare-calendar .rdp-button_previous:hover,
+.keepcare-calendar .rdp-button_next:hover {
+    color: var(--app-color-text-strong);
+    background: var(--app-color-surface-raised);
+}
+
+.keepcare-calendar .rdp-chevron {
+    fill: none;
+    color: currentColor;
+}
+
+.keepcare-calendar .rdp-weekday {
+    padding: 8px 0 6px;
+    color: var(--app-color-text-subtle);
+    font-size: 10px;
+    font-weight: 500;
+}
+
+.keepcare-calendar .rdp-day_button {
+    margin: auto;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    color: var(--app-color-text-muted);
+    font-size: 11px;
+    transition: color 150ms ease, background-color 150ms ease, border-color 150ms ease;
+}
+
+.keepcare-calendar .rdp-day_button:hover {
+    color: var(--app-color-text-strong);
+    background: var(--app-color-surface-raised);
+}
+
+.keepcare-calendar .rdp-outside .rdp-day_button {
+    color: var(--app-color-text-disabled);
+    opacity: 0.55;
+}
+
+.keepcare-calendar .rdp-today:not(.rdp-selected) .rdp-day_button {
+    border-color: var(--app-color-border-strong);
+    color: var(--app-color-primary);
+}
+
+.keepcare-calendar .rdp-selected .rdp-day_button {
+    border-color: var(--app-color-primary);
+    background: var(--app-color-primary);
+    color: var(--app-color-primary-text);
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.keepcare-calendar .rdp-day_button:focus-visible,
+.keepcare-calendar .rdp-button_previous:focus-visible,
+.keepcare-calendar .rdp-button_next:focus-visible {
+    outline: 2px solid var(--app-color-primary);
+    outline-offset: 1px;
+}

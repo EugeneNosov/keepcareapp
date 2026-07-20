@@ -36,11 +36,11 @@ export default function Dialog({isOpen, onClose, title, children}: DialogProps) 
   return createPortal(
     <dialog
       aria-labelledby="dialog-title"
-      className="fixed inset-0 m-auto max-h-[calc(100vh-2rem)] w-[min(calc(100%-2rem),34rem)] overflow-hidden border-0 bg-transparent p-0 text-text-strong backdrop:bg-black/75 backdrop:backdrop-blur-sm"
+      className="fixed inset-0 m-auto max-h-[calc(100vh-2rem)] w-[min(calc(100%-2rem),34rem)] overflow-visible border-0 bg-transparent p-0 text-text-strong backdrop:bg-black/75 backdrop:backdrop-blur-sm"
       onClose={onClose}
       ref={dialogRef}
     >
-      <Card className="overflow-hidden shadow-2xl">
+      <Card className="overflow-visible shadow-2xl">
         <header className="flex items-center justify-between gap-4 px-6 pt-6 pb-3">
           <h2
             id="dialog-title"

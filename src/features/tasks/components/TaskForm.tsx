@@ -1,7 +1,8 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 import { z } from 'zod'
 import Button from '@/components/Button/Button.tsx'
+import DatePicker from '@/components/DatePicker/DatePicker.tsx';
 import Input from '@/components/Input/Input.tsx';
 import Select from '@/components/Select/Select.tsx'
 import { TASK_REPEAT_UNITS } from '../task.constants.ts'
@@ -58,6 +59,7 @@ export default function TaskForm({
                                    submitLabel,
                                  }: TaskFormProps) {
   const {
+    control,
     register,
     handleSubmit,
     reset,
@@ -87,11 +89,17 @@ export default function TaskForm({
       <Input label="Task name" id="task-name" placeholder="Enter task name"
              type="text" {...register('name')}/>
 
-      <Input
-        label="Starts at"
-        id="task-starts-at"
-        type="date"
-        {...register('startsAt')}
+      <Controller
+        control={control}
+        name="startsAt"
+        render={({field}) => (
+          <DatePicker
+            aria-invalid={Boolean(errors.startsAt)}
+            id="task-starts-at"
+            label="Starts at"
+            {...field}
+          />
+        )}
       />
 
       <div className="grid gap-4 sm:grid-cols-[minmax(0,1fr)_150px]">
