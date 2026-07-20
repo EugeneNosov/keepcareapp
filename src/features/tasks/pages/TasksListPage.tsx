@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { isInlineRequestError } from '@/shared/api';
 import AddTaskDialog from '../components/AddTaskDialog.tsx';
 import TaskItem from '../components/TaskItem.tsx';
@@ -10,16 +10,63 @@ import useTasks from '../hooks/useTasks.ts';
 import useTaskSummary from '../hooks/useTaskSummary.ts';
 import type { CreateTaskPayload } from '../types/tasks.types.ts';
 
+function updateTaskIdSet(
+  taskIds: ReadonlySet<string>,
+  taskId: string,
+  shouldInclude: boolean,
+) {
+  if (taskIds.has(taskId) === shouldInclude) {
+    return taskIds;
+  }
+
+  const nextTaskIds = new Set(taskIds);
+
+  if (shouldInclude) {
+    nextTaskIds.add(taskId);
+  } else {
+    nextTaskIds.delete(taskId);
+  }
+
+  return nextTaskIds;
+}
+
+function updateTaskError(
+  taskErrors: ReadonlyMap<string, string>,
+  taskId: string,
+  error: string | null,
+) {
+  if ((taskErrors.get(taskId) ?? null) === error) {
+    return taskErrors;
+  }
+
+  const nextTaskErrors = new Map(taskErrors);
+
+  if (error) {
+    nextTaskErrors.set(taskId, error);
+  } else {
+    nextTaskErrors.delete(taskId);
+  }
+
+  return nextTaskErrors;
+}
+
 export function TasksListPage() {
   const {tasks, isLoading, error} = useTasks();
   const {summaryData, error: summaryError} = useTaskSummary();
   const createTaskMutation = useCreateTask();
   const completeTaskMutation = useMarkTaskAsCompleted();
   const deleteTaskMutation = useDeleteTask();
-  const {mutate: completeTask} = completeTaskMutation;
-  const {mutate: deleteTask} = deleteTaskMutation;
-  const isTaskActionPending =
-    completeTaskMutation.isPending || deleteTaskMutation.isPending;
+  const {mutateAsync: completeTask} = completeTaskMutation;
+  const {mutateAsync: deleteTask} = deleteTaskMutation;
+  const [completingTaskIds, setCompletingTaskIds] = useState<ReadonlySet<string>>(
+    () => new Set(),
+  );
+  const [deletingTaskIds, setDeletingTaskIds] = useState<ReadonlySet<string>>(
+    () => new Set(),
+  );
+  const [taskActionErrors, setTaskActionErrors] = useState<ReadonlyMap<string, string>>(
+    () => new Map(),
+  );
   const createError = isInlineRequestError(createTaskMutation.error)
     ? createTaskMutation.error.message
     : null;
@@ -28,30 +75,39 @@ export function TasksListPage() {
     await createTaskMutation.mutateAsync(task);
   }
 
-  const handleCompleteTask = useCallback((taskId: string) => {
-    completeTask(taskId);
+  const handleCompleteTask = useCallback(async (taskId: string) => {
+    setTaskActionErrors((taskErrors) => updateTaskError(taskErrors, taskId, null));
+    setCompletingTaskIds((taskIds) => updateTaskIdSet(taskIds, taskId, true));
+
+    try {
+      await completeTask(taskId);
+    } catch (error) {
+      if (isInlineRequestError(error)) {
+        setTaskActionErrors((taskErrors) =>
+          updateTaskError(taskErrors, taskId, error.message)
+        );
+      }
+    } finally {
+      setCompletingTaskIds((taskIds) => updateTaskIdSet(taskIds, taskId, false));
+    }
   }, [completeTask]);
 
-  const handleDeleteTask = useCallback((taskId: string) => {
-    deleteTask(taskId);
-  }, [deleteTask]);
+  const handleDeleteTask = useCallback(async (taskId: string) => {
+    setTaskActionErrors((taskErrors) => updateTaskError(taskErrors, taskId, null));
+    setDeletingTaskIds((taskIds) => updateTaskIdSet(taskIds, taskId, true));
 
-  function getTaskActionError(taskId: string) {
-    const mutationError =
-      completeTaskMutation.variables === taskId
-        ? completeTaskMutation.error
-        : deleteTaskMutation.variables === taskId
-          ? deleteTaskMutation.error
-          : null;
-
-    if (!mutationError) {
-      return null;
+    try {
+      await deleteTask(taskId);
+    } catch (error) {
+      if (isInlineRequestError(error)) {
+        setTaskActionErrors((taskErrors) =>
+          updateTaskError(taskErrors, taskId, error.message)
+        );
+      }
+    } finally {
+      setDeletingTaskIds((taskIds) => updateTaskIdSet(taskIds, taskId, false));
     }
-
-    return isInlineRequestError(mutationError)
-      ? mutationError.message
-      : null;
-  }
+  }, [deleteTask]);
 
   return (
     <section className="mx-auto w-full max-w-275">
@@ -96,16 +152,9 @@ export function TasksListPage() {
             )}
             {tasks.map((task) => (
               <TaskItem
-                actionError={getTaskActionError(task.id)}
-                isActionDisabled={isTaskActionPending}
-                isCompleting={
-                  completeTaskMutation.isPending
-                  && completeTaskMutation.variables === task.id
-                }
-                isDeleting={
-                  deleteTaskMutation.isPending
-                  && deleteTaskMutation.variables === task.id
-                }
+                actionError={taskActionErrors.get(task.id) ?? null}
+                isCompleting={completingTaskIds.has(task.id)}
+                isDeleting={deletingTaskIds.has(task.id)}
                 key={task.id}
                 onComplete={handleCompleteTask}
                 onDelete={handleDeleteTask}

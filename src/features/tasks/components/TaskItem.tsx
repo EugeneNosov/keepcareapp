@@ -36,7 +36,6 @@ const taskDateFormatter = new Intl.DateTimeFormat('en', {
 interface TaskItemProps {
   task: Task;
   actionError: string | null;
-  isActionDisabled: boolean;
   isCompleting: boolean;
   isDeleting: boolean;
   onComplete: (taskId: string) => void;
@@ -92,7 +91,6 @@ function isTaskScheduled(task: Task) {
 function TaskItem({
                     task,
                     actionError,
-                    isActionDisabled,
                     isCompleting,
                     isDeleting,
                     onComplete,
@@ -102,7 +100,8 @@ function TaskItem({
   const StatusIcon = statusStyle.icon;
   const isCompletedToday = isTaskCompletedToday(task);
   const isScheduled = isTaskScheduled(task);
-  const isCompleteButtonDisabled = isScheduled || isCompletedToday || isActionDisabled;
+  const isActionPending = isCompleting || isDeleting;
+  const isCompleteButtonDisabled = isScheduled || isCompletedToday || isActionPending;
   const displayedDate = isScheduled ? task.startsAt : task.dueDate;
   const completeLabel = isCompleting
     ? 'Saving...'
@@ -117,7 +116,10 @@ function TaskItem({
       className="grid grid-cols-[minmax(0,1.5fr)_minmax(220px,0.8fr)_auto] items-center gap-6 rounded-card border border-transparent bg-surface p-4 transition-colors hover:border-border-app hover:bg-surface-hover max-[760px]:grid-cols-1 max-[760px]:gap-4">
       <div className="flex min-w-0 items-center gap-4">
         <span className="grid size-10 shrink-0 place-items-center rounded-pill"
-              style={{backgroundColor: `color-mix(in srgb, ${statusStyle.color} 8%, transparent)`, color: statusStyle.color}}>
+              style={{
+                backgroundColor: `color-mix(in srgb, ${statusStyle.color} 8%, transparent)`,
+                color: statusStyle.color
+              }}>
           <StatusIcon className="size-4" aria-hidden="true"/>
         </span>
         <div className="min-w-0">
@@ -128,7 +130,7 @@ function TaskItem({
       <div className="max-[760px]:pl-14">
         <p className="text-[10px] text-text-disabled">{isScheduled ? 'Starts' : 'Next due'}</p>
         <p className="mt-1 text-xs text-text-muted">{formatDueDate(displayedDate)} <span className="ml-2"
-                                                                                       style={{color: statusStyle.color}}>{statusStyle.label}</span>
+                                                                                         style={{color: statusStyle.color}}>{statusStyle.label}</span>
         </p>
       </div>
       <div className="grid min-w-50 gap-2 max-[760px]:min-w-0">
@@ -144,7 +146,7 @@ function TaskItem({
           </button>
           <DeleteTaskDialog
             isDeleting={isDeleting}
-            isDisabled={isActionDisabled}
+            isDisabled={isActionPending}
             onDelete={() => onDelete(task.id)}
             taskName={task.name}
           />
