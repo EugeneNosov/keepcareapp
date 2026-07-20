@@ -1,6 +1,7 @@
 import { useCallback, useState } from 'react';
 import {
   GoogleLogin,
+  GoogleOAuthProvider,
   type CredentialResponse,
 } from '@react-oauth/google';
 import { useForm } from 'react-hook-form';
@@ -10,9 +11,12 @@ import { ROUTES } from '@/app.constants.ts';
 import Button from '@/components/Button/Button.tsx';
 import Input from '@/components/Input/Input.tsx';
 import { ApiError } from '@/shared/api';
+import getEnvVariable from '@/shared/utils/getEnvVariable.ts';
 import AuthPageLayout from '../components/AuthPageLayout.tsx';
 import { useAuth } from '../hooks/useAuth';
 import type { LoginInput } from '../types/auth.types';
+
+const googleClientId = getEnvVariable('VITE_GOOGLE_CLIENT_ID');
 
 export function LoginPage() {
   const navigate = useNavigate();
@@ -133,8 +137,9 @@ export function LoginPage() {
         </div>
 
         {requestError && (
-          <p className="m-0 rounded-control border border-danger-border bg-danger-surface px-4 py-3 text-xs leading-5 text-danger-text"
-             role="alert">
+          <p
+            className="m-0 rounded-control border border-danger-border bg-danger-surface px-4 py-3 text-xs leading-5 text-danger-text"
+            role="alert">
             {requestError}
           </p>
         )}
@@ -160,15 +165,17 @@ export function LoginPage() {
               : ''
           }`}
         >
-          <GoogleLogin
-            onError={handleGoogleError}
-            onSuccess={handleGoogleSuccess}
-            shape="rectangular"
-            size="large"
-            text="continue_with"
-            theme="filled_black"
-            width="320"
-          />
+          <GoogleOAuthProvider clientId={googleClientId}>
+            <GoogleLogin
+              onError={handleGoogleError}
+              onSuccess={handleGoogleSuccess}
+              shape="rectangular"
+              size="large"
+              text="continue_with"
+              theme="filled_black"
+              width="320"
+            />
+          </GoogleOAuthProvider>
         </div>
 
         <p className="m-0 text-center text-xs text-text-subtle">
