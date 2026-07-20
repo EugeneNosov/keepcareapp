@@ -70,6 +70,10 @@ const Select = ({
   );
 
   useEffect(() => {
+    if (!isOpen) {
+      return;
+    }
+
     function handleDocumentClick(event: MouseEvent) {
       const target = event.target as Node;
 
@@ -81,26 +85,20 @@ const Select = ({
       }
     }
 
-    document.addEventListener('mousedown', handleDocumentClick);
-
-    return () => {
-      document.removeEventListener('mousedown', handleDocumentClick);
-    };
-  }, []);
-
-  useEffect(() => {
     function handleWindowChange() {
       setIsOpen(false);
     }
 
+    document.addEventListener('mousedown', handleDocumentClick);
     window.addEventListener('resize', handleWindowChange);
     window.addEventListener('scroll', handleWindowChange, true);
 
     return () => {
+      document.removeEventListener('mousedown', handleDocumentClick);
       window.removeEventListener('resize', handleWindowChange);
       window.removeEventListener('scroll', handleWindowChange, true);
     };
-  }, []);
+  }, [isOpen]);
 
   function openMenu() {
     const buttonRect = buttonRef.current?.getBoundingClientRect();
