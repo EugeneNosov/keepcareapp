@@ -1,13 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
 import { ApiError } from '@/shared/api';
-import { getTasks } from '../api/task.api.ts';
-import { TASK_QUERY_KEYS } from '../task.constants.ts';
+import { taskListQueryOptions } from '../task.queries.ts';
 
 export default function useTasks() {
-  const tasksQuery = useQuery({
-    queryKey: TASK_QUERY_KEYS.list,
-    queryFn: getTasks,
-  });
+  const tasksQuery = useQuery(taskListQueryOptions());
 
   return {
     tasks: tasksQuery.data ?? [],

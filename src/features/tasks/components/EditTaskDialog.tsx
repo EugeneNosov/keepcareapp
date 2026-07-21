@@ -1,9 +1,12 @@
-import { useState } from 'react';
+import { lazy, Suspense, useState } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import { LuPencil } from 'react-icons/lu';
 import Dialog from '@/components/Dialog/Dialog.tsx';
-import useTaskDetails from '../hooks/useTaskDetails.ts';
-import type { Task, TaskListItem, UpdateTaskPayload } from '../types/tasks.types.ts';
-import TaskForm, { type TaskFormData } from './TaskForm.tsx';
+import { taskDetailsQueryOptions } from '../task.queries.ts';
+import type { TaskListItem, UpdateTaskPayload } from '../types/tasks.types.ts';
+
+const loadEditTaskDialogContent = () => import('./EditTaskDialogContent.tsx');
+const EditTaskDialogContent = lazy(loadEditTaskDialogContent);
 
 interface EditTaskDialogProps {
   error?: string | null;
@@ -13,17 +16,6 @@ interface EditTaskDialogProps {
   task: TaskListItem;
 }
 
-function getTaskFormData(task: Task): TaskFormData {
-  return {
-    name: task.name,
-    notes: task.notes ?? '',
-    startsAt: task.startsAt.slice(0, 10),
-    repeatEvery: {
-      ...task.repeatEvery,
-    },
-  };
-}
-
 export default function EditTaskDialog({
                                          error,
                                          isDisabled,
@@ -31,12 +23,8 @@ export default function EditTaskDialog({
                                          onResetError,
                                          task,
                                        }: EditTaskDialogProps) {
+  const queryClient = useQueryClient();
   const [isOpen, setIsOpen] = useState(false);
-  const {
-    task: taskDetails,
-    isLoading: areTaskDetailsLoading,
-    error: taskDetailsError,
-  } = useTaskDetails(task.id, isOpen);
 
   function closeDialog() {
     onResetError();
@@ -45,24 +33,9 @@ export default function EditTaskDialog({
 
   function openDialog() {
     onResetError();
+    void queryClient.prefetchQuery(taskDetailsQueryOptions(task.id));
+    void loadEditTaskDialogContent().catch(() => undefined);
     setIsOpen(true);
-  }
-
-  async function handleEditTask(data: TaskFormData) {
-    if (!taskDetails) {
-      return;
-    }
-
-    const {name, notes, repeatEvery, startsAt} = data;
-    const originalStartDate = taskDetails.startsAt.slice(0, 10);
-
-    await onEditTask(taskDetails.id, {
-      name,
-      notes: notes?.trim() || undefined,
-      repeatEvery,
-      startsAt: startsAt === originalStartDate ? taskDetails.startsAt : startsAt,
-    });
-    closeDialog();
   }
 
   return (
@@ -79,21 +52,14 @@ export default function EditTaskDialog({
 
       {isOpen && (
         <Dialog isOpen={isOpen} onClose={closeDialog} title="Edit task">
-          {taskDetails ? (
-            <TaskForm
-              defaultValues={getTaskFormData(taskDetails)}
-              onCancel={closeDialog}
-              onSubmit={handleEditTask}
-              requestError={error}
-              submitLabel="Save changes"
+          <Suspense fallback={<p className="text-xs text-text-muted" role="status">Loading task details...</p>}>
+            <EditTaskDialogContent
+              error={error}
+              onClose={closeDialog}
+              onEditTask={onEditTask}
+              taskId={task.id}
             />
-          ) : taskDetailsError ? (
-            <p className="text-sm text-danger" role="alert">{taskDetailsError}</p>
-          ) : (
-            <p className="text-xs text-text-muted" role="status">
-              {areTaskDetailsLoading ? 'Loading task details...' : 'Task details are unavailable.'}
-            </p>
-          )}
+          </Suspense>
         </Dialog>
       )}
     </>

@@ -7,16 +7,16 @@ import type {
   UpdateTaskPayload,
 } from '../types/tasks.types.ts';
 
-export function getTasks() {
-  return apiRequest<TaskListItem[]>('/tasks');
+export function getTasks(signal?: AbortSignal) {
+  return apiRequest<TaskListItem[]>('/tasks', {signal});
 }
 
-export function getTaskDetails(taskId: string) {
-  return apiRequest<Task>(`/tasks/${taskId}`);
+export function getTaskDetails(taskId: string, signal?: AbortSignal) {
+  return apiRequest<Task>(`/tasks/${taskId}`, {signal});
 }
 
-export function getTaskSummary() {
-  return apiRequest<TaskSummary>('/tasks/summary');
+export function getTaskSummary(signal?: AbortSignal) {
+  return apiRequest<TaskSummary>('/tasks/summary', {signal});
 }
 
 export function createTask(payload: CreateTaskPayload) {

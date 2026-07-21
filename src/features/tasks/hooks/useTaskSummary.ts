@@ -1,7 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { ApiError } from '@/shared/api';
-import { getTaskSummary } from '../api/task.api.ts';
-import { TASK_QUERY_KEYS } from '../task.constants.ts';
+import { taskSummaryQueryOptions } from '../task.queries.ts';
 import type { TaskSummary } from '../types/tasks.types.ts';
 
 const EMPTY_TASK_SUMMARY: TaskSummary = {
@@ -13,10 +12,7 @@ const EMPTY_TASK_SUMMARY: TaskSummary = {
 };
 
 export default function useTaskSummary() {
-  const taskSummaryQuery = useQuery({
-    queryKey: TASK_QUERY_KEYS.summary,
-    queryFn: getTaskSummary,
-  });
+  const taskSummaryQuery = useQuery(taskSummaryQueryOptions());
 
   return {
     summaryData: taskSummaryQuery.data ?? EMPTY_TASK_SUMMARY,
