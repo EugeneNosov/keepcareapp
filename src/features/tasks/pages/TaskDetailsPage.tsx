@@ -2,12 +2,11 @@ import { Link, useParams } from 'react-router';
 import { ROUTES } from '@/app.constants.ts';
 import TaskDetails from '../components/TaskDetails.tsx';
 import TaskDetailsState from '../components/TaskDetailsState.tsx';
-import useTasks from '../hooks/useTasks.ts';
+import useTaskDetails from '../hooks/useTaskDetails.ts';
 
 export function TaskDetailsPage() {
-  const {taskId} = useParams<{taskId: string}>();
-  const {tasks, isLoading, error} = useTasks();
-  const task = tasks.find(({id}) => id === taskId);
+  const {taskId = ''} = useParams<{taskId: string}>();
+  const {task, isLoading, error} = useTaskDetails(taskId);
 
   if (isLoading) {
     return (

@@ -2,12 +2,17 @@ import { apiRequest } from '@/shared/api';
 import type {
   CreateTaskPayload,
   Task,
+  TaskListItem,
   TaskSummary,
   UpdateTaskPayload,
 } from '../types/tasks.types.ts';
 
 export function getTasks() {
-  return apiRequest<Task[]>('/tasks');
+  return apiRequest<TaskListItem[]>('/tasks');
+}
+
+export function getTaskDetails(taskId: string) {
+  return apiRequest<Task>(`/tasks/${taskId}`);
 }
 
 export function getTaskSummary() {

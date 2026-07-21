@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { LuPencil } from 'react-icons/lu';
 import Dialog from '@/components/Dialog/Dialog.tsx';
-import type { Task, UpdateTaskPayload } from '../types/tasks.types.ts';
+import useTaskDetails from '../hooks/useTaskDetails.ts';
+import type { Task, TaskListItem, UpdateTaskPayload } from '../types/tasks.types.ts';
 import TaskForm, { type TaskFormData } from './TaskForm.tsx';
 
 interface EditTaskDialogProps {
@@ -9,7 +10,7 @@ interface EditTaskDialogProps {
   isDisabled: boolean;
   onEditTask: (taskId: string, payload: UpdateTaskPayload) => void | Promise<void>;
   onResetError: () => void;
-  task: Task;
+  task: TaskListItem;
 }
 
 function getTaskFormData(task: Task): TaskFormData {
@@ -31,6 +32,11 @@ export default function EditTaskDialog({
                                          task,
                                        }: EditTaskDialogProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const {
+    task: taskDetails,
+    isLoading: areTaskDetailsLoading,
+    error: taskDetailsError,
+  } = useTaskDetails(task.id, isOpen);
 
   function closeDialog() {
     onResetError();
@@ -43,14 +49,18 @@ export default function EditTaskDialog({
   }
 
   async function handleEditTask(data: TaskFormData) {
-    const {name, notes, repeatEvery, startsAt} = data;
-    const originalStartDate = task.startsAt.slice(0, 10);
+    if (!taskDetails) {
+      return;
+    }
 
-    await onEditTask(task.id, {
+    const {name, notes, repeatEvery, startsAt} = data;
+    const originalStartDate = taskDetails.startsAt.slice(0, 10);
+
+    await onEditTask(taskDetails.id, {
       name,
       notes: notes?.trim() || undefined,
       repeatEvery,
-      startsAt: startsAt === originalStartDate ? task.startsAt : startsAt,
+      startsAt: startsAt === originalStartDate ? taskDetails.startsAt : startsAt,
     });
     closeDialog();
   }
@@ -69,13 +79,21 @@ export default function EditTaskDialog({
 
       {isOpen && (
         <Dialog isOpen={isOpen} onClose={closeDialog} title="Edit task">
-          <TaskForm
-            defaultValues={getTaskFormData(task)}
-            onCancel={closeDialog}
-            onSubmit={handleEditTask}
-            requestError={error}
-            submitLabel="Save changes"
-          />
+          {taskDetails ? (
+            <TaskForm
+              defaultValues={getTaskFormData(taskDetails)}
+              onCancel={closeDialog}
+              onSubmit={handleEditTask}
+              requestError={error}
+              submitLabel="Save changes"
+            />
+          ) : taskDetailsError ? (
+            <p className="text-sm text-danger" role="alert">{taskDetailsError}</p>
+          ) : (
+            <p className="text-xs text-text-muted" role="status">
+              {areTaskDetailsLoading ? 'Loading task details...' : 'Task details are unavailable.'}
+            </p>
+          )}
         </Dialog>
       )}
     </>

@@ -20,6 +20,17 @@ export interface Task {
   dueDate: string;
 }
 
+export interface TaskListItem {
+  id: string;
+  name: string;
+  status: TaskStatus;
+  repeatEvery: TaskRepeatEvery;
+  createdAt: string;
+  startsAt: string;
+  lastCompletedAt: string | null;
+  dueDate: string;
+}
+
 export interface CreateTaskPayload {
   name: string;
   notes?: string;

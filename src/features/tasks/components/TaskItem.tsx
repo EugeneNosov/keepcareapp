@@ -3,7 +3,7 @@ import { LuCheck, LuChevronRight } from 'react-icons/lu';
 import { Link } from 'react-router';
 import { ROUTES } from '@/app.constants.ts';
 import { TASK_STATUS_STYLES } from '../task.constants.ts';
-import type { Task, UpdateTaskPayload } from '../types/tasks.types.ts';
+import type { TaskListItem, UpdateTaskPayload } from '../types/tasks.types.ts';
 import {
   formatRepeatEvery,
   formatTaskDate,
@@ -14,7 +14,7 @@ import DeleteTaskDialog from './DeleteTaskDialog.tsx';
 import EditTaskDialog from './EditTaskDialog.tsx';
 
 interface TaskItemProps {
-  task: Task;
+  task: TaskListItem;
   actionError: string | null;
   isCompleting: boolean;
   isDeleting: boolean;

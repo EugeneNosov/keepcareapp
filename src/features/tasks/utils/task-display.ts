@@ -1,5 +1,5 @@
 import { TASK_STATUS } from '../task.constants.ts';
-import type { Task } from '../types/tasks.types.ts';
+import type { TaskListItem } from '../types/tasks.types.ts';
 
 const taskDateFormatter = new Intl.DateTimeFormat('en', {
   day: '2-digit',
@@ -7,7 +7,7 @@ const taskDateFormatter = new Intl.DateTimeFormat('en', {
   year: 'numeric',
 });
 
-export function formatRepeatEvery({value, unit}: Task['repeatEvery']) {
+export function formatRepeatEvery({value, unit}: TaskListItem['repeatEvery']) {
   const unitLabel = value === 1 ? unit.slice(0, -1) : unit;
 
   return `Every ${value} ${unitLabel}`;
@@ -27,7 +27,7 @@ export function formatTaskDate(date: string | null) {
   return taskDateFormatter.format(parsedDate);
 }
 
-export function isTaskScheduled(task: Task) {
+export function isTaskScheduled(task: TaskListItem) {
   const startsAt = new Date(task.startsAt);
 
   if (Number.isNaN(startsAt.getTime())) {
@@ -37,7 +37,7 @@ export function isTaskScheduled(task: Task) {
   return startsAt.getTime() > Date.now();
 }
 
-export function isTaskCompletedToday(task: Task) {
+export function isTaskCompletedToday(task: TaskListItem) {
   if (!task.lastCompletedAt) {
     return false;
   }

@@ -1,7 +1,7 @@
 import type { QueryClient } from '@tanstack/react-query';
 import { TASK_QUERY_KEYS, TASK_STATUS } from '../task.constants.ts';
 import type {
-  Task,
+  TaskListItem,
   TaskStatus,
   TaskSummary,
 } from '../types/tasks.types.ts';
@@ -48,7 +48,7 @@ function updateTaskSummaryCache(
   return true;
 }
 
-export function addTaskToSummaryCache(queryClient: QueryClient, task: Task) {
+export function addTaskToSummaryCache(queryClient: QueryClient, task: TaskListItem) {
   return updateTaskSummaryCache(queryClient, (summary) => ({
     ...updateSummaryCount(summary, task.status, 1),
     allCount: summary.allCount + 1,
@@ -57,8 +57,8 @@ export function addTaskToSummaryCache(queryClient: QueryClient, task: Task) {
 
 export function replaceTaskInSummaryCache(
   queryClient: QueryClient,
-  previousTask: Task,
-  updatedTask: Task,
+  previousTask: TaskListItem,
+  updatedTask: TaskListItem,
 ) {
   return updateTaskSummaryCache(
     queryClient,
@@ -70,7 +70,7 @@ export function replaceTaskInSummaryCache(
   );
 }
 
-export function removeTaskFromSummaryCache(queryClient: QueryClient, task: Task) {
+export function removeTaskFromSummaryCache(queryClient: QueryClient, task: TaskListItem) {
   return updateTaskSummaryCache(queryClient, (summary) => ({
     ...updateSummaryCount(summary, task.status, -1),
     allCount: Math.max(0, summary.allCount - 1),

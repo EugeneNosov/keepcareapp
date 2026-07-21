@@ -1,7 +1,8 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { removeTask } from '../api/task.api.ts';
 import { TASK_QUERY_KEYS } from '../task.constants.ts';
-import type { Task } from '../types/tasks.types.ts';
+import type { TaskListItem } from '../types/tasks.types.ts';
+import { cancelTaskCacheQueries } from '../utils/task-cache.ts';
 import { removeTaskFromSummaryCache } from '../utils/task-summary-cache.ts';
 
 export default function useDeleteTask() {
@@ -10,15 +11,16 @@ export default function useDeleteTask() {
   return useMutation({
     mutationFn: removeTask,
     onSuccess: async (_, deletedTaskId) => {
-      await Promise.all([
-        queryClient.cancelQueries({ queryKey: TASK_QUERY_KEYS.list }),
-        queryClient.cancelQueries({ queryKey: TASK_QUERY_KEYS.summary }),
-      ]);
+      await cancelTaskCacheQueries(queryClient, deletedTaskId);
 
-      const cachedTasks = queryClient.getQueryData<Task[]>(TASK_QUERY_KEYS.list);
+      const cachedTasks = queryClient.getQueryData<TaskListItem[]>(TASK_QUERY_KEYS.list);
       const deletedTask = cachedTasks?.find((task) => task.id === deletedTaskId);
 
-      queryClient.setQueryData<Task[]>(
+      queryClient.removeQueries({
+        queryKey: TASK_QUERY_KEYS.detail(deletedTaskId),
+        exact: true,
+      });
+      queryClient.setQueryData<TaskListItem[]>(
         TASK_QUERY_KEYS.list,
         (tasks) => tasks?.filter((task) => task.id !== deletedTaskId) ?? [],
       );
