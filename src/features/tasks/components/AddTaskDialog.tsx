@@ -1,11 +1,9 @@
-import { lazy, Suspense, useState } from 'react'
+import { useState } from 'react'
 import { LuPlus } from 'react-icons/lu'
 import Button from '@/components/Button/Button.tsx'
 import Dialog from '@/components/Dialog/Dialog.tsx'
 import type { CreateTaskPayload } from '../types/tasks.types.ts'
-
-const loadAddTaskDialogContent = () => import('./AddTaskDialogContent.tsx');
-const AddTaskDialogContent = lazy(loadAddTaskDialogContent);
+import TaskForm, { type TaskFormData } from './TaskForm.tsx'
 
 interface AddTaskDialogProps {
   error?: string | null;
@@ -19,9 +17,16 @@ export default function AddTaskDialog({ error, onAddNewTask }: AddTaskDialogProp
     setIsOpen(false)
   }
 
-  function openDialog() {
-    void loadAddTaskDialogContent().catch(() => undefined);
-    setIsOpen(true);
+  async function handleCreateTask(data: TaskFormData) {
+    const {name, notes, repeatEvery, startsAt} = data
+
+    await onAddNewTask({
+      name,
+      notes: notes?.trim() || undefined,
+      repeatEvery,
+      startsAt,
+    })
+    closeDialog()
   }
 
   return (
@@ -29,18 +34,17 @@ export default function AddTaskDialog({ error, onAddNewTask }: AddTaskDialogProp
       <Button
         icon={LuPlus}
         label="Create task"
-        onClick={openDialog}
+        onClick={() => setIsOpen(true)}
       />
 
       {isOpen && (
         <Dialog isOpen={isOpen} onClose={closeDialog} title="Create task">
-          <Suspense fallback={<p className="text-xs text-text-muted" role="status">Loading form...</p>}>
-            <AddTaskDialogContent
-              error={error}
-              onAddNewTask={onAddNewTask}
-              onClose={closeDialog}
-            />
-          </Suspense>
+          <TaskForm
+            onCancel={closeDialog}
+            onSubmit={handleCreateTask}
+            requestError={error}
+            submitLabel="Create task"
+          />
         </Dialog>
       )}
     </>
