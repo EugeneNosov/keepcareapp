@@ -1,38 +1,17 @@
 import { memo } from 'react';
-import { LuCalendarClock, LuCheck, LuCircleCheck, LuClock3, LuTriangleAlert } from 'react-icons/lu';
-import { TASK_STATUS } from '../task.constants.ts';
-import type { Task, TaskStatus, UpdateTaskPayload } from '../types/tasks.types.ts';
+import { LuCheck, LuChevronRight } from 'react-icons/lu';
+import { Link } from 'react-router';
+import { ROUTES } from '@/app.constants.ts';
+import { TASK_STATUS_STYLES } from '../task.constants.ts';
+import type { Task, UpdateTaskPayload } from '../types/tasks.types.ts';
+import {
+  formatRepeatEvery,
+  formatTaskDate,
+  isTaskCompletedToday,
+  isTaskScheduled,
+} from '../utils/task-display.ts';
 import DeleteTaskDialog from './DeleteTaskDialog.tsx';
 import EditTaskDialog from './EditTaskDialog.tsx';
-
-const statusStyles: Record<TaskStatus, { label: string; color: string; icon: typeof LuClock3 }> = {
-  [TASK_STATUS.scheduled]: {
-    label: 'SCHEDULED',
-    color: 'var(--app-color-primary)',
-    icon: LuCalendarClock,
-  },
-  [TASK_STATUS.overdue]: {
-    label: 'OVERDUE',
-    color: 'var(--app-color-danger)',
-    icon: LuTriangleAlert,
-  },
-  [TASK_STATUS.dueSoon]: {
-    label: 'DUE SOON',
-    color: 'var(--app-color-warning)',
-    icon: LuClock3,
-  },
-  [TASK_STATUS.ok]: {
-    label: 'OK',
-    color: 'var(--app-color-success)',
-    icon: LuCircleCheck,
-  },
-}
-
-const taskDateFormatter = new Intl.DateTimeFormat('en', {
-  day: '2-digit',
-  month: 'short',
-  year: 'numeric',
-});
 
 interface TaskItemProps {
   task: Task;
@@ -47,52 +26,6 @@ interface TaskItemProps {
   updateError: string | null;
 }
 
-function formatRepeatEvery({value, unit}: Task['repeatEvery']) {
-  const unitLabel = value === 1 ? unit.slice(0, -1) : unit
-
-  return `Every ${value} ${unitLabel}`
-}
-
-function formatDueDate(dueDate: string) {
-  const parsedDueDate = new Date(dueDate)
-
-  if (Number.isNaN(parsedDueDate.getTime())) {
-    return '—'
-  }
-
-  return taskDateFormatter.format(parsedDueDate)
-}
-
-function isSameCalendarDate(date: Date, comparisonDate: Date) {
-  return date.getFullYear() === comparisonDate.getFullYear()
-    && date.getMonth() === comparisonDate.getMonth()
-    && date.getDate() === comparisonDate.getDate()
-}
-
-function isTaskCompletedToday(task: Task) {
-  if (!task.lastCompletedAt) {
-    return false;
-  }
-
-  const lastCompletedDate = new Date(task.lastCompletedAt);
-
-  if (Number.isNaN(lastCompletedDate.getTime())) {
-    return false;
-  }
-
-  return isSameCalendarDate(lastCompletedDate, new Date());
-}
-
-function isTaskScheduled(task: Task) {
-  const startsAt = new Date(task.startsAt);
-
-  if (Number.isNaN(startsAt.getTime())) {
-    return task.status === TASK_STATUS.scheduled;
-  }
-
-  return startsAt.getTime() > Date.now();
-}
-
 function TaskItem({
                     task,
                     actionError,
@@ -105,7 +38,7 @@ function TaskItem({
                     onResetEditError,
                     updateError,
                   }: TaskItemProps) {
-  const statusStyle = statusStyles[task.status];
+  const statusStyle = TASK_STATUS_STYLES[task.status];
   const StatusIcon = statusStyle.icon;
   const isCompletedToday = isTaskCompletedToday(task);
   const isScheduled = isTaskScheduled(task);
@@ -132,13 +65,25 @@ function TaskItem({
           <StatusIcon className="size-4" aria-hidden="true"/>
         </span>
         <div className="min-w-0">
-          <h3 className="truncate text-sm text-text-soft">{task.name}</h3>
+          <h3 className="min-w-0">
+            <Link
+              aria-label={`View details for ${task.name}`}
+              className="group flex min-w-0 items-center gap-1.5 text-sm text-text-soft transition-colors hover:text-text-strong focus-visible:rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary"
+              to={`${ROUTES.tasks}/${encodeURIComponent(task.id)}`}
+            >
+              <span className="truncate">{task.name}</span>
+              <LuChevronRight
+                aria-hidden="true"
+                className="size-3.5 shrink-0 text-text-disabled transition-transform group-hover:translate-x-0.5 group-hover:text-primary"
+              />
+            </Link>
+          </h3>
           <p className="mt-1.5 text-[11px] text-text-subtle">{formatRepeatEvery(task.repeatEvery)}</p>
         </div>
       </div>
       <div className="max-[760px]:pl-14">
         <p className="text-[10px] text-text-disabled">{isScheduled ? 'Starts' : 'Next due'}</p>
-        <p className="mt-1 text-xs text-text-muted">{formatDueDate(displayedDate)} <span className="ml-2"
+        <p className="mt-1 text-xs text-text-muted">{formatTaskDate(displayedDate) ?? '—'} <span className="ml-2"
                                                                                          style={{color: statusStyle.color}}>{statusStyle.label}</span>
         </p>
       </div>

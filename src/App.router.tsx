@@ -68,6 +68,14 @@ export const router = createBrowserRouter([
                   return { Component: TasksListPage };
                 },
               },
+              {
+                path: 'tasks/:taskId',
+                lazy: async () => {
+                  const { TaskDetailsPage } = await import('./features/tasks/pages/TaskDetailsPage.tsx');
+
+                  return { Component: TaskDetailsPage };
+                },
+              },
             ],
           },
           {
