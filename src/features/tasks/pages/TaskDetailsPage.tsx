@@ -1,12 +1,47 @@
-import { Link, useParams } from 'react-router';
+import { Link, useNavigate, useParams } from 'react-router';
 import { ROUTES } from '@/app.constants.ts';
+import { isInlineRequestError } from '@/shared/api';
 import TaskDetails from '../components/TaskDetails.tsx';
 import TaskDetailsState from '../components/TaskDetailsState.tsx';
+import useDeleteTask from '../hooks/useDeleteTask.ts';
+import useMarkTaskAsCompleted from '../hooks/useMarkTaskAsCompleted.ts';
 import useTaskDetails from '../hooks/useTaskDetails.ts';
+import useUpdateTask from '../hooks/useUpdateTask.ts';
+import type { UpdateTaskPayload } from '../types/tasks.types.ts';
 
 export function TaskDetailsPage() {
+  const navigate = useNavigate();
   const {taskId = ''} = useParams<{taskId: string}>();
   const {task, isLoading, error} = useTaskDetails(taskId);
+  const completeTaskMutation = useMarkTaskAsCompleted();
+  const deleteTaskMutation = useDeleteTask();
+  const updateTaskMutation = useUpdateTask();
+  const completeError = isInlineRequestError(completeTaskMutation.error)
+    ? completeTaskMutation.error.message
+    : null;
+  const updateError = isInlineRequestError(updateTaskMutation.error)
+    ? updateTaskMutation.error.message
+    : null;
+  const deleteError = isInlineRequestError(deleteTaskMutation.error)
+    ? deleteTaskMutation.error.message
+    : null;
+
+  function handleCompleteTask(currentTaskId: string) {
+    completeTaskMutation.mutate(currentTaskId);
+  }
+
+  function handleDeleteTask(currentTaskId: string) {
+    deleteTaskMutation.mutate(currentTaskId, {
+      onSuccess: () => navigate(ROUTES.tasks, {replace: true}),
+    });
+  }
+
+  async function handleUpdateTask(
+    currentTaskId: string,
+    payload: UpdateTaskPayload,
+  ) {
+    await updateTaskMutation.mutateAsync({taskId: currentTaskId, payload});
+  }
 
   if (isLoading) {
     return (
@@ -45,5 +80,18 @@ export function TaskDetailsPage() {
     );
   }
 
-  return <TaskDetails task={task}/>;
+  return (
+    <TaskDetails
+      actionError={deleteError ?? completeError}
+      isCompleting={completeTaskMutation.isPending}
+      isDeleting={deleteTaskMutation.isPending}
+      isUpdating={updateTaskMutation.isPending}
+      onComplete={handleCompleteTask}
+      onDelete={handleDeleteTask}
+      onEdit={handleUpdateTask}
+      onResetEditError={updateTaskMutation.reset}
+      task={task}
+      updateError={updateError}
+    />
+  );
 }

@@ -1,5 +1,5 @@
 import { memo } from 'react';
-import { LuCheck, LuChevronRight } from 'react-icons/lu';
+import { LuChevronRight } from 'react-icons/lu';
 import { Link } from 'react-router';
 import { ROUTES } from '@/app.constants.ts';
 import { TASK_STATUS_STYLES } from '../task.constants.ts';
@@ -7,9 +7,9 @@ import type { TaskListItem, UpdateTaskPayload } from '../types/tasks.types.ts';
 import {
   formatRepeatEvery,
   formatTaskDate,
-  isTaskCompletedToday,
   isTaskScheduled,
 } from '../utils/task-display.ts';
+import CompleteTaskButton from './CompleteTaskButton.tsx';
 import DeleteTaskDialog from './DeleteTaskDialog.tsx';
 import EditTaskDialog from './EditTaskDialog.tsx';
 
@@ -40,18 +40,9 @@ function TaskItem({
                   }: TaskItemProps) {
   const statusStyle = TASK_STATUS_STYLES[task.status];
   const StatusIcon = statusStyle.icon;
-  const isCompletedToday = isTaskCompletedToday(task);
   const isScheduled = isTaskScheduled(task);
   const isActionPending = isCompleting || isDeleting || isUpdating;
-  const isCompleteButtonDisabled = isScheduled || isCompletedToday || isActionPending;
   const displayedDate = isScheduled ? task.startsAt : task.dueDate;
-  const completeLabel = isCompleting
-    ? 'Saving...'
-    : isScheduled
-      ? 'Scheduled'
-      : isCompletedToday
-        ? 'Completed'
-        : 'Complete';
 
   return (
     <article
@@ -89,15 +80,13 @@ function TaskItem({
       </div>
       <div className="grid min-w-50 gap-2 max-[760px]:min-w-0">
         <div className="flex gap-2">
-          <button
-            className="inline-flex h-10 flex-1 cursor-pointer items-center justify-center gap-2 rounded-pill bg-success-surface px-4 text-[11px] font-medium text-success transition-colors hover:bg-success-surface-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-success disabled:cursor-not-allowed disabled:bg-surface-raised disabled:text-text-disabled"
-            disabled={isCompleteButtonDisabled}
-            onClick={() => onComplete(task.id)}
-            type="button"
-          >
-            <LuCheck className="size-3.5" aria-hidden="true"/>
-            {completeLabel}
-          </button>
+          <CompleteTaskButton
+            className="flex-1"
+            isCompleting={isCompleting}
+            isDisabled={isActionPending}
+            onComplete={onComplete}
+            task={task}
+          />
           <EditTaskDialog
             error={updateError}
             isDisabled={isActionPending}
