@@ -45,6 +45,37 @@
 
 * {
     box-sizing: border-box;
+    scrollbar-color: var(--app-color-border-strong) transparent;
+    scrollbar-width: thin;
+}
+
+*::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+*::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+    min-height: 40px;
+    border: 2px solid transparent;
+    border-radius: var(--app-radius-pill);
+    background: var(--app-color-border-strong);
+    background-clip: padding-box;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+    background-color: var(--app-color-primary);
+}
+
+*::-webkit-scrollbar-thumb:active {
+    background-color: var(--app-color-primary-hover);
+}
+
+*::-webkit-scrollbar-corner {
+    background: transparent;
 }
 
 body {
