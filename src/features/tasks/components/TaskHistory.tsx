@@ -81,7 +81,7 @@ export default function TaskHistory({task}: TaskHistoryProps) {
       <ol className="divide-y divide-border-app px-6">
         {historyItems.map(({color, date, description, icon: Icon, title}) => (
           <li
-            className="grid grid-cols-[170px_minmax(0,1fr)] items-center py-5 max-[600px]:grid-cols-1 max-[600px]:gap-3"
+            className="grid grid-cols-[170px_minmax(0,1fr)] items-center py-3 max-[600px]:grid-cols-1 max-[600px]:gap-2"
             key={`${title}-${date}`}
           >
             <time className="text-xs text-text-muted" dateTime={date}>
@@ -97,7 +97,7 @@ export default function TaskHistory({task}: TaskHistoryProps) {
               </span>
               <div className="min-w-0">
                 <h3 className="text-xs font-medium text-text-soft">{title}</h3>
-                <p className="mt-1.5 text-[11px] leading-5 text-text-subtle">{description}</p>
+                <p className="mt-1 text-[11px] leading-4 text-text-subtle">{description}</p>
               </div>
             </div>
           </li>
