@@ -1,7 +1,8 @@
-import { useId, useState } from 'react';
+import { useState } from 'react';
 import { LuArrowLeft, LuHistory, LuLayoutGrid } from 'react-icons/lu';
 import { Link } from 'react-router';
 import { ROUTES } from '@/app.constants.ts';
+import Tabs, { type TabItem } from '@/components/Tabs/Tabs.tsx';
 import { TASK_STATUS_STYLES } from '../task.constants.ts';
 import type { Task, UpdateTaskPayload } from '../types/tasks.types.ts';
 import CompleteTaskButton from './CompleteTaskButton.tsx';
@@ -40,10 +41,29 @@ export default function TaskDetails({
                                       updateError,
                                     }: TaskDetailsProps) {
   const [activeTab, setActiveTab] = useState<TaskDetailsTab>('overview');
-  const tabId = useId();
   const statusStyle = TASK_STATUS_STYLES[task.status];
   const StatusIcon = statusStyle.icon;
   const isActionPending = isCompleting || isDeleting || isUpdating;
+  const tabs: readonly TabItem<TaskDetailsTab>[] = [
+    {
+      value: 'overview',
+      label: 'Overview',
+      icon: LuLayoutGrid,
+      content: (
+        <div className="grid grid-cols-[minmax(0,1.4fr)_minmax(260px,0.75fr)] gap-5 max-[860px]:grid-cols-1">
+          <TaskInformation task={task}/>
+          <TaskSchedule task={task}/>
+          <TaskNotes notes={task.notes}/>
+        </div>
+      ),
+    },
+    {
+      value: 'history',
+      label: 'Task history',
+      icon: LuHistory,
+      content: <TaskHistory task={task}/>,
+    },
+  ];
 
   return (
     <section className="mx-auto w-full max-w-275">
@@ -102,66 +122,14 @@ export default function TaskDetails({
         </div>
       </header>
 
-      <div
-        aria-label="Task details sections"
-        className="mt-6 inline-flex rounded-control border border-border-app bg-surface p-1 max-[520px]:flex"
-        role="tablist"
-      >
-        <button
-          aria-controls={`${tabId}-overview-panel`}
-          aria-selected={activeTab === 'overview'}
-          className={`inline-flex h-10 items-center justify-center gap-2 whitespace-nowrap rounded-[9px] px-4 text-[11px] transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary max-[520px]:flex-1 max-[520px]:gap-1.5 max-[520px]:px-2 ${
-            activeTab === 'overview'
-              ? 'bg-surface-muted text-text-strong'
-              : 'text-text-subtle hover:bg-surface-hover hover:text-text-soft'
-          }`}
-          id={`${tabId}-overview-tab`}
-          onClick={() => setActiveTab('overview')}
-          role="tab"
-          type="button"
-        >
-          <LuLayoutGrid className={`size-3.5 ${activeTab === 'overview' ? 'text-primary' : ''}`} aria-hidden="true"/>
-          Overview
-        </button>
-        <button
-          aria-controls={`${tabId}-history-panel`}
-          aria-selected={activeTab === 'history'}
-          className={`inline-flex h-10 items-center justify-center gap-2 whitespace-nowrap rounded-[9px] px-4 text-[11px] transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary max-[520px]:flex-1 max-[520px]:gap-1.5 max-[520px]:px-2 ${
-            activeTab === 'history'
-              ? 'bg-surface-muted text-text-strong'
-              : 'text-text-subtle hover:bg-surface-hover hover:text-text-soft'
-          }`}
-          id={`${tabId}-history-tab`}
-          onClick={() => setActiveTab('history')}
-          role="tab"
-          type="button"
-        >
-          <LuHistory className={`size-3.5 ${activeTab === 'history' ? 'text-primary' : ''}`} aria-hidden="true"/>
-          Task history
-        </button>
-      </div>
-
-      {activeTab === 'overview' ? (
-        <div
-          aria-labelledby={`${tabId}-overview-tab`}
-          className="mt-5 grid grid-cols-[minmax(0,1.4fr)_minmax(260px,0.75fr)] gap-5 max-[860px]:grid-cols-1"
-          id={`${tabId}-overview-panel`}
-          role="tabpanel"
-        >
-          <TaskInformation task={task}/>
-          <TaskSchedule task={task}/>
-          <TaskNotes notes={task.notes}/>
-        </div>
-      ) : (
-        <div
-          aria-labelledby={`${tabId}-history-tab`}
-          className="mt-5"
-          id={`${tabId}-history-panel`}
-          role="tabpanel"
-        >
-          <TaskHistory task={task}/>
-        </div>
-      )}
+      <Tabs
+        ariaLabel="Task details sections"
+        className="mt-6"
+        items={tabs}
+        onChange={setActiveTab}
+        panelClassName="mt-5"
+        value={activeTab}
+      />
     </section>
   );
 }
