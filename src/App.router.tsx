@@ -76,6 +76,14 @@ export const router = createBrowserRouter([
                   return { Component: TaskDetailsPage };
                 },
               },
+              {
+                path: 'history',
+                lazy: async () => {
+                  const { HistoryPage } = await import('./features/history/pages/HistoryPage.tsx');
+
+                  return { Component: HistoryPage };
+                },
+              },
             ],
           },
           {

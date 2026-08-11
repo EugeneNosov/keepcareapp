@@ -1,4 +1,9 @@
-import type { InfiniteData, QueryClient } from '@tanstack/react-query';
+import type {
+  InfiniteData,
+  QueryClient,
+  QueryKey,
+} from '@tanstack/react-query';
+import { resetTaskHistoryFeedToFirstPage } from '@/features/history/utils/history-cache.ts';
 import { TASK_QUERY_KEYS } from '../task.constants.ts';
 import type {
   Task,
@@ -31,13 +36,13 @@ export async function cancelTaskCacheQueries(
   ]);
 }
 
-function resetTaskHistoryToFirstPage(
+async function resetHistoryToFirstPage<TResponse>(
   queryClient: QueryClient,
-  taskId: string,
+  historyQueryKey: QueryKey,
 ) {
-  const historyQueryKey = TASK_QUERY_KEYS.history(taskId);
+  await queryClient.cancelQueries({queryKey: historyQueryKey, exact: true});
 
-  queryClient.setQueryData<InfiniteData<TaskHistoryResponse, string | null>>(
+  queryClient.setQueryData<InfiniteData<TResponse, string | null>>(
     historyQueryKey,
     (history) => {
       if (!history || history.pages.length <= 1) {
@@ -52,6 +57,16 @@ function resetTaskHistoryToFirstPage(
   );
 
   return queryClient.invalidateQueries({queryKey: historyQueryKey});
+}
+
+function resetTaskHistoryToFirstPage(
+  queryClient: QueryClient,
+  taskId: string,
+) {
+  return resetHistoryToFirstPage<TaskHistoryResponse>(
+    queryClient,
+    TASK_QUERY_KEYS.history(taskId),
+  );
 }
 
 export async function syncUpdatedTaskCache(
@@ -74,6 +89,7 @@ export async function syncUpdatedTaskCache(
 
   const invalidations = [
     resetTaskHistoryToFirstPage(queryClient, updatedTask.id),
+    resetTaskHistoryFeedToFirstPage(queryClient),
   ];
 
   if (

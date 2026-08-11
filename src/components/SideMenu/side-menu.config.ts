@@ -1,4 +1,4 @@
-import { LuBell, LuListTodo, LuSettings } from 'react-icons/lu'
+import { LuBell, LuHistory, LuListTodo, LuSettings } from 'react-icons/lu'
 import type { IconType } from 'react-icons'
 import { ROUTES } from '@/app.constants.ts';
 
@@ -13,6 +13,11 @@ export const SIDE_MENU_CONFIG: MenuItem[] = [
     label: 'Tasks',
     path: ROUTES.tasks,
     icon: LuListTodo,
+  },
+  {
+    label: 'History',
+    path: ROUTES.history,
+    icon: LuHistory,
   },
   {
     label: 'Notifications',

@@ -1,4 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { resetTaskHistoryFeedToFirstPage } from '@/features/history/utils/history-cache.ts';
 import { createTask } from '../api/task.api.ts';
 import { TASK_QUERY_KEYS } from '../task.constants.ts';
 import type { TaskListItem } from '../types/tasks.types.ts';
@@ -36,6 +37,8 @@ export default function useCreateTask() {
       if (!addTaskToSummaryCache(queryClient, createdTaskListItem)) {
         await queryClient.invalidateQueries({ queryKey: TASK_QUERY_KEYS.summary });
       }
+
+      await resetTaskHistoryFeedToFirstPage(queryClient);
     },
   });
 }

@@ -4,6 +4,7 @@ export const ROUTES = {
   register: '/register',
   app: '/app',
   tasks: '/app/tasks',
+  history: '/app/history',
   notifications: '/app/notifications',
   settings: '/app/settings',
 } as const;
