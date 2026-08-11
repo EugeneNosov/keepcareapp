@@ -1,4 +1,4 @@
-import { Link, useNavigate, useParams } from 'react-router';
+import { Link, useLocation, useNavigate, useParams } from 'react-router';
 import { ROUTES } from '@/app.constants.ts';
 import { isInlineRequestError } from '@/shared/api';
 import TaskDetails from '../components/TaskDetails.tsx';
@@ -10,6 +10,7 @@ import useUpdateTask from '../hooks/useUpdateTask.ts';
 import type { UpdateTaskPayload } from '../types/tasks.types.ts';
 
 export function TaskDetailsPage() {
+  const location = useLocation();
   const navigate = useNavigate();
   const {taskId = ''} = useParams<{taskId: string}>();
   const {task, isLoading, error} = useTaskDetails(taskId);
@@ -28,6 +29,19 @@ export function TaskDetailsPage() {
 
   function handleCompleteTask(currentTaskId: string) {
     completeTaskMutation.mutate(currentTaskId);
+  }
+
+  function handleBack() {
+    const navigationState = location.state as {
+      origin?: 'history' | 'tasks';
+    } | null;
+
+    if (navigationState?.origin === 'history' || navigationState?.origin === 'tasks') {
+      navigate(-1);
+      return;
+    }
+
+    navigate(ROUTES.tasks, {replace: true});
   }
 
   function handleDeleteTask(currentTaskId: string, deleteHistory: boolean) {
@@ -86,6 +100,7 @@ export function TaskDetailsPage() {
       isCompleting={completeTaskMutation.isPending}
       isDeleting={deleteTaskMutation.isPending}
       isUpdating={updateTaskMutation.isPending}
+      onBack={handleBack}
       onComplete={handleCompleteTask}
       onDelete={handleDeleteTask}
       onEdit={handleUpdateTask}

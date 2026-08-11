@@ -1,7 +1,5 @@
 import { useState } from 'react';
 import { LuArrowLeft, LuHistory, LuLayoutGrid } from 'react-icons/lu';
-import { Link } from 'react-router';
-import { ROUTES } from '@/app.constants.ts';
 import Tabs, { type TabItem } from '@/components/Tabs/Tabs.tsx';
 import { TASK_STATUS_STYLES } from '../task.constants.ts';
 import type { Task, UpdateTaskPayload } from '../types/tasks.types.ts';
@@ -18,6 +16,7 @@ interface TaskDetailsProps {
   isCompleting: boolean;
   isDeleting: boolean;
   isUpdating: boolean;
+  onBack: () => void;
   onComplete: (taskId: string) => void;
   onDelete: (taskId: string, deleteHistory: boolean) => void;
   onEdit: (taskId: string, payload: UpdateTaskPayload) => void | Promise<void>;
@@ -33,6 +32,7 @@ export default function TaskDetails({
                                       isCompleting,
                                       isDeleting,
                                       isUpdating,
+                                      onBack,
                                       onComplete,
                                       onDelete,
                                       onEdit,
@@ -72,13 +72,14 @@ export default function TaskDetails({
 
   return (
     <section className="mx-auto w-full max-w-275">
-      <Link
+      <button
         className="inline-flex items-center gap-2 text-[11px] text-text-subtle transition-colors hover:text-text-strong focus-visible:rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary"
-        to={ROUTES.tasks}
+        onClick={onBack}
+        type="button"
       >
         <LuArrowLeft className="size-3.5" aria-hidden="true"/>
-        Back to tasks
-      </Link>
+        Back
+      </button>
 
       <header className="mt-8 flex flex-wrap items-end justify-between gap-6 border-b border-border-app pb-8">
         <div className="min-w-0">

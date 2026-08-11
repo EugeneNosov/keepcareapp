@@ -48,6 +48,7 @@ export default function HistoryList({events}: HistoryListProps) {
                   <Link
                     aria-label={`View details for ${event.task.name}`}
                     className="group inline-flex max-w-full items-center gap-1.5 text-xs text-text-soft transition-colors hover:text-text-strong focus-visible:rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary"
+                    state={{origin: 'history'}}
                     to={`${ROUTES.tasks}/${encodeURIComponent(event.task.id)}`}
                   >
                     <span className="truncate">{event.task.name}</span>

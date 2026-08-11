@@ -60,6 +60,7 @@ function TaskItem({
             <Link
               aria-label={`View details for ${task.name}`}
               className="group flex min-w-0 items-center gap-1.5 text-sm text-text-soft transition-colors hover:text-text-strong focus-visible:rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary"
+              state={{origin: 'tasks'}}
               to={`${ROUTES.tasks}/${encodeURIComponent(task.id)}`}
             >
               <span className="truncate">{task.name}</span>
