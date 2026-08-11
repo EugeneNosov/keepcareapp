@@ -1,15 +1,18 @@
 import type { IconType } from 'react-icons';
 import {
-  LuCalendarClock,
   LuCircleCheck,
   LuCirclePlus,
+  LuPencilLine,
 } from 'react-icons/lu';
 import Card from '@/components/Card/Card.tsx';
-import type { Task } from '../types/tasks.types.ts';
-import { formatRepeatEvery, formatTaskDate } from '../utils/task-display.ts';
+import type {
+  TaskHistoryEvent,
+  TaskHistoryUpdatedField,
+} from '../types/tasks.types.ts';
+import { formatTaskDate } from '../utils/task-display.ts';
 
 interface TaskHistoryProps {
-  task: Task;
+  events: readonly TaskHistoryEvent[];
 }
 
 interface HistoryItem {
@@ -20,49 +23,63 @@ interface HistoryItem {
   title: string;
 }
 
-function getHistoryItems(task: Task): HistoryItem[] {
-  const items: HistoryItem[] = [];
+const TASK_HISTORY_FIELD_LABELS: Record<TaskHistoryUpdatedField, string> = {
+  name: 'name',
+  notes: 'notes',
+  startsAt: 'start date',
+  repeatEvery: 'repeat schedule',
+};
 
-  if (task.lastCompletedAt) {
-    const nextDueDate = formatTaskDate(task.dueDate);
+const historyFieldListFormatter = new Intl.ListFormat('en', {
+  style: 'long',
+  type: 'conjunction',
+});
 
-    items.push({
+function getUpdatedFieldsDescription(fields: readonly TaskHistoryUpdatedField[]) {
+  if (fields.length === 0) {
+    return 'Task details were updated.';
+  }
+
+  const formattedFields = historyFieldListFormatter.format(
+    fields.map((field) => TASK_HISTORY_FIELD_LABELS[field]),
+  );
+
+  return `${formattedFields.charAt(0).toUpperCase()}${formattedFields.slice(1)} updated.`;
+}
+
+function getHistoryItem(event: TaskHistoryEvent): HistoryItem {
+  if (event.type === 'task_completed') {
+    const nextDueDate = formatTaskDate(event.details.nextDueAt);
+
+    return {
       color: 'var(--app-color-success)',
-      date: task.lastCompletedAt,
+      date: event.occurredAt,
       description: nextDueDate ? `Next due date: ${nextDueDate}.` : 'The task was marked as done.',
       icon: LuCircleCheck,
       title: 'Task completed',
-    });
+    };
   }
 
-  const startsAt = new Date(task.startsAt);
-
-  if (!Number.isNaN(startsAt.getTime()) && startsAt.getTime() <= Date.now()) {
-    items.push({
+  if (event.type === 'task_updated') {
+    return {
       color: 'var(--app-color-primary)',
-      date: task.startsAt,
-      description: `${formatRepeatEvery(task.repeatEvery)} schedule started.`,
-      icon: LuCalendarClock,
-      title: 'Schedule started',
-    });
+      date: event.occurredAt,
+      description: getUpdatedFieldsDescription(event.details.updatedFields),
+      icon: LuPencilLine,
+      title: 'Task updated',
+    };
   }
 
-  items.push({
+  return {
     color: 'var(--app-color-text-subtle)',
-    date: task.createdAt,
+    date: event.occurredAt,
     description: 'The task was added to your care list.',
     icon: LuCirclePlus,
     title: 'Task created',
-  });
-
-  return items.sort((first, second) => (
-    new Date(second.date).getTime() - new Date(first.date).getTime()
-  ));
+  };
 }
 
-export default function TaskHistory({task}: TaskHistoryProps) {
-  const historyItems = getHistoryItems(task);
-
+export default function TaskHistory({events}: TaskHistoryProps) {
   return (
     <Card className="overflow-hidden p-0 shadow-none">
       <header className="border-b border-border-app px-6 py-5">
@@ -79,29 +96,33 @@ export default function TaskHistory({task}: TaskHistoryProps) {
       </div>
 
       <ol className="divide-y divide-border-app px-6">
-        {historyItems.map(({color, date, description, icon: Icon, title}) => (
-          <li
-            className="grid grid-cols-[170px_minmax(0,1fr)] items-center py-3 max-[600px]:grid-cols-1 max-[600px]:gap-2"
-            key={`${title}-${date}`}
-          >
-            <time className="text-xs text-text-muted" dateTime={date}>
-              {formatTaskDate(date) ?? '—'}
-            </time>
+        {events.map((event) => {
+          const {color, date, description, icon: Icon, title} = getHistoryItem(event);
 
-            <div className="flex min-w-0 items-start gap-3">
-              <span
-                className="mt-0.5 grid size-7 shrink-0 place-items-center rounded-pill bg-surface-hover"
-                style={{color}}
-              >
-                <Icon className="size-3.5" aria-hidden="true"/>
-              </span>
-              <div className="min-w-0">
-                <h3 className="text-xs font-medium text-text-soft">{title}</h3>
-                <p className="mt-1 text-[11px] leading-4 text-text-subtle">{description}</p>
+          return (
+            <li
+              className="grid grid-cols-[170px_minmax(0,1fr)] items-center py-3 max-[600px]:grid-cols-1 max-[600px]:gap-2"
+              key={event.id}
+            >
+              <time className="text-xs text-text-muted" dateTime={date}>
+                {formatTaskDate(date) ?? '—'}
+              </time>
+
+              <div className="flex min-w-0 items-start gap-3">
+                <span
+                  className="mt-0.5 grid size-7 shrink-0 place-items-center rounded-pill bg-surface-hover"
+                  style={{color}}
+                >
+                  <Icon className="size-3.5" aria-hidden="true"/>
+                </span>
+                <div className="min-w-0">
+                  <h3 className="text-xs font-medium text-text-soft">{title}</h3>
+                  <p className="mt-1 text-[11px] leading-4 text-text-subtle">{description}</p>
+                </div>
               </div>
-            </div>
-          </li>
-        ))}
+            </li>
+          );
+        })}
       </ol>
     </Card>
   );
