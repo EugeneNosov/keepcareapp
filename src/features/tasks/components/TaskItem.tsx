@@ -20,7 +20,7 @@ interface TaskItemProps {
   isDeleting: boolean;
   isUpdating: boolean;
   onComplete: (taskId: string) => void;
-  onDelete: (taskId: string) => void;
+  onDelete: (taskId: string, deleteHistory: boolean) => void;
   onEdit: (taskId: string, payload: UpdateTaskPayload) => void | Promise<void>;
   onResetEditError: () => void;
   updateError: string | null;
@@ -97,7 +97,7 @@ function TaskItem({
           <DeleteTaskDialog
             isDeleting={isDeleting}
             isDisabled={isActionPending}
-            onDelete={() => onDelete(task.id)}
+            onDelete={(deleteHistory) => onDelete(task.id, deleteHistory)}
             taskName={task.name}
           />
         </div>

@@ -95,6 +95,11 @@ export interface CreateTaskPayload {
   repeatEvery: TaskRepeatEvery;
 }
 
+export interface DeleteTaskPayload {
+  taskId: string;
+  deleteHistory: boolean;
+}
+
 export type UpdateTaskPayload = CreateTaskPayload;
 
 export interface TaskSummary {

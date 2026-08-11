@@ -11,7 +11,7 @@ export default function useDeleteTask() {
 
   return useMutation({
     mutationFn: removeTask,
-    onSuccess: async (_, deletedTaskId) => {
+    onSuccess: async (_, {taskId: deletedTaskId}) => {
       await cancelTaskCacheQueries(queryClient, deletedTaskId);
 
       const cachedTasks = queryClient.getQueryData<TaskListItem[]>(TASK_QUERY_KEYS.list);

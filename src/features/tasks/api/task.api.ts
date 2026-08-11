@@ -1,6 +1,7 @@
 import { apiRequest } from '@/shared/api';
 import type {
   CreateTaskPayload,
+  DeleteTaskPayload,
   Task,
   TaskHistoryQuery,
   TaskHistoryResponse,
@@ -68,8 +69,17 @@ export function updateTask(taskId: string, payload: UpdateTaskPayload) {
   });
 }
 
-export function removeTask(taskId: string) {
-  return apiRequest<void>(`/tasks/${taskId}`, {
+export function removeTask({taskId, deleteHistory}: DeleteTaskPayload) {
+  const searchParams = new URLSearchParams();
+
+  if (deleteHistory) {
+    searchParams.set('deleteHistory', 'true');
+  }
+
+  const queryString = searchParams.toString();
+  const path = `/tasks/${taskId}${queryString ? `?${queryString}` : ''}`;
+
+  return apiRequest<void>(path, {
     method: 'DELETE',
   });
 }

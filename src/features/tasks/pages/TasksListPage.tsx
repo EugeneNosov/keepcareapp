@@ -109,12 +109,15 @@ export function TasksListPage() {
     }
   }, [completeTask]);
 
-  const handleDeleteTask = useCallback(async (taskId: string) => {
+  const handleDeleteTask = useCallback(async (
+    taskId: string,
+    deleteHistory: boolean,
+  ) => {
     setTaskActionErrors((taskErrors) => updateTaskError(taskErrors, taskId, null));
     setDeletingTaskIds((taskIds) => updateTaskIdSet(taskIds, taskId, true));
 
     try {
-      await deleteTask(taskId);
+      await deleteTask({taskId, deleteHistory});
     } catch (error) {
       if (isInlineRequestError(error)) {
         setTaskActionErrors((taskErrors) =>

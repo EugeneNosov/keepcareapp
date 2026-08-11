@@ -30,8 +30,8 @@ export function TaskDetailsPage() {
     completeTaskMutation.mutate(currentTaskId);
   }
 
-  function handleDeleteTask(currentTaskId: string) {
-    deleteTaskMutation.mutate(currentTaskId, {
+  function handleDeleteTask(currentTaskId: string, deleteHistory: boolean) {
+    deleteTaskMutation.mutate({taskId: currentTaskId, deleteHistory}, {
       onSuccess: () => navigate(ROUTES.tasks, {replace: true}),
     });
   }
