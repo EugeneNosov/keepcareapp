@@ -1,4 +1,5 @@
 import type { TASK_REPEAT_UNITS, TASK_STATUS } from '../task.constants.ts';
+import type { IconType } from 'react-icons';
 
 export type TaskStatus = typeof TASK_STATUS[keyof typeof TASK_STATUS];
 export type TaskRepeatUnit = typeof TASK_REPEAT_UNITS[number];
@@ -32,7 +33,37 @@ export type TaskHistoryEvent = TaskHistoryEventBase & (
       nextDueAt: string | null;
     };
   }
+  | {
+    type: 'task_deleted';
+    details: Record<string, never>;
+  }
 );
+
+export interface TaskHistoryQuery {
+  cursor?: string;
+  limit?: number;
+}
+
+export interface TaskHistoryPagination {
+  nextCursor: string | null;
+  hasMore: boolean;
+  limit: number;
+}
+
+export interface TaskHistoryResponse {
+  data: TaskHistoryEvent[];
+  meta: {
+    pagination: TaskHistoryPagination;
+  };
+}
+
+export interface HistoryItem {
+  color: string;
+  date: string;
+  description: string;
+  icon: IconType;
+  title: string;
+}
 
 export interface Task {
   id: string;

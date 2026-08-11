@@ -2,6 +2,8 @@ import { apiRequest } from '@/shared/api';
 import type {
   CreateTaskPayload,
   Task,
+  TaskHistoryQuery,
+  TaskHistoryResponse,
   TaskListItem,
   TaskSummary,
   UpdateTaskPayload,
@@ -13,6 +15,27 @@ export function getTasks(signal?: AbortSignal) {
 
 export function getTaskDetails(taskId: string, signal?: AbortSignal) {
   return apiRequest<Task>(`/tasks/${taskId}`, {signal});
+}
+
+export function getTaskHistory(
+  taskId: string,
+  query: TaskHistoryQuery = {},
+  signal?: AbortSignal,
+) {
+  const searchParams = new URLSearchParams();
+
+  if (query.limit !== undefined) {
+    searchParams.set('limit', String(query.limit));
+  }
+
+  if (query.cursor) {
+    searchParams.set('cursor', query.cursor);
+  }
+
+  const queryString = searchParams.toString();
+  const path = `/tasks/${taskId}/history${queryString ? `?${queryString}` : ''}`;
+
+  return apiRequest<TaskHistoryResponse>(path, {signal});
 }
 
 export function getTaskSummary(signal?: AbortSignal) {

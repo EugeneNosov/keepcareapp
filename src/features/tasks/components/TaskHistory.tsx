@@ -1,11 +1,12 @@
-import type { IconType } from 'react-icons';
 import {
   LuCircleCheck,
   LuCirclePlus,
   LuPencilLine,
+  LuTrash2,
 } from 'react-icons/lu';
 import Card from '@/components/Card/Card.tsx';
 import type {
+  HistoryItem,
   TaskHistoryEvent,
   TaskHistoryUpdatedField,
 } from '../types/tasks.types.ts';
@@ -13,14 +14,6 @@ import { formatTaskDate } from '../utils/task-display.ts';
 
 interface TaskHistoryProps {
   events: readonly TaskHistoryEvent[];
-}
-
-interface HistoryItem {
-  color: string;
-  date: string;
-  description: string;
-  icon: IconType;
-  title: string;
 }
 
 const TASK_HISTORY_FIELD_LABELS: Record<TaskHistoryUpdatedField, string> = {
@@ -67,6 +60,16 @@ function getHistoryItem(event: TaskHistoryEvent): HistoryItem {
       description: getUpdatedFieldsDescription(event.details.updatedFields),
       icon: LuPencilLine,
       title: 'Task updated',
+    };
+  }
+
+  if (event.type === 'task_deleted') {
+    return {
+      color: 'var(--app-color-danger)',
+      date: event.occurredAt,
+      description: 'The task was removed from your care list.',
+      icon: LuTrash2,
+      title: 'Task deleted',
     };
   }
 

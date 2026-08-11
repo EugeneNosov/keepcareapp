@@ -1,6 +1,10 @@
-import type { QueryClient } from '@tanstack/react-query';
+import type { InfiniteData, QueryClient } from '@tanstack/react-query';
 import { TASK_QUERY_KEYS } from '../task.constants.ts';
-import type { Task, TaskListItem } from '../types/tasks.types.ts';
+import type {
+  Task,
+  TaskHistoryResponse,
+  TaskListItem,
+} from '../types/tasks.types.ts';
 import { replaceTaskInSummaryCache } from './task-summary-cache.ts';
 
 export function toTaskListItem(task: Task): TaskListItem {
@@ -27,6 +31,29 @@ export async function cancelTaskCacheQueries(
   ]);
 }
 
+function resetTaskHistoryToFirstPage(
+  queryClient: QueryClient,
+  taskId: string,
+) {
+  const historyQueryKey = TASK_QUERY_KEYS.history(taskId);
+
+  queryClient.setQueryData<InfiniteData<TaskHistoryResponse, string | null>>(
+    historyQueryKey,
+    (history) => {
+      if (!history || history.pages.length <= 1) {
+        return history;
+      }
+
+      return {
+        pages: history.pages.slice(0, 1),
+        pageParams: history.pageParams.slice(0, 1),
+      };
+    },
+  );
+
+  return queryClient.invalidateQueries({queryKey: historyQueryKey});
+}
+
 export async function syncUpdatedTaskCache(
   queryClient: QueryClient,
   updatedTask: Task,
@@ -45,10 +72,18 @@ export async function syncUpdatedTaskCache(
     ) ?? [updatedTaskListItem],
   );
 
+  const invalidations = [
+    resetTaskHistoryToFirstPage(queryClient, updatedTask.id),
+  ];
+
   if (
     !previousTask
     || !replaceTaskInSummaryCache(queryClient, previousTask, updatedTaskListItem)
   ) {
-    await queryClient.invalidateQueries({queryKey: TASK_QUERY_KEYS.summary});
+    invalidations.push(
+      queryClient.invalidateQueries({queryKey: TASK_QUERY_KEYS.summary}),
+    );
   }
+
+  await Promise.all(invalidations);
 }

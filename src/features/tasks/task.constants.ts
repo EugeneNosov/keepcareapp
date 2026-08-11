@@ -18,6 +18,7 @@ export const TASK_QUERY_KEYS = {
   all: ['tasks'] as const,
   list: ['tasks', 'list'] as const,
   detail: (taskId: string) => ['tasks', 'detail', taskId] as const,
+  history: (taskId: string) => ['tasks', 'detail', taskId, 'history'] as const,
   summary: ['tasks', 'summary'] as const,
 };
 
@@ -48,3 +49,5 @@ export const TASK_STATUS_STYLES: Record<
     icon: LuCircleCheck,
   },
 };
+
+export const TASK_HISTORY_PAGE_LIMIT = 20;

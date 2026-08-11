@@ -4,15 +4,11 @@ import { Link } from 'react-router';
 import { ROUTES } from '@/app.constants.ts';
 import Tabs, { type TabItem } from '@/components/Tabs/Tabs.tsx';
 import { TASK_STATUS_STYLES } from '../task.constants.ts';
-import type {
-  Task,
-  TaskHistoryEvent,
-  UpdateTaskPayload,
-} from '../types/tasks.types.ts';
+import type { Task, UpdateTaskPayload } from '../types/tasks.types.ts';
 import CompleteTaskButton from './CompleteTaskButton.tsx';
 import DeleteTaskDialog from './DeleteTaskDialog.tsx';
 import EditTaskDialog from './EditTaskDialog.tsx';
-import TaskHistory from './TaskHistory.tsx';
+import TaskHistorySection from './TaskHistorySection.tsx';
 import TaskInformation from './TaskInformation.tsx';
 import TaskNotes from './TaskNotes.tsx';
 import TaskSchedule from './TaskSchedule.tsx';
@@ -31,31 +27,6 @@ interface TaskDetailsProps {
 }
 
 type TaskDetailsTab = 'overview' | 'history';
-
-const TASK_HISTORY_MOCK: readonly TaskHistoryEvent[] = [
-  {
-    id: 'hist_01JDEF',
-    type: 'task_updated',
-    occurredAt: '2026-08-10T14:30:00.000Z',
-    details: {
-      updatedFields: ['notes', 'repeatEvery'],
-    },
-  },
-  {
-    id: 'hist_01JXYZ',
-    type: 'task_completed',
-    occurredAt: '2026-08-09T14:32:18.000Z',
-    details: {
-      nextDueAt: '2026-11-09T14:32:18.000Z',
-    },
-  },
-  {
-    id: 'hist_01JAAA',
-    type: 'task_created',
-    occurredAt: '2026-05-09T17:15:00.000Z',
-    details: {},
-  },
-];
 
 export default function TaskDetails({
                                       actionError,
@@ -90,7 +61,12 @@ export default function TaskDetails({
       value: 'history',
       label: 'Task history',
       icon: LuHistory,
-      content: <TaskHistory events={TASK_HISTORY_MOCK}/>,
+      content: (
+        <TaskHistorySection
+          isEnabled={activeTab === 'history'}
+          taskId={task.id}
+        />
+      ),
     },
   ];
 
