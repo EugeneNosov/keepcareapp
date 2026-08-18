@@ -4,13 +4,26 @@ import {
   LuLoaderCircle,
   LuRefreshCw,
 } from 'react-icons/lu';
+import { useQueryClient } from '@tanstack/react-query';
+import { useState } from 'react';
 import Button from '@/components/Button/Button.tsx';
 import Card from '@/components/Card/Card.tsx';
 import HistoryFilters from '../components/HistoryFilters.tsx';
 import HistoryList from '../components/HistoryList.tsx';
+import {
+  HISTORY_DEFAULT_FILTERS,
+  HISTORY_QUERY_KEYS,
+} from '../history.constants.ts';
 import useTaskHistoryFeed from '../hooks/useTaskHistoryFeed.ts';
+import type { TaskHistoryFilters as TaskHistoryFiltersValue } from '../types/history.types.ts';
+import { hasActiveTaskHistoryFilters } from '../utils/history-filters.ts';
 
 export function HistoryPage() {
+  const queryClient = useQueryClient();
+  const [filters, setFilters] = useState<TaskHistoryFiltersValue>(
+    HISTORY_DEFAULT_FILTERS,
+  );
+  const hasActiveFilters = hasActiveTaskHistoryFilters(filters);
   const {
     error,
     events,
@@ -20,7 +33,7 @@ export function HistoryPage() {
     loadMore,
     loadMoreError,
     retry,
-  } = useTaskHistoryFeed();
+  } = useTaskHistoryFeed(filters);
 
   function handleLoadMore() {
     void loadMore();
@@ -28,6 +41,30 @@ export function HistoryPage() {
 
   function handleRetry() {
     void retry();
+  }
+
+  function handleFiltersChange(nextFilters: TaskHistoryFiltersValue) {
+    const filtersAreUnchanged = (
+      filters.includeDeletedTasks === nextFilters.includeDeletedTasks
+      && filters.eventTypes.length === nextFilters.eventTypes.length
+      && filters.eventTypes.every(
+        (eventType, index) => eventType === nextFilters.eventTypes[index],
+      )
+    );
+
+    if (filtersAreUnchanged) {
+      return;
+    }
+
+    queryClient.removeQueries({
+      exact: true,
+      queryKey: HISTORY_QUERY_KEYS.feed(nextFilters),
+    });
+    setFilters(nextFilters);
+  }
+
+  function handleResetFilters() {
+    handleFiltersChange(HISTORY_DEFAULT_FILTERS);
   }
 
   return (
@@ -49,7 +86,10 @@ export function HistoryPage() {
                 {events.length} {events.length === 1 ? 'event' : 'events'} shown
               </span>
             ) : null}
-            <HistoryFilters/>
+            <HistoryFilters
+              filters={filters}
+              onChange={handleFiltersChange}
+            />
           </div>
         </header>
 
@@ -86,10 +126,23 @@ export function HistoryPage() {
           <Card className="grid min-h-48 place-items-center p-6 text-center shadow-none">
             <div>
               <LuHistory className="mx-auto size-5 text-text-disabled" aria-hidden="true"/>
-              <p className="mt-3 text-sm font-medium text-text-soft">No history yet</p>
-              <p className="mt-2 text-xs text-text-subtle">
-                Task activity will appear here.
+              <p className="mt-3 text-sm font-medium text-text-soft">
+                {hasActiveFilters ? 'No matching activity' : 'No history yet'}
               </p>
+              <p className="mt-2 text-xs text-text-subtle">
+                {hasActiveFilters
+                  ? 'Try selecting more event types or include deleted tasks.'
+                  : 'Task activity will appear here.'}
+              </p>
+              {hasActiveFilters ? (
+                <Button
+                  className="mt-5"
+                  icon={LuRefreshCw}
+                  label="Reset filters"
+                  onClick={handleResetFilters}
+                  variant="secondary"
+                />
+              ) : null}
             </div>
           </Card>
         ) : null}

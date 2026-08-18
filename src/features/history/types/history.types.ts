@@ -1,6 +1,13 @@
 import type { TaskHistoryEvent } from '@/features/tasks/types/tasks.types.ts';
 
-export interface TaskHistoryQuery {
+export type TaskHistoryEventType = TaskHistoryEvent['type'];
+
+export interface TaskHistoryFilters {
+  eventTypes: TaskHistoryEventType[];
+  includeDeletedTasks: boolean;
+}
+
+export interface TaskHistoryQuery extends TaskHistoryFilters {
   cursor?: string;
   limit?: number;
 }

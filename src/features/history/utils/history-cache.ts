@@ -6,12 +6,11 @@ export async function resetTaskHistoryFeedToFirstPage(
   queryClient: QueryClient,
 ) {
   await queryClient.cancelQueries({
-    queryKey: HISTORY_QUERY_KEYS.feed,
-    exact: true,
+    queryKey: HISTORY_QUERY_KEYS.all,
   });
 
-  queryClient.setQueryData<InfiniteData<TaskHistoryFeedResponse, string | null>>(
-    HISTORY_QUERY_KEYS.feed,
+  queryClient.setQueriesData<InfiniteData<TaskHistoryFeedResponse, string | null>>(
+    {queryKey: HISTORY_QUERY_KEYS.all},
     (history) => {
       if (!history || history.pages.length <= 1) {
         return history;
@@ -24,5 +23,5 @@ export async function resetTaskHistoryFeedToFirstPage(
     },
   );
 
-  return queryClient.invalidateQueries({queryKey: HISTORY_QUERY_KEYS.feed});
+  return queryClient.invalidateQueries({queryKey: HISTORY_QUERY_KEYS.all});
 }

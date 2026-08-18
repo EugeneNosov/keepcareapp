@@ -5,7 +5,7 @@ import type {
 } from '../types/history.types.ts';
 
 export function getTaskHistoryFeed(
-  query: TaskHistoryQuery = {},
+  query: TaskHistoryQuery,
   signal?: AbortSignal,
 ) {
   const searchParams = new URLSearchParams();
@@ -17,6 +17,12 @@ export function getTaskHistoryFeed(
   if (query.cursor) {
     searchParams.set('cursor', query.cursor);
   }
+
+  searchParams.set('eventTypes', query.eventTypes.join(','));
+  searchParams.set(
+    'includeDeletedTasks',
+    String(query.includeDeletedTasks),
+  );
 
   const queryString = searchParams.toString();
   const path = `/tasks/history${queryString ? `?${queryString}` : ''}`;

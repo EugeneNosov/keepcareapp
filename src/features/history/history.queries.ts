@@ -4,15 +4,17 @@ import {
   HISTORY_PAGE_LIMIT,
   HISTORY_QUERY_KEYS,
 } from './history.constants.ts';
+import type { TaskHistoryFilters } from './types/history.types.ts';
 
-export function taskHistoryFeedQueryOptions() {
+export function taskHistoryFeedQueryOptions(filters: TaskHistoryFilters) {
   return infiniteQueryOptions({
-    queryKey: HISTORY_QUERY_KEYS.feed,
+    queryKey: HISTORY_QUERY_KEYS.feed(filters),
     refetchOnWindowFocus: false,
     queryFn: ({pageParam, signal}) => getTaskHistoryFeed(
       {
         limit: HISTORY_PAGE_LIMIT,
         cursor: pageParam ?? undefined,
+        ...filters,
       },
       signal,
     ),
