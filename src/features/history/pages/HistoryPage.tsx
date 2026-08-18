@@ -8,12 +8,10 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import Button from '@/components/Button/Button.tsx';
 import Card from '@/components/Card/Card.tsx';
+import { TASK_HISTORY_FEED_QUERY_KEYS } from '@/shared/task-history/task-history.constants.ts';
 import HistoryFilters from '../components/HistoryFilters.tsx';
 import HistoryList from '../components/HistoryList.tsx';
-import {
-  HISTORY_DEFAULT_FILTERS,
-  HISTORY_QUERY_KEYS,
-} from '../history.constants.ts';
+import { HISTORY_DEFAULT_FILTERS } from '../history.constants.ts';
 import useTaskHistoryFeed from '../hooks/useTaskHistoryFeed.ts';
 import type { TaskHistoryFilters as TaskHistoryFiltersValue } from '../types/history.types.ts';
 import { hasActiveTaskHistoryFilters } from '../utils/history-filters.ts';
@@ -58,7 +56,7 @@ export function HistoryPage() {
 
     queryClient.removeQueries({
       exact: true,
-      queryKey: HISTORY_QUERY_KEYS.feed(nextFilters),
+      queryKey: TASK_HISTORY_FEED_QUERY_KEYS.feed(nextFilters),
     });
     setFilters(nextFilters);
   }

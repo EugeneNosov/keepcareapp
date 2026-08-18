@@ -1,8 +1,8 @@
 import Card from '@/components/Card/Card.tsx';
 import ExpandableNote from '@/components/ExpandableNote/ExpandableNote.tsx';
-import type { TaskHistoryEvent } from '../types/tasks.types.ts';
-import { formatTaskDate } from '../utils/task-display.ts';
-import { getTaskHistoryItem } from '../utils/task-history.ts';
+import { getTaskHistoryDisplayItem } from '@/shared/task-history/task-history-display.ts';
+import type { TaskHistoryEvent } from '@/shared/task-history/task-history.types.ts';
+import { formatAppDate } from '@/shared/utils/date.ts';
 
 interface TaskHistoryProps {
   events: readonly TaskHistoryEvent[];
@@ -26,7 +26,7 @@ export default function TaskHistory({events}: TaskHistoryProps) {
 
       <ol className="divide-y divide-border-app px-6">
         {events.map((event) => {
-          const {color, date, description, icon: Icon, note, title} = getTaskHistoryItem(event);
+          const {color, date, description, icon: Icon, note, title} = getTaskHistoryDisplayItem(event);
 
           return (
             <li
@@ -34,7 +34,7 @@ export default function TaskHistory({events}: TaskHistoryProps) {
               key={event.id}
             >
               <time className="text-xs text-text-muted" dateTime={date}>
-                {formatTaskDate(date) ?? '—'}
+                {formatAppDate(date) ?? '—'}
               </time>
 
               <div className="flex min-w-0 items-start gap-3">

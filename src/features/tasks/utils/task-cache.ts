@@ -3,11 +3,11 @@ import type {
   QueryClient,
   QueryKey,
 } from '@tanstack/react-query';
-import { resetTaskHistoryFeedToFirstPage } from '@/features/history/utils/history-cache.ts';
+import { resetTaskHistoryFeedToFirstPage } from '@/shared/task-history/task-history-cache.ts';
+import type { TaskHistoryResponse } from '@/shared/task-history/task-history.types.ts';
 import { TASK_QUERY_KEYS } from '../task.constants.ts';
 import type {
   Task,
-  TaskHistoryResponse,
   TaskListItem,
 } from '../types/tasks.types.ts';
 import { replaceTaskInSummaryCache } from './task-summary-cache.ts';

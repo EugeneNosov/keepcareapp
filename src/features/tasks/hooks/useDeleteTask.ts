@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { resetTaskHistoryFeedToFirstPage } from '@/features/history/utils/history-cache.ts';
+import { resetTaskHistoryFeedToFirstPage } from '@/shared/task-history/task-history-cache.ts';
 import { removeTask } from '../api/task.api.ts';
 import { TASK_QUERY_KEYS } from '../task.constants.ts';
 import type { TaskListItem } from '../types/tasks.types.ts';

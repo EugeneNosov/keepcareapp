@@ -1,15 +1,24 @@
+import type { IconType } from 'react-icons';
 import {
   LuCircleCheck,
   LuCirclePlus,
   LuPencilLine,
   LuTrash2,
 } from 'react-icons/lu';
+import { formatAppDate } from '@/shared/utils/date.ts';
 import type {
-  HistoryItem,
   TaskHistoryEvent,
   TaskHistoryUpdatedField,
-} from '../types/tasks.types.ts';
-import { formatTaskDate } from './task-display.ts';
+} from './task-history.types.ts';
+
+interface TaskHistoryDisplayItem {
+  color: string;
+  date: string;
+  description: string;
+  icon: IconType;
+  note?: string | null;
+  title: string;
+}
 
 const TASK_HISTORY_FIELD_LABELS: Record<TaskHistoryUpdatedField, string> = {
   name: 'name',
@@ -35,9 +44,11 @@ function getUpdatedFieldsDescription(fields: readonly TaskHistoryUpdatedField[])
   return `${formattedFields.charAt(0).toUpperCase()}${formattedFields.slice(1)} updated.`;
 }
 
-export function getTaskHistoryItem(event: TaskHistoryEvent): HistoryItem {
+export function getTaskHistoryDisplayItem(
+  event: TaskHistoryEvent,
+): TaskHistoryDisplayItem {
   if (event.type === 'task_completed') {
-    const nextDueDate = formatTaskDate(event.details.nextDueAt);
+    const nextDueDate = formatAppDate(event.details.nextDueAt);
 
     return {
       color: 'var(--app-color-success)',

@@ -1,30 +1,12 @@
 import { TASK_STATUS } from '../task.constants.ts';
 import type { TaskListItem } from '../types/tasks.types.ts';
 
-const taskDateFormatter = new Intl.DateTimeFormat('en', {
-  day: '2-digit',
-  month: 'short',
-  year: 'numeric',
-});
+export { formatAppDate as formatTaskDate } from '@/shared/utils/date.ts';
 
 export function formatRepeatEvery({value, unit}: TaskListItem['repeatEvery']) {
   const unitLabel = value === 1 ? unit.slice(0, -1) : unit;
 
   return `Every ${value} ${unitLabel}`;
-}
-
-export function formatTaskDate(date: string | null) {
-  if (!date) {
-    return null;
-  }
-
-  const parsedDate = new Date(date);
-
-  if (Number.isNaN(parsedDate.getTime())) {
-    return null;
-  }
-
-  return taskDateFormatter.format(parsedDate);
 }
 
 export function isTaskScheduled(task: TaskListItem) {

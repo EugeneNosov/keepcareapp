@@ -1,21 +1,17 @@
-import type { TaskHistoryEvent } from '@/features/tasks/types/tasks.types.ts';
+import type {
+  TaskHistoryEvent,
+  TaskHistoryFilters,
+  TaskHistoryPagination,
+} from '@/shared/task-history/task-history.types.ts';
 
-export type TaskHistoryEventType = TaskHistoryEvent['type'];
-
-export interface TaskHistoryFilters {
-  eventTypes: TaskHistoryEventType[];
-  includeDeletedTasks: boolean;
-}
+export type {
+  TaskHistoryEventType,
+  TaskHistoryFilters,
+} from '@/shared/task-history/task-history.types.ts';
 
 export interface TaskHistoryQuery extends TaskHistoryFilters {
   cursor?: string;
   limit?: number;
-}
-
-export interface TaskHistoryPagination {
-  nextCursor: string | null;
-  hasMore: boolean;
-  limit: number;
 }
 
 export type TaskHistoryFeedEvent = TaskHistoryEvent & {

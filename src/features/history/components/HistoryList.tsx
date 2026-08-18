@@ -2,8 +2,8 @@ import { LuChevronRight } from 'react-icons/lu';
 import { Link } from 'react-router';
 import { ROUTES } from '@/app.constants.ts';
 import Card from '@/components/Card/Card.tsx';
-import { formatTaskDate } from '@/features/tasks/utils/task-display.ts';
-import { getTaskHistoryItem } from '@/features/tasks/utils/task-history.ts';
+import { getTaskHistoryDisplayItem } from '@/shared/task-history/task-history-display.ts';
+import { formatAppDate } from '@/shared/utils/date.ts';
 import type { TaskHistoryFeedEvent } from '../types/history.types.ts';
 
 interface HistoryListProps {
@@ -24,7 +24,7 @@ export default function HistoryList({events}: HistoryListProps) {
 
       <ol className="divide-y divide-border-app px-6">
         {events.map((event) => {
-          const {color, date, description, icon: Icon, note, title} = getTaskHistoryItem(event);
+          const {color, date, description, icon: Icon, note, title} = getTaskHistoryDisplayItem(event);
           const isDeletedTask = event.task.isDeleted;
 
           return (
@@ -33,7 +33,7 @@ export default function HistoryList({events}: HistoryListProps) {
               key={event.id}
             >
               <time className="flex flex-col gap-1 text-xs text-text-muted max-[760px]:flex-row max-[760px]:items-center" dateTime={date}>
-                <span>{formatTaskDate(date) ?? '—'}</span>
+                <span>{formatAppDate(date) ?? '—'}</span>
               </time>
 
               <div className="min-w-0 pr-6 max-[760px]:pr-0">

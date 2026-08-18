@@ -5,10 +5,8 @@ import {
   LuRotateCcw,
 } from 'react-icons/lu';
 import Checkbox from '@/components/Checkbox/Checkbox.tsx';
-import {
-  HISTORY_DEFAULT_FILTERS,
-  HISTORY_EVENT_TYPES,
-} from '../history.constants.ts';
+import { TASK_HISTORY_EVENT_TYPES } from '@/shared/task-history/task-history.constants.ts';
+import { HISTORY_DEFAULT_FILTERS } from '../history.constants.ts';
 import type {
   TaskHistoryEventType,
   TaskHistoryFilters as TaskHistoryFiltersValue,
@@ -34,7 +32,7 @@ export default function HistoryFilters({
   const panelId = useId();
   const wrapperRef = useRef<HTMLDivElement>(null);
   const activeFilterCount = (
-    filters.eventTypes.length !== HISTORY_EVENT_TYPES.length ? 1 : 0
+    filters.eventTypes.length !== TASK_HISTORY_EVENT_TYPES.length ? 1 : 0
   ) + (filters.includeDeletedTasks ? 0 : 1);
 
   useEffect(() => {
@@ -75,7 +73,7 @@ export default function HistoryFilters({
       selectedEventTypes.delete(eventType);
     }
 
-    const eventTypes = HISTORY_EVENT_TYPES.filter((type) =>
+    const eventTypes = TASK_HISTORY_EVENT_TYPES.filter((type) =>
       selectedEventTypes.has(type),
     );
 

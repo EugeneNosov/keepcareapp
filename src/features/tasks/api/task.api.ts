@@ -1,11 +1,13 @@
 import { apiRequest } from '@/shared/api';
 import type {
+  TaskHistoryQuery,
+  TaskHistoryResponse,
+} from '@/shared/task-history/task-history.types.ts';
+import type {
   CompleteTaskPayload,
   CreateTaskPayload,
   DeleteTaskPayload,
   Task,
-  TaskHistoryQuery,
-  TaskHistoryResponse,
   TaskListItem,
   TaskSummary,
   UpdateTaskPayload,
