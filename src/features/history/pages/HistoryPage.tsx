@@ -6,6 +6,7 @@ import {
 } from 'react-icons/lu';
 import Button from '@/components/Button/Button.tsx';
 import Card from '@/components/Card/Card.tsx';
+import HistoryFilters from '../components/HistoryFilters.tsx';
 import HistoryList from '../components/HistoryList.tsx';
 import useTaskHistoryFeed from '../hooks/useTaskHistoryFeed.ts';
 
@@ -42,11 +43,14 @@ export function HistoryPage() {
       <section className="mt-10">
         <header className="mb-4 flex items-center justify-between gap-4 px-1">
           <h2 className="text-sm font-medium text-text-soft">Recent activity</h2>
-          {!isLoading && !error && events.length > 0 ? (
-            <span className="text-xs text-text-subtle">
-              {events.length} {events.length === 1 ? 'event' : 'events'} shown
-            </span>
-          ) : null}
+          <div className="flex items-center gap-3">
+            {!isLoading && !error && events.length > 0 ? (
+              <span className="text-xs text-text-subtle max-[480px]:hidden">
+                {events.length} {events.length === 1 ? 'event' : 'events'} shown
+              </span>
+            ) : null}
+            <HistoryFilters/>
+          </div>
         </header>
 
         {isLoading ? (

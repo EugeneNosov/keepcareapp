@@ -1,6 +1,7 @@
 import { useId, useState } from 'react';
-import { LuCheck, LuTriangleAlert, LuTrash2 } from 'react-icons/lu';
+import { LuTriangleAlert, LuTrash2 } from 'react-icons/lu';
 import Button from '@/components/Button/Button.tsx';
+import Checkbox from '@/components/Checkbox/Checkbox.tsx';
 import Dialog from '@/components/Dialog/Dialog.tsx';
 
 type DeleteTaskDialogProps = {
@@ -56,20 +57,13 @@ export default function DeleteTaskDialog({
             </p>
 
             <div className="grid gap-3">
-              <label className="flex cursor-pointer items-center gap-3 rounded-control border border-border-app bg-surface-hover px-4 py-3.5 transition-colors hover:border-border-strong">
-                <input
-                  aria-describedby={deleteFromHistory ? deleteHistoryWarningId : undefined}
-                  checked={deleteFromHistory}
-                  className="peer sr-only"
-                  disabled={isDeleting}
-                  onChange={(event) => setDeleteFromHistory(event.target.checked)}
-                  type="checkbox"
-                />
-                <span className="grid size-4 shrink-0 place-items-center rounded-sm border border-border-strong text-transparent transition-colors peer-checked:border-danger peer-checked:bg-danger peer-checked:text-app-root peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-primary peer-disabled:opacity-50">
-                  <LuCheck className="size-3" aria-hidden="true"/>
-                </span>
-                <span className="text-xs text-text-soft">Delete from history</span>
-              </label>
+              <Checkbox
+                aria-describedby={deleteFromHistory ? deleteHistoryWarningId : undefined}
+                checked={deleteFromHistory}
+                disabled={isDeleting}
+                label="Delete from history"
+                onChange={(event) => setDeleteFromHistory(event.target.checked)}
+              />
 
               {deleteFromHistory ? (
                 <div
