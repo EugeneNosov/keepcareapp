@@ -24,7 +24,7 @@ export default function HistoryList({events}: HistoryListProps) {
 
       <ol className="divide-y divide-border-app px-6">
         {events.map((event) => {
-          const {color, date, description, icon: Icon, title} = getTaskHistoryItem(event);
+          const {color, date, description, icon: Icon, note, title} = getTaskHistoryItem(event);
           const isDeletedTask = event.task.isDeleted;
 
           return (
@@ -70,6 +70,11 @@ export default function HistoryList({events}: HistoryListProps) {
                 <div className="min-w-0">
                   <h3 className="text-xs font-medium text-text-soft">{title}</h3>
                   <p className="mt-1 text-[11px] leading-4 text-text-subtle">{description}</p>
+                  {note && (
+                    <p className="mt-1.5 whitespace-pre-wrap break-words text-[11px] leading-4 text-text-muted">
+                      <span className="text-text-disabled">Note: </span>{note}
+                    </p>
+                  )}
                 </div>
               </div>
             </li>

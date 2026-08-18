@@ -44,6 +44,7 @@ export function getTaskHistoryItem(event: TaskHistoryEvent): HistoryItem {
       date: event.occurredAt,
       description: nextDueDate ? `Next due date: ${nextDueDate}.` : 'The task was marked as done.',
       icon: LuCircleCheck,
+      note: event.details.note,
       title: 'Task completed',
     };
   }

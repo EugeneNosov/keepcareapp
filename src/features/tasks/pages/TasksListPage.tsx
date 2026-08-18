@@ -9,7 +9,11 @@ import useMarkTaskAsCompleted from '../hooks/useMarkTaskAsCompleted.ts';
 import useTasks from '../hooks/useTasks.ts';
 import useTaskSummary from '../hooks/useTaskSummary.ts';
 import useUpdateTask from '../hooks/useUpdateTask.ts';
-import type { CreateTaskPayload, UpdateTaskPayload } from '../types/tasks.types.ts';
+import type {
+  CompleteTaskPayload,
+  CreateTaskPayload,
+  UpdateTaskPayload,
+} from '../types/tasks.types.ts';
 
 function updateTaskIdSet(
   taskIds: ReadonlySet<string>,
@@ -92,18 +96,22 @@ export function TasksListPage() {
     resetUpdateTask();
   }, [resetUpdateTask]);
 
-  const handleCompleteTask = useCallback(async (taskId: string) => {
+  const handleCompleteTask = useCallback(async (payload: CompleteTaskPayload) => {
+    const {taskId} = payload;
+
     setTaskActionErrors((taskErrors) => updateTaskError(taskErrors, taskId, null));
     setCompletingTaskIds((taskIds) => updateTaskIdSet(taskIds, taskId, true));
 
     try {
-      await completeTask(taskId);
+      await completeTask(payload);
     } catch (error) {
       if (isInlineRequestError(error)) {
         setTaskActionErrors((taskErrors) =>
           updateTaskError(taskErrors, taskId, error.message)
         );
       }
+
+      throw error;
     } finally {
       setCompletingTaskIds((taskIds) => updateTaskIdSet(taskIds, taskId, false));
     }

@@ -3,13 +3,17 @@ import { LuChevronRight } from 'react-icons/lu';
 import { Link } from 'react-router';
 import { ROUTES } from '@/app.constants.ts';
 import { TASK_STATUS_STYLES } from '../task.constants.ts';
-import type { TaskListItem, UpdateTaskPayload } from '../types/tasks.types.ts';
+import type {
+  CompleteTaskPayload,
+  TaskListItem,
+  UpdateTaskPayload,
+} from '../types/tasks.types.ts';
 import {
   formatRepeatEvery,
   formatTaskDate,
   isTaskScheduled,
 } from '../utils/task-display.ts';
-import CompleteTaskButton from './CompleteTaskButton.tsx';
+import CompleteTaskDialog from './CompleteTaskDialog.tsx';
 import DeleteTaskDialog from './DeleteTaskDialog.tsx';
 import EditTaskDialog from './EditTaskDialog.tsx';
 
@@ -19,7 +23,7 @@ interface TaskItemProps {
   isCompleting: boolean;
   isDeleting: boolean;
   isUpdating: boolean;
-  onComplete: (taskId: string) => void;
+  onComplete: (payload: CompleteTaskPayload) => void | Promise<void>;
   onDelete: (taskId: string, deleteHistory: boolean) => void;
   onEdit: (taskId: string, payload: UpdateTaskPayload) => void | Promise<void>;
   onResetEditError: () => void;
@@ -81,7 +85,7 @@ function TaskItem({
       </div>
       <div className="grid min-w-50 gap-2 max-[760px]:min-w-0">
         <div className="flex gap-2">
-          <CompleteTaskButton
+          <CompleteTaskDialog
             className="flex-1"
             isCompleting={isCompleting}
             isDisabled={isActionPending}

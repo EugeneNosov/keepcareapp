@@ -7,7 +7,10 @@ import useDeleteTask from '../hooks/useDeleteTask.ts';
 import useMarkTaskAsCompleted from '../hooks/useMarkTaskAsCompleted.ts';
 import useTaskDetails from '../hooks/useTaskDetails.ts';
 import useUpdateTask from '../hooks/useUpdateTask.ts';
-import type { UpdateTaskPayload } from '../types/tasks.types.ts';
+import type {
+  CompleteTaskPayload,
+  UpdateTaskPayload,
+} from '../types/tasks.types.ts';
 
 export function TaskDetailsPage() {
   const location = useLocation();
@@ -27,8 +30,8 @@ export function TaskDetailsPage() {
     ? deleteTaskMutation.error.message
     : null;
 
-  function handleCompleteTask(currentTaskId: string) {
-    completeTaskMutation.mutate(currentTaskId);
+  async function handleCompleteTask(payload: CompleteTaskPayload) {
+    await completeTaskMutation.mutateAsync(payload);
   }
 
   function handleBack() {

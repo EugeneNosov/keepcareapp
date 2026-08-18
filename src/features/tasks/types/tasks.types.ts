@@ -31,6 +31,7 @@ export type TaskHistoryEvent = TaskHistoryEventBase & (
     type: 'task_completed';
     details: {
       nextDueAt: string | null;
+      note?: string | null;
     };
   }
   | {
@@ -62,6 +63,7 @@ export interface HistoryItem {
   date: string;
   description: string;
   icon: IconType;
+  note?: string | null;
   title: string;
 }
 
@@ -98,6 +100,11 @@ export interface CreateTaskPayload {
 export interface DeleteTaskPayload {
   taskId: string;
   deleteHistory: boolean;
+}
+
+export interface CompleteTaskPayload {
+  taskId: string;
+  note?: string;
 }
 
 export type UpdateTaskPayload = CreateTaskPayload;

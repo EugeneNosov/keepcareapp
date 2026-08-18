@@ -1,5 +1,6 @@
 import { apiRequest } from '@/shared/api';
 import type {
+  CompleteTaskPayload,
   CreateTaskPayload,
   DeleteTaskPayload,
   Task,
@@ -53,9 +54,12 @@ export function createTask(payload: CreateTaskPayload) {
   });
 }
 
-export function markTaskAsCompleted(taskId: string) {
+export function markTaskAsCompleted({taskId, note}: CompleteTaskPayload) {
+  const normalizedNote = note?.trim();
+
   return apiRequest<Task>(`/tasks/${taskId}/complete`, {
     method: 'PATCH',
+    body: normalizedNote ? {note: normalizedNote} : {},
   });
 }
 

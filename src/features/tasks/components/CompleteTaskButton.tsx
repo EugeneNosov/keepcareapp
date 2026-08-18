@@ -9,7 +9,7 @@ interface CompleteTaskButtonProps {
   className?: string;
   isCompleting: boolean;
   isDisabled?: boolean;
-  onComplete: (taskId: string) => void;
+  onClick: () => void;
   task: TaskListItem;
 }
 
@@ -17,7 +17,7 @@ export default function CompleteTaskButton({
                                              className,
                                              isCompleting,
                                              isDisabled = false,
-                                             onComplete,
+                                             onClick,
                                              task,
                                            }: CompleteTaskButtonProps) {
   const isCompletedToday = isTaskCompletedToday(task);
@@ -34,7 +34,7 @@ export default function CompleteTaskButton({
     <button
       className={`inline-flex h-10 cursor-pointer items-center justify-center gap-2 rounded-pill bg-success-surface px-4 text-[11px] font-medium text-success transition-colors hover:bg-success-surface-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-success disabled:cursor-not-allowed disabled:bg-surface-raised disabled:text-text-disabled ${className ?? ''}`}
       disabled={isDisabled || isScheduled || isCompletedToday}
-      onClick={() => onComplete(task.id)}
+      onClick={onClick}
       type="button"
     >
       <LuCheck className="size-3.5" aria-hidden="true"/>

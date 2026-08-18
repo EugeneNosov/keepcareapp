@@ -2,8 +2,12 @@ import { useState } from 'react';
 import { LuArrowLeft, LuHistory, LuLayoutGrid } from 'react-icons/lu';
 import Tabs, { type TabItem } from '@/components/Tabs/Tabs.tsx';
 import { TASK_STATUS_STYLES } from '../task.constants.ts';
-import type { Task, UpdateTaskPayload } from '../types/tasks.types.ts';
-import CompleteTaskButton from './CompleteTaskButton.tsx';
+import type {
+  CompleteTaskPayload,
+  Task,
+  UpdateTaskPayload,
+} from '../types/tasks.types.ts';
+import CompleteTaskDialog from './CompleteTaskDialog.tsx';
 import DeleteTaskDialog from './DeleteTaskDialog.tsx';
 import EditTaskDialog from './EditTaskDialog.tsx';
 import TaskHistorySection from './TaskHistorySection.tsx';
@@ -17,7 +21,7 @@ interface TaskDetailsProps {
   isDeleting: boolean;
   isUpdating: boolean;
   onBack: () => void;
-  onComplete: (taskId: string) => void;
+  onComplete: (payload: CompleteTaskPayload) => void | Promise<void>;
   onDelete: (taskId: string, deleteHistory: boolean) => void;
   onEdit: (taskId: string, payload: UpdateTaskPayload) => void | Promise<void>;
   onResetEditError: () => void;
@@ -102,7 +106,7 @@ export default function TaskDetails({
               <StatusIcon className="size-3.5" aria-hidden="true"/>
               {statusStyle.label}
             </span>
-            <CompleteTaskButton
+            <CompleteTaskDialog
               isCompleting={isCompleting}
               isDisabled={isActionPending}
               onComplete={onComplete}
