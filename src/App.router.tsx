@@ -1,10 +1,12 @@
 import { createBrowserRouter, Navigate } from 'react-router';
 import { ROUTES } from './app.constants.ts';
+import RouterHydrateFallback from './components/RouterHydrateFallback/RouterHydrateFallback.tsx';
 import { PublicLayout } from './layouts/PublicLayout.tsx';
 import { UnexpectedErrorPage } from './features/errors/pages/UnexpectedErrorPage.tsx';
 
 export const router = createBrowserRouter([
   {
+    HydrateFallback: RouterHydrateFallback,
     errorElement: <UnexpectedErrorPage/>,
     children: [
       {
