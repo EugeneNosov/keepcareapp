@@ -29,7 +29,7 @@ export default function HistoryList({events}: HistoryListProps) {
 
           return (
             <li
-              className="grid grid-cols-[150px_minmax(170px,0.75fr)_minmax(0,1.25fr)] items-center py-3.5 max-[760px]:grid-cols-1 max-[760px]:gap-3"
+              className="grid h-24 grid-cols-[150px_minmax(170px,0.75fr)_minmax(0,1.25fr)] items-center max-[760px]:h-auto max-[760px]:min-h-24 max-[760px]:grid-cols-1 max-[760px]:gap-3 max-[760px]:py-4"
               key={event.id}
             >
               <time className="flex flex-col gap-1 text-xs text-text-muted max-[760px]:flex-row max-[760px]:items-center" dateTime={date}>
@@ -68,12 +68,28 @@ export default function HistoryList({events}: HistoryListProps) {
                   <Icon className="size-3.5" aria-hidden="true"/>
                 </span>
                 <div className="min-w-0">
-                  <h3 className="text-xs font-medium text-text-soft">{title}</h3>
-                  <p className="mt-1 text-[11px] leading-4 text-text-subtle">{description}</p>
-                  {note && (
-                    <p className="mt-1.5 whitespace-pre-wrap break-words text-[11px] leading-4 text-text-muted">
-                      <span className="text-text-disabled">Note: </span>{note}
-                    </p>
+                  {note ? (
+                    <>
+                      <div className="flex min-w-0 items-baseline gap-2">
+                        <h3 className="shrink-0 text-xs font-medium text-text-soft">{title}</h3>
+                        <span className="shrink-0 text-[10px] text-text-disabled" aria-hidden="true">·</span>
+                        <p className="truncate text-[11px] leading-4 text-text-subtle">{description}</p>
+                      </div>
+                      <p
+                        className="mt-1 truncate text-[11px] leading-4 text-text-muted"
+                        title={note}
+                      >
+                        <span className="mr-1.5 text-[9px] tracking-[0.06em] text-text-disabled uppercase">
+                          Note
+                        </span>
+                        {note}
+                      </p>
+                    </>
+                  ) : (
+                    <>
+                      <h3 className="text-xs font-medium text-text-soft">{title}</h3>
+                      <p className="mt-1 truncate text-[11px] leading-4 text-text-subtle">{description}</p>
+                    </>
                   )}
                 </div>
               </div>
