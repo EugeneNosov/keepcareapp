@@ -158,7 +158,7 @@ export function TasksListPage() {
         </p>
       )}
 
-      <section className="mt-10">
+      <section className="mt-8">
         <header className="mb-4 flex items-center justify-between gap-4 px-1">
           <h2 className="text-sm font-medium text-text-soft">All tasks</h2>
           <span className="text-xs text-text-subtle">
@@ -166,7 +166,7 @@ export function TasksListPage() {
           </span>
         </header>
 
-        <div className="grid gap-3">
+        <div className="@container grid gap-3">
           {isLoading && (
             <p className="rounded-card bg-surface px-5 py-6 text-xs text-text-subtle">Loading tasks...</p>
           )}

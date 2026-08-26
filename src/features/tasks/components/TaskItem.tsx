@@ -50,7 +50,7 @@ function TaskItem({
 
   return (
     <article
-      className="grid grid-cols-[minmax(0,1.5fr)_minmax(220px,0.8fr)_auto] items-center gap-6 rounded-card border border-transparent bg-surface p-4 transition-colors hover:border-border-app hover:bg-surface-hover max-[760px]:grid-cols-1 max-[760px]:gap-4">
+      className="grid grid-cols-[minmax(0,1.5fr)_minmax(0,0.8fr)_auto] items-center gap-6 rounded-card border border-transparent bg-surface p-4 transition-colors hover:border-border-app hover:bg-surface-hover @max-[760px]:grid-cols-[minmax(0,1fr)_auto] @max-[760px]:gap-x-6 @max-[760px]:gap-y-2 @max-[480px]:grid-cols-1 @max-[480px]:gap-4">
       <div className="flex min-w-0 items-center gap-4">
         <span className="grid size-10 shrink-0 place-items-center rounded-pill"
               style={{
@@ -77,13 +77,13 @@ function TaskItem({
           <p className="mt-1.5 text-[11px] text-text-subtle">{formatRepeatEvery(task.repeatEvery)}</p>
         </div>
       </div>
-      <div className="max-[760px]:pl-14">
+      <div
+        className="@max-[760px]:col-start-1 @max-[760px]:pl-14 @max-[760px]:flex @max-[760px]:flex-wrap @max-[760px]:items-baseline @max-[760px]:gap-x-2">
         <p className="text-[10px] text-text-disabled">{isScheduled ? 'Starts' : 'Next due'}</p>
-        <p className="mt-1 text-xs text-text-muted">{formatTaskDate(displayedDate) ?? '—'} <span className="ml-2"
-                                                                                         style={{color: statusStyle.color}}>{statusStyle.label}</span>
-        </p>
+        <p className="mt-1 text-xs text-text-muted @max-[760px]:mt-0">{formatTaskDate(displayedDate) ?? '—'}</p>
       </div>
-      <div className="grid min-w-50 gap-2 max-[760px]:min-w-0">
+      <div
+        className="grid min-w-50 gap-2 @max-[760px]:col-start-2 @max-[760px]:row-start-1 @max-[760px]:row-span-2 @max-[760px]:self-center @max-[480px]:col-start-1 @max-[480px]:row-start-3 @max-[480px]:row-span-1 @max-[480px]:min-w-0">
         <div className="flex gap-2">
           <CompleteTaskDialog
             className="flex-1"
