@@ -1,12 +1,12 @@
 import { expect, test } from '@playwright/test';
 import {
   mockAuthenticatedSession,
-  mockEmptyTaskList,
   mockInvalidLogin,
   mockLogout,
   mockSuccessfulLogin,
   mockUnauthenticatedSession,
 } from './support/mock-api.ts';
+import {mockTaskApi} from './support/mock-task-api.ts';
 
 test('landing page opens successfully', async ({page}) => {
   await page.goto('/');
@@ -34,7 +34,7 @@ test('user can navigate to login and registration', async ({page}) => {
 test('valid login redirects to the task list', async ({page}) => {
   await mockUnauthenticatedSession(page);
   await mockSuccessfulLogin(page);
-  await mockEmptyTaskList(page);
+  await mockTaskApi(page, []);
   await page.goto('/login');
 
   await page.getByLabel('Email address').fill('alex@example.com');
@@ -71,7 +71,7 @@ test('unauthenticated user cannot open protected routes', async ({page}) => {
 
 test('logout returns the user to a public page', async ({page}) => {
   await mockAuthenticatedSession(page);
-  await mockEmptyTaskList(page);
+  await mockTaskApi(page, []);
   await mockLogout(page);
   await page.goto('/app/tasks');
   await expect(

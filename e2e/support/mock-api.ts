@@ -50,21 +50,3 @@ export async function mockLogout(page: Page) {
     await route.fulfill({status: 204});
   });
 }
-
-export async function mockEmptyTaskList(page: Page) {
-  await page.route(/^https?:\/\/[^/]+\/tasks\/summary(?:\?.*)?$/, async (route) => {
-    await route.fulfill({
-      json: {
-        scheduledCount: 0,
-        overdueCount: 0,
-        dueSoonCount: 0,
-        okCount: 0,
-        allCount: 0,
-      },
-    });
-  });
-
-  await page.route(/^https?:\/\/[^/]+\/tasks(?:\?.*)?$/, async (route) => {
-    await route.fulfill({json: []});
-  });
-}

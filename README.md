@@ -103,7 +103,7 @@ Run the suite:
 npm run test:e2e
 ```
 
-The current browser suite covers the landing page and core authentication flows with deterministic API mocks. Task workflow coverage will be added incrementally. Failed runs retain screenshots and video; the first CI retry also records a Playwright trace.
+The current browser suite covers the landing page, core authentication flows, task management, form validation, navigation and error handling, and history workflows with deterministic API mocks. Additional workflow coverage will be added incrementally. Failed runs retain screenshots and video; the first CI retry also records a Playwright trace.
 
 Generated results are written to ignored directories such as `playwright-report/` and `test-results/`.
 
