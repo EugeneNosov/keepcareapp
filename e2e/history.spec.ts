@@ -1,6 +1,6 @@
-import {expect, test, type Page} from '@playwright/test';
-import {mockAuthenticatedSession} from './support/mock-api.ts';
-import {mockHistoryApi} from './support/mock-history-api.ts';
+import { expect, test, type Page } from '@playwright/test';
+import { mockAuthenticatedSession } from './support/mock-api.ts';
+import { mockHistoryApi } from './support/mock-history-api.ts';
 
 async function openHistory(page: Page) {
   await mockAuthenticatedSession(page);

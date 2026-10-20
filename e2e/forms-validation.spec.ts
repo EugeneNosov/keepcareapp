@@ -1,6 +1,6 @@
-import {expect, test, type Page} from '@playwright/test';
-import {mockAuthenticatedSession} from './support/mock-api.ts';
-import {mockTaskApi} from './support/mock-task-api.ts';
+import { expect, test, type Page } from '@playwright/test';
+import { mockAuthenticatedSession } from './support/mock-api.ts';
+import { mockTaskApi } from './support/mock-task-api.ts';
 
 async function openCreateTaskDialog(page: Page) {
   await mockAuthenticatedSession(page);

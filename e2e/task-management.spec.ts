@@ -1,5 +1,5 @@
-import {expect, test, type Page} from '@playwright/test';
-import {mockAuthenticatedSession} from './support/mock-api.ts';
+import { expect, test, type Page } from '@playwright/test';
+import { mockAuthenticatedSession } from './support/mock-api.ts';
 import {
   DEFAULT_TASK,
   mockTaskApi,

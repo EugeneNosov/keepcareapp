@@ -1,9 +1,9 @@
-import {expect, test} from '@playwright/test';
+import { expect, test } from '@playwright/test';
 import {
   mockAuthenticatedSession,
   mockUnauthenticatedSession,
 } from './support/mock-api.ts';
-import {mockHistoryApi} from './support/mock-history-api.ts';
+import { mockHistoryApi } from './support/mock-history-api.ts';
 import {
   DEFAULT_TASK,
   mockCreateTaskFailure,

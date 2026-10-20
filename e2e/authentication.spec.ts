@@ -6,7 +6,7 @@ import {
   mockSuccessfulLogin,
   mockUnauthenticatedSession,
 } from './support/mock-api.ts';
-import {mockTaskApi} from './support/mock-task-api.ts';
+import { mockTaskApi } from './support/mock-task-api.ts';
 
 test('landing page opens successfully', async ({page}) => {
   await page.goto('/');
