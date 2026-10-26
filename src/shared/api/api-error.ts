@@ -32,5 +32,22 @@ export class ApiError extends Error {
 }
 
 function isApiErrorPayload(payload: unknown): payload is ApiErrorPayload {
-  return typeof payload === 'object' && payload !== null;
+  if (
+    typeof payload !== 'object'
+    || payload === null
+    || Array.isArray(payload)
+  ) {
+    return false;
+  }
+
+  const {message, error} = payload as Record<string, unknown>;
+  const hasValidMessage = message === undefined
+    || typeof message === 'string'
+    || (
+      Array.isArray(message)
+      && message.every((detail) => typeof detail === 'string')
+    );
+  const hasValidError = error === undefined || typeof error === 'string';
+
+  return hasValidMessage && hasValidError;
 }
