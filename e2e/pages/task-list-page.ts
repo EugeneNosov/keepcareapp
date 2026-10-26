@@ -22,6 +22,11 @@ export class TaskListPage {
     return this.page.getByRole('dialog', {name: 'Create task'});
   }
 
+  async openEditTaskDialog(taskName: string) {
+    await this.editTaskButton(taskName).click();
+    return this.page.getByRole('dialog', {name: 'Edit task'});
+  }
+
   async openTaskDetails(taskName: string) {
     await this.taskLink(taskName).click();
   }

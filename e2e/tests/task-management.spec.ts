@@ -1,5 +1,6 @@
 import { expect, test } from '../fixtures/test.ts';
 import {
+  createTaskFixture,
   DEFAULT_TASK,
   mockTaskApi,
   type MockTask,
@@ -51,9 +52,8 @@ test('user can open task details', async ({taskListPage}) => {
 
 test('user can edit a task', async ({taskListPage}) => {
   await openTaskList(taskListPage);
-  await taskListPage.editTaskButton(DEFAULT_TASK.name).click();
 
-  const dialog = taskListPage.page.getByRole('dialog', {name: 'Edit task'});
+  const dialog = await taskListPage.openEditTaskDialog(DEFAULT_TASK.name);
   const taskName = dialog.getByLabel('Task name');
   await expect(taskName).toHaveValue(DEFAULT_TASK.name);
   await taskName.fill('Replace kitchen water filter');
@@ -63,6 +63,31 @@ test('user can edit a task', async ({taskListPage}) => {
   await expect(
     taskListPage.taskLink('Replace kitchen water filter'),
   ).toBeVisible();
+});
+
+test('edit dialog displays data for the selected task', async ({taskListPage}) => {
+  const selectedTask = createTaskFixture({
+    id: 'task-clean-apartment',
+    name: 'Clean apartment',
+    notes: 'Vacuum every room and clean the bathroom.',
+    startsAt: '2026-07-18T10:00:00.000Z',
+    repeatEvery: {
+      value: 1,
+      unit: 'weeks',
+    },
+  });
+  await openTaskList(taskListPage, [DEFAULT_TASK, selectedTask]);
+
+  const dialog = await taskListPage.openEditTaskDialog(selectedTask.name);
+
+  await expect(dialog.getByLabel('Task name')).toHaveValue(selectedTask.name);
+  await expect(dialog.getByLabel('Starts at')).toContainText('Jul 18, 2026');
+  await expect(dialog.getByLabel('Repeat every')).toHaveValue('1');
+  await expect(dialog.getByLabel('Period')).toHaveValue('weeks');
+  await expect(dialog.getByLabel('Notes')).toHaveValue(selectedTask.notes ?? '');
+  await expect(
+    dialog.getByRole('button', {name: 'Save changes'}),
+  ).toBeEnabled();
 });
 
 test('user can mark a task as completed', async ({taskListPage}) => {

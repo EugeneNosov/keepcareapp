@@ -4,7 +4,7 @@ import {
   type MockTask,
 } from './data/task-fixtures.ts';
 
-export { DEFAULT_TASK } from './data/task-fixtures.ts';
+export { createTaskFixture, DEFAULT_TASK } from './data/task-fixtures.ts';
 export type { MockTask } from './data/task-fixtures.ts';
 
 const TASK_API_PATTERN = /^https?:\/\/[^/]+\/tasks(?:\/.*)?(?:\?.*)?$/;
