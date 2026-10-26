@@ -112,7 +112,11 @@ See the [Playwright installation guide](https://playwright.dev/docs/intro) for s
 ## Project structure
 
 ```text
-e2e/                       Playwright browser tests
+e2e/
+  fixtures/                Opt-in Playwright fixtures
+  mocks/                   Domain API handlers and typed fixture data
+  pages/                   Reusable Task List and History page objects
+  tests/                   Playwright browser-test specifications
 src/
   components/              Reusable interface components
   features/

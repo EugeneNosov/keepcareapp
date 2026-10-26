@@ -1,18 +1,16 @@
-import { expect, test, type Page } from '@playwright/test';
-import { mockAuthenticatedSession } from './support/mock-api.ts';
-import { mockTaskApi } from './support/mock-task-api.ts';
+import { expect, test } from '../fixtures/test.ts';
+import { mockTaskApi } from '../mocks/task-api.ts';
+import type { TaskListPage } from '../pages/task-list-page.ts';
 
-async function openCreateTaskDialog(page: Page) {
-  await mockAuthenticatedSession(page);
-  await mockTaskApi(page, []);
-  await page.goto('/app/tasks');
-  await page.getByRole('button', {name: 'Create task'}).click();
+async function openCreateTaskDialog(taskListPage: TaskListPage) {
+  await mockTaskApi(taskListPage.page, []);
+  await taskListPage.goto();
 
-  return page.getByRole('dialog', {name: 'Create task'});
+  return taskListPage.openCreateTaskDialog();
 }
 
-test('required-field validation is displayed', async ({page}) => {
-  const dialog = await openCreateTaskDialog(page);
+test('required-field validation is displayed', async ({taskListPage}) => {
+  const dialog = await openCreateTaskDialog(taskListPage);
   const taskName = dialog.getByLabel('Task name');
 
   await taskName.fill('Temporary name');
@@ -22,12 +20,12 @@ test('required-field validation is displayed', async ({page}) => {
   await expect(dialog.getByRole('button', {name: 'Create task'})).toBeDisabled();
 });
 
-test('invalid dates and repeat values are rejected', async ({page}) => {
-  const dialog = await openCreateTaskDialog(page);
+test('invalid dates and repeat values are rejected', async ({taskListPage}) => {
+  const dialog = await openCreateTaskDialog(taskListPage);
   await dialog.getByLabel('Task name').fill('Inspect smoke alarms');
 
   await dialog.getByLabel('Starts at').click();
-  await page
+  await taskListPage.page
     .getByRole('dialog', {name: 'Choose start date'})
     .getByRole('button', {name: 'Clear'})
     .click();
@@ -36,7 +34,7 @@ test('invalid dates and repeat values are rejected', async ({page}) => {
   await expect(validationAlert).toContainText('Start date is required');
 
   await dialog.getByLabel('Starts at').click();
-  await page
+  await taskListPage.page
     .getByRole('dialog', {name: 'Choose start date'})
     .getByRole('button', {name: 'Today', exact: true})
     .click();
@@ -47,15 +45,14 @@ test('invalid dates and repeat values are rejected', async ({page}) => {
   await expect(dialog.getByRole('button', {name: 'Create task'})).toBeDisabled();
 });
 
-test('cancelling a create form clears draft values', async ({page}) => {
-  let dialog = await openCreateTaskDialog(page);
+test('cancelling a create form clears draft values', async ({taskListPage}) => {
+  let dialog = await openCreateTaskDialog(taskListPage);
   await dialog.getByLabel('Task name').fill('Unfinished task');
   await dialog.getByLabel('Notes').fill('This draft should be discarded.');
   await dialog.getByRole('button', {name: 'Cancel'}).click();
   await expect(dialog).not.toBeVisible();
 
-  await page.getByRole('button', {name: 'Create task'}).click();
-  dialog = page.getByRole('dialog', {name: 'Create task'});
+  dialog = await taskListPage.openCreateTaskDialog();
 
   await expect(dialog.getByLabel('Task name')).toHaveValue('');
   await expect(dialog.getByLabel('Notes')).toHaveValue('');

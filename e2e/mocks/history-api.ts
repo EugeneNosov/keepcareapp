@@ -1,50 +1,11 @@
 import type { Page } from '@playwright/test';
+import {
+  HISTORY_EVENTS,
+  type MockHistoryEvent,
+} from './data/history-fixtures.ts';
 
-type MockHistoryEventType =
-  | 'task_completed'
-  | 'task_updated'
-  | 'task_deleted'
-  | 'task_created';
-
-type MockHistoryEvent = {
-  id: string;
-  type: MockHistoryEventType;
-  occurredAt: string;
-  details: Record<string, unknown>;
-  task: {
-    id: string;
-    name: string;
-    isDeleted: boolean;
-  };
-};
-
-export const HISTORY_EVENTS: MockHistoryEvent[] = [
-  {
-    id: 'event-completed',
-    type: 'task_completed',
-    occurredAt: '2026-10-20T09:00:00.000Z',
-    details: {
-      nextDueAt: '2027-01-20T09:00:00.000Z',
-      note: 'Installed a new filter.',
-    },
-    task: {
-      id: 'task-1',
-      name: 'Replace water filter',
-      isDeleted: false,
-    },
-  },
-  {
-    id: 'event-created',
-    type: 'task_created',
-    occurredAt: '2026-01-01T10:00:00.000Z',
-    details: {},
-    task: {
-      id: 'task-1',
-      name: 'Replace water filter',
-      isDeleted: false,
-    },
-  },
-];
+export { HISTORY_EVENTS } from './data/history-fixtures.ts';
+export type { MockHistoryEvent } from './data/history-fixtures.ts';
 
 const HISTORY_API_PATTERN = /^https?:\/\/[^/]+\/tasks\/history(?:\?.*)?$/;
 

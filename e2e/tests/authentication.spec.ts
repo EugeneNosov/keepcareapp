@@ -1,12 +1,12 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from '../fixtures/test.ts';
 import {
   mockAuthenticatedSession,
   mockInvalidLogin,
   mockLogout,
   mockSuccessfulLogin,
   mockUnauthenticatedSession,
-} from './support/mock-api.ts';
-import { mockTaskApi } from './support/mock-task-api.ts';
+} from '../mocks/auth-api.ts';
+import { mockTaskApi } from '../mocks/task-api.ts';
 
 test('landing page opens successfully', async ({page}) => {
   await page.goto('/');

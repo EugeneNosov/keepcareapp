@@ -1,36 +1,11 @@
 import type { Page, Route } from '@playwright/test';
+import {
+  DEFAULT_TASK,
+  type MockTask,
+} from './data/task-fixtures.ts';
 
-type MockTaskStatus = 'scheduled' | 'overdue' | 'due_soon' | 'ok';
-
-export type MockTask = {
-  id: string;
-  name: string;
-  notes: string | null;
-  status: MockTaskStatus;
-  repeatEvery: {
-    value: number;
-    unit: 'days' | 'weeks' | 'months';
-  };
-  createdAt: string;
-  startsAt: string;
-  lastCompletedAt: string | null;
-  dueDate: string;
-};
-
-export const DEFAULT_TASK: MockTask = {
-  id: 'task-1',
-  name: 'Replace water filter',
-  notes: 'Use the spare filter from the utility cupboard.',
-  status: 'overdue',
-  repeatEvery: {
-    value: 3,
-    unit: 'months',
-  },
-  createdAt: '2026-01-01T10:00:00.000Z',
-  startsAt: '2026-01-10T10:00:00.000Z',
-  lastCompletedAt: null,
-  dueDate: '2026-10-01T10:00:00.000Z',
-};
+export { DEFAULT_TASK } from './data/task-fixtures.ts';
+export type { MockTask } from './data/task-fixtures.ts';
 
 const TASK_API_PATTERN = /^https?:\/\/[^/]+\/tasks(?:\/.*)?(?:\?.*)?$/;
 
