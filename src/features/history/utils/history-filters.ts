@@ -4,8 +4,12 @@ import type { TaskHistoryFilters } from '../types/history.types.ts';
 export function hasActiveTaskHistoryFilters(
   filters: TaskHistoryFilters,
 ): boolean {
+  const includesEveryEventType = TASK_HISTORY_EVENT_TYPES.every(
+    (eventType) => filters.eventTypes.includes(eventType),
+  );
+
   return (
-    filters.eventTypes.length !== TASK_HISTORY_EVENT_TYPES.length
+    !includesEveryEventType
     || !filters.includeDeletedTasks
   );
 }
