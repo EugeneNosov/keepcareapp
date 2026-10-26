@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { LuArrowRight } from 'react-icons/lu';
 import { Link, Navigate, useNavigate } from 'react-router';
@@ -9,6 +10,7 @@ import { ApiError } from '@/shared/api';
 import AuthPageLayout from '../components/AuthPageLayout.tsx';
 import { useAuth } from '../hooks/useAuth';
 import type { RegisterInput } from '../types/auth.types';
+import { registrationFormSchema } from '../validation/auth-form.schemas.ts';
 
 export function RegisterPage() {
   const navigate = useNavigate();
@@ -18,7 +20,9 @@ export function RegisterPage() {
     register: registerField,
     handleSubmit,
     formState: {errors, isSubmitting},
-  } = useForm<RegisterInput>();
+  } = useForm<RegisterInput>({
+    resolver: zodResolver(registrationFormSchema),
+  });
 
   async function handleRegistration(input: RegisterInput) {
     setRequestError(null);
@@ -69,12 +73,7 @@ export function RegisterPage() {
             type="text"
             autoComplete="name"
             aria-invalid={Boolean(errors.displayName)}
-            {...registerField('displayName', {
-              maxLength: {
-                value: 120,
-                message: 'Display name cannot exceed 120 characters.',
-              },
-            })}
+            {...registerField('displayName')}
           />
           {errors.displayName && (
             <span className="normal-case text-danger" role="alert">
@@ -91,9 +90,7 @@ export function RegisterPage() {
             type="email"
             autoComplete="email"
             aria-invalid={Boolean(errors.email)}
-            {...registerField('email', {
-              required: 'Email address is required.',
-            })}
+            {...registerField('email')}
           />
           {errors.email && (
             <span className="normal-case text-danger" role="alert">
@@ -110,17 +107,7 @@ export function RegisterPage() {
             type="password"
             autoComplete="new-password"
             aria-invalid={Boolean(errors.password)}
-            {...registerField('password', {
-              required: 'Password is required.',
-              minLength: {
-                value: 8,
-                message: 'Password must contain at least 8 characters.',
-              },
-              maxLength: {
-                value: 128,
-                message: 'Password cannot exceed 128 characters.',
-              },
-            })}
+            {...registerField('password')}
           />
           {errors.password && (
             <span className="normal-case text-danger" role="alert">

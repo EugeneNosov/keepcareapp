@@ -4,6 +4,7 @@ import {
   GoogleOAuthProvider,
   type CredentialResponse,
 } from '@react-oauth/google';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { LuArrowRight } from 'react-icons/lu';
 import { Link, Navigate, useNavigate } from 'react-router';
@@ -15,6 +16,7 @@ import getEnvVariable from '@/shared/utils/getEnvVariable.ts';
 import AuthPageLayout from '../components/AuthPageLayout.tsx';
 import { useAuth } from '../hooks/useAuth';
 import type { LoginInput } from '../types/auth.types';
+import { loginFormSchema } from '../validation/auth-form.schemas.ts';
 
 const googleClientId = getEnvVariable('VITE_GOOGLE_CLIENT_ID');
 
@@ -27,7 +29,9 @@ export function LoginPage() {
     register: registerField,
     handleSubmit,
     formState: {errors, isSubmitting},
-  } = useForm<LoginInput>();
+  } = useForm<LoginInput>({
+    resolver: zodResolver(loginFormSchema),
+  });
 
   async function handleLogin(input: LoginInput) {
     setRequestError(null);
@@ -106,9 +110,7 @@ export function LoginPage() {
             type="email"
             autoComplete="email"
             aria-invalid={Boolean(errors.email)}
-            {...registerField('email', {
-              required: 'Email address is required.',
-            })}
+            {...registerField('email')}
           />
           {errors.email && (
             <span className="normal-case text-danger" role="alert">
@@ -125,9 +127,7 @@ export function LoginPage() {
             type="password"
             autoComplete="current-password"
             aria-invalid={Boolean(errors.password)}
-            {...registerField('password', {
-              required: 'Password is required.',
-            })}
+            {...registerField('password')}
           />
           {errors.password && (
             <span className="normal-case text-danger" role="alert">

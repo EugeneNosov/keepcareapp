@@ -1,31 +1,15 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Controller, useForm } from 'react-hook-form'
-import { z } from 'zod'
 import Button from '@/components/Button/Button.tsx'
 import DatePicker from '@/components/DatePicker/DatePicker.tsx';
 import Input from '@/components/Input/Input.tsx';
 import Select from '@/components/Select/Select.tsx'
-import { TASK_REPEAT_UNITS } from '../task.constants.ts'
+import {
+  taskFormSchema,
+  type TaskFormData,
+} from '../validation/task-form.schema.ts';
 
-const taskFormSchema = z.object({
-  name: z.string()
-    .trim()
-    .min(1, 'Task name is required')
-    .max(50, 'Task name must be less than 50 characters'),
-  startsAt: z.string()
-    .min(1, 'Start date is required'),
-  repeatEvery: z.object({
-    value: z.number()
-      .int('Period must be a whole number')
-      .min(1, 'Period must be at least 1'),
-    unit: z.enum(TASK_REPEAT_UNITS),
-  }),
-  notes: z.string()
-    .max(240, 'Notes must be less than 240 characters')
-    .optional(),
-})
-
-export type TaskFormData = z.infer<typeof taskFormSchema>
+export type { TaskFormData } from '../validation/task-form.schema.ts';
 
 interface TaskFormProps {
   defaultValues?: TaskFormData;

@@ -2,7 +2,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useId, useState } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import { LuCheck } from 'react-icons/lu';
-import { z } from 'zod';
 import Button from '@/components/Button/Button.tsx';
 import Dialog from '@/components/Dialog/Dialog.tsx';
 import Input from '@/components/Input/Input.tsx';
@@ -11,20 +10,12 @@ import type {
   CompleteTaskPayload,
   TaskListItem,
 } from '../types/tasks.types.ts';
+import {
+  COMPLETION_NOTE_MAX_LENGTH,
+  completeTaskFormSchema,
+  type CompleteTaskFormData,
+} from '../validation/complete-task-form.schema.ts';
 import CompleteTaskButton from './CompleteTaskButton.tsx';
-
-const COMPLETION_NOTE_MAX_LENGTH = 240;
-
-const completeTaskFormSchema = z.object({
-  note: z.string()
-    .trim()
-    .max(
-      COMPLETION_NOTE_MAX_LENGTH,
-      `Completion note must be ${COMPLETION_NOTE_MAX_LENGTH} characters or less`,
-    ),
-});
-
-type CompleteTaskFormData = z.infer<typeof completeTaskFormSchema>;
 
 const initialCompleteTaskFormData: CompleteTaskFormData = {
   note: '',

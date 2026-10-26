@@ -10,7 +10,11 @@ import type {
   Task,
   TaskListItem,
 } from '../types/tasks.types.ts';
-import { replaceTaskInSummaryCache } from './task-summary-cache.ts';
+import {
+  addTaskToSummaryCache,
+  removeTaskFromSummaryCache,
+  replaceTaskInSummaryCache,
+} from './task-summary-cache.ts';
 
 export function toTaskListItem(task: Task): TaskListItem {
   return {
@@ -34,6 +38,80 @@ export async function cancelTaskCacheQueries(
     queryClient.cancelQueries({queryKey: TASK_QUERY_KEYS.detail(taskId)}),
     queryClient.cancelQueries({queryKey: TASK_QUERY_KEYS.summary}),
   ]);
+}
+
+export async function syncCreatedTaskCache(
+  queryClient: QueryClient,
+  createdTask: Task,
+) {
+  await Promise.all([
+    queryClient.cancelQueries({queryKey: TASK_QUERY_KEYS.list}),
+    queryClient.cancelQueries({queryKey: TASK_QUERY_KEYS.summary}),
+  ]);
+
+  const cachedTasks = queryClient.getQueryData<TaskListItem[]>(TASK_QUERY_KEYS.list);
+  const createdTaskListItem = toTaskListItem(createdTask);
+
+  queryClient.setQueryData(TASK_QUERY_KEYS.detail(createdTask.id), createdTask);
+
+  const invalidations = [resetTaskHistoryFeedToFirstPage(queryClient)];
+
+  if (!cachedTasks) {
+    invalidations.push(
+      queryClient.invalidateQueries({queryKey: TASK_QUERY_KEYS.list}),
+    );
+  } else {
+    queryClient.setQueryData<TaskListItem[]>(
+      TASK_QUERY_KEYS.list,
+      [
+        createdTaskListItem,
+        ...cachedTasks.filter((task) => task.id !== createdTask.id),
+      ],
+    );
+  }
+
+  if (!addTaskToSummaryCache(queryClient, createdTaskListItem)) {
+    invalidations.push(
+      queryClient.invalidateQueries({queryKey: TASK_QUERY_KEYS.summary}),
+    );
+  }
+
+  await Promise.all(invalidations);
+}
+
+export async function syncDeletedTaskCache(
+  queryClient: QueryClient,
+  deletedTaskId: string,
+) {
+  await cancelTaskCacheQueries(queryClient, deletedTaskId);
+
+  const cachedTasks = queryClient.getQueryData<TaskListItem[]>(TASK_QUERY_KEYS.list);
+  const deletedTask = cachedTasks?.find((task) => task.id === deletedTaskId);
+
+  queryClient.removeQueries({
+    queryKey: TASK_QUERY_KEYS.detail(deletedTaskId),
+  });
+
+  const invalidations = [resetTaskHistoryFeedToFirstPage(queryClient)];
+
+  if (!cachedTasks) {
+    invalidations.push(
+      queryClient.invalidateQueries({queryKey: TASK_QUERY_KEYS.list}),
+    );
+  } else {
+    queryClient.setQueryData<TaskListItem[]>(
+      TASK_QUERY_KEYS.list,
+      cachedTasks.filter((task) => task.id !== deletedTaskId),
+    );
+  }
+
+  if (!deletedTask || !removeTaskFromSummaryCache(queryClient, deletedTask)) {
+    invalidations.push(
+      queryClient.invalidateQueries({queryKey: TASK_QUERY_KEYS.summary}),
+    );
+  }
+
+  await Promise.all(invalidations);
 }
 
 async function resetHistoryToFirstPage<TResponse>(
