@@ -76,6 +76,7 @@ Vite prints the local URL when the server is ready. The default is `http://local
 | `npm run build` | Type-check the project and create a production build in `dist/`. |
 | `npm run preview` | Serve the production build locally for a final browser check. |
 | `npm run lint` | Run ESLint across the repository. |
+| `npm run commitlint -- --from HEAD~1 --to HEAD` | Validate the latest commit message. |
 | `npm run test:unit` | Run all Vitest unit and component tests once. |
 | `npm run test:unit:watch` | Run Vitest in watch mode during development. |
 | `npm run test:unit:coverage` | Run Vitest and write text and HTML coverage reports. |
@@ -170,6 +171,32 @@ The `@/` import alias resolves to `src/`.
 The API returns a short-lived access token, which the frontend keeps in memory and sends as a bearer token. API requests also include credentials so the server can use its refresh cookie. When an authenticated request receives `401 Unauthorized`, the client performs one shared token-refresh request and retries the original request once.
 
 If refresh fails, local authentication and cached server data are cleared. The backend remains responsible for cookie security, authorization, token lifetime, and refresh-token rotation.
+
+## Commit messages
+
+Commit messages follow [Conventional Commits 1.0.0](https://www.conventionalcommits.org/en/v1.0.0/):
+
+```text
+<type>[optional scope]: <description>
+```
+
+For example:
+
+```text
+test(e2e): verify edit dialog data
+feat(tasks): add task reminders
+fix(auth): clear expired sessions
+```
+
+The accepted types are `build`, `chore`, `ci`, `docs`, `feat`, `fix`, `perf`, `refactor`, `revert`, `style`, and `test`. A scope such as `auth`, `tasks`, or `e2e` is optional.
+
+Husky runs commitlint from the `commit-msg` Git hook and rejects invalid messages before a commit is created. The hook is installed automatically by the `prepare` script when you run `npm install`.
+
+You can validate the latest commit manually:
+
+```bash
+npm run commitlint -- --from HEAD~1 --to HEAD
+```
 
 ## Before opening a pull request
 
